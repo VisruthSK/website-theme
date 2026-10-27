@@ -106,7 +106,7 @@ Routes cannot be shadowed by path, so the theme registers its pages with `inject
 
 ## Updating from upstream
 
-`upstream/` is a submodule pinned to a commit of astro-erudite. A weekly workflow (`.github/workflows/upstream.yml`) opens a pull request when astro-erudite publishes a newer release tag that contains the pinned commit; commits to upstream's main branch are ignored. The tests run on both example sites before it can merge. After merging, the next release picks up the new files. The workflow needs _Settings → Actions → Allow GitHub Actions to create pull requests_.
+`upstream/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it once a month and opens a pull request when upstream's main branch has moved, which runs the full test suite on both example sites. Dependabot cannot follow release tags, so a pull request can contain commits made between releases; check upstream's changelog before merging.
 
 ## Deploying an example
 
