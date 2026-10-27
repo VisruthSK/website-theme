@@ -121,3 +121,12 @@ Both examples are complete sites. On Cloudflare Pages, connect the repository (w
 | Node version           | `NODE_VERSION` set to the version in `.node-version`                           |
 
 Use `examples/minimal` for the second site. Each example's `public/_headers` carries the strict Content Security Policy the site is tested under.
+
+### GitHub Pages
+
+`.github/workflows/pages.yml` builds `examples/full` and publishes it. Set _Settings → Pages → Source_ to _GitHub Actions_ and run the workflow.
+
+- Pages serves a site from the root of a domain, and the theme links to `/essays/`, `/tags/` and so on, so the site has to live at `https://<user>.github.io/` or a custom domain, not under a project path such as `/website-theme/`.
+- Set `site.href` in `examples/full/theme.json` to that address before publishing. Feeds, the sitemap and canonical links use it.
+- Pages cannot send response headers, so `public/_headers` has no effect there. Cloudflare Pages applies it.
+- Pages from a private repository needs a paid GitHub plan.

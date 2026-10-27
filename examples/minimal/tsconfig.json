@@ -5,6 +5,11 @@
       "@/*": ["./src/*", "../../src/*", "../../astro-erudite/src/*"]
     }
   },
-  "include": [".astro/types.d.ts", "**/*", "../../src/**/*", "../../config/**/*"],
+  "include": [
+    ".astro/types.d.ts",
+    "**/*",
+    "../../src/**/*",
+    "../../config/**/*"
+  ],
   "exclude": ["dist", "public/pagefind", "src/generated"]
 }

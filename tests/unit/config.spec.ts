@@ -77,20 +77,32 @@ test.describe('generated stylesheet', () => {
   const css = themeStylesheet(SITES.example.theme, file, root)
 
   test('palette names become custom properties and references', () => {
-    expect(css).toContain('--paper: oklch(0.985 0.004 250);')
-    expect(css).toContain(
+    const named = themeStylesheet(
+      parseTheme({
+        ...example,
+        palette: {
+          paper: 'oklch(0.985 0.004 250)',
+          'paper-dark': 'oklch(0.17 0.015 255)',
+        },
+        colors: { background: { light: 'paper', dark: 'paper-dark' } },
+      }),
+      file,
+      root,
+    )
+    expect(named).toContain('--paper: oklch(0.985 0.004 250);')
+    expect(named).toContain(
       '--background: light-dark(var(--paper), var(--paper-dark));',
     )
-    expect(css).toContain('--focus-ring: 2px solid var(--ring);')
+    expect(named).toContain('--focus-ring: 2px solid var(--ring);')
   })
 
   test('font faces point at the configured files', () => {
-    expect(css).toContain("font-family: 'Source Serif 4';")
+    expect(css).toContain("font-family: 'IBM Plex Sans';")
     expect(css).toContain(
-      "src: url('../assets/fonts/source-serif-4-400-italic.woff2') format('woff2');",
+      "src: url('../assets/fonts/plex-sans-400-italic.woff2') format('woff2');",
     )
-    expect(css).toContain("--font-serif: 'Source Serif 4', ui-serif,")
-    expect(css).toContain("--font-mono: 'JetBrains Mono', ui-monospace,")
+    expect(css).toContain("--font-serif: 'IBM Plex Sans', ui-serif,")
+    expect(css).toContain("--font-mono: 'IBM Plex Mono', ui-monospace,")
     expect(css).toContain('STIXTwoMath-Regular.woff2')
     expect(css).toContain("--font-math: 'STIX Two Math', math;")
   })
