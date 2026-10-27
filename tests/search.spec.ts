@@ -65,7 +65,7 @@ test.describe('search', () => {
     await expect(about.locator('[data-meta]')).toBeHidden()
     await Promise.all([
       page.waitForURL(/\/about\/?$/),
-      about.click({ position: { x: 4, y: 4 } }),
+      about.click({ position: { x: 24, y: 24 } }),
     ])
   })
 })

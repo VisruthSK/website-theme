@@ -106,7 +106,7 @@ Routes cannot be shadowed by path, so the theme registers its pages with `inject
 
 ## Updating from upstream
 
-`upstream/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it once a month and opens a pull request when upstream's main branch has moved, which runs the full test suite on both example sites. Dependabot cannot follow release tags, so a pull request can contain commits made between releases; check upstream's changelog before merging.
+`upstream/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it once a month. Since February 2026 it prefers the newest semver-tagged release on the tracked branch over newer untagged commits, so pull requests normally move to a release. Pull requests run the full test suite on both example sites.
 
 ## Deploying an example
 

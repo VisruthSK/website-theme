@@ -278,6 +278,7 @@ test('opening and closing characters protrude by the planned amount', async ({
     for (const width of [700, 1100, 1280]) {
       await page.setViewportSize({ width, height: 900 })
       await open(page, route)
+      await settled(page)
       const readings = await page.evaluate(() => {
         const found: { side: string; offset: number; planned: number }[] = []
         for (const paragraph of document.querySelectorAll<HTMLElement>('p.j')) {
