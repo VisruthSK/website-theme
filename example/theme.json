@@ -1,0 +1,99 @@
+{
+  "$schema": "../config/theme.schema.json",
+  "site": {
+    "title": "Example Site",
+    "description": "A demonstration site for the theme.",
+    "href": "https://example.com/",
+    "author": "Example Author",
+    "postsPerPage": 3,
+    "featured": ["margins"],
+    "footer": "Placeholder text, written for testing.",
+    "themeColor": { "light": "#f7f9fc", "dark": "#10141c" },
+    "manifest": { "background": "#f7f9fc", "theme": "#10141c" }
+  },
+  "sections": [
+    { "slug": "essays", "label": "Essays", "collection": "essays" },
+    { "slug": "notes", "label": "Notes", "collection": "notes" }
+  ],
+  "navigation": [
+    { "section": "essays" },
+    { "section": "notes" },
+    { "href": "/tags", "label": "Tags" },
+    { "href": "/about", "label": "About" },
+    { "href": "https://example.org/", "label": "Elsewhere" },
+    { "href": "/search", "label": "Search" }
+  ],
+  "socials": [
+    { "href": "/rss.xml", "label": "RSS", "icon": "rss" },
+    {
+      "href": "https://github.com/example",
+      "label": "GitHub",
+      "icon": "github"
+    },
+    { "href": "mailto:author@example.com", "label": "Email", "icon": "mail" }
+  ],
+  "palette": {
+    "paper": "oklch(0.985 0.004 250)",
+    "paper-dark": "oklch(0.17 0.015 255)",
+    "ink": "oklch(0.2 0.03 255)",
+    "ink-dark": "oklch(0.93 0.01 250)",
+    "mist": "oklch(0.93 0.015 250)",
+    "mist-dark": "oklch(0.27 0.02 255)",
+    "slate": "oklch(0.45 0.03 255)",
+    "slate-dark": "oklch(0.75 0.02 250)",
+    "rule": "oklch(0.8 0.02 250)",
+    "rule-dark": "oklch(0.42 0.02 255)",
+    "blue": "oklch(0.45 0.13 255)",
+    "blue-dark": "oklch(0.75 0.11 250)",
+    "red": "oklch(0.5 0.17 25)",
+    "red-dark": "oklch(0.7 0.15 25)",
+    "amber": "oklch(0.58 0.12 75)",
+    "amber-dark": "oklch(0.8 0.12 80)"
+  },
+  "colors": {
+    "background": { "light": "paper", "dark": "paper-dark" },
+    "foreground": { "light": "ink", "dark": "ink-dark" },
+    "primary": { "light": "blue", "dark": "blue-dark" },
+    "secondary": { "light": "mist", "dark": "mist-dark" },
+    "muted": { "light": "mist", "dark": "mist-dark" },
+    "muted-foreground": { "light": "slate", "dark": "slate-dark" },
+    "accent": { "light": "mist", "dark": "mist-dark" },
+    "border": { "light": "rule", "dark": "rule-dark" },
+    "ring": { "light": "blue", "dark": "blue-dark" },
+    "danger": { "light": "red", "dark": "red-dark" },
+    "warning": { "light": "amber", "dark": "amber-dark" },
+    "surface-hover": {
+      "light": "oklch(0.955 0.01 250)",
+      "dark": "oklch(0.22 0.02 255)"
+    },
+    "highlight": {
+      "light": "color-mix(in oklab, var(--amber-dark) 45%, var(--background))",
+      "dark": "color-mix(in oklab, var(--amber) 40%, var(--background))"
+    },
+    "flourish": { "light": "blue", "dark": "blue-dark" }
+  },
+  "fonts": {
+    "body": {
+      "family": "Source Serif 4",
+      "faces": [
+        { "file": "source-serif-4-400-normal.woff2" },
+        { "file": "source-serif-4-400-italic.woff2", "style": "italic" },
+        { "file": "source-serif-4-700-normal.woff2", "weight": 700 }
+      ]
+    },
+    "heading": {
+      "family": "Inter",
+      "faces": [{ "file": "inter-600-normal.woff2", "weight": 600 }]
+    },
+    "mono": {
+      "family": "JetBrains Mono",
+      "faces": [{ "file": "jetbrains-mono-400-normal.woff2" }]
+    },
+    "dropCap": {
+      "family": "Inter",
+      "file": "inter-900-normal.woff2",
+      "size": "5.3rem",
+      "weight": 900
+    }
+  }
+}

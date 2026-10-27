@@ -1,0 +1,96 @@
+---
+import { FEATURES } from '@/consts'
+
+interface Props {
+  description?: string
+  parentTitle?: string
+  parentUrl?: string
+  publishedAt?: string
+  sectionLabel: string
+  tags?: string[]
+  wordCount?: number
+}
+
+const {
+  description,
+  parentTitle,
+  parentUrl,
+  publishedAt,
+  sectionLabel,
+  tags = [],
+  wordCount,
+} = Astro.props
+
+const tagsValue = JSON.stringify(tags.filter(Boolean))
+---
+
+{
+  FEATURES.search && (
+    <meta
+      name="pagefind:section_label"
+      data-pagefind-meta="section_label[content]"
+      content={sectionLabel}
+    />
+  )
+}
+
+{
+  FEATURES.search && description && (
+    <meta
+      name="pagefind:description"
+      data-pagefind-meta="description[content]"
+      content={description}
+    />
+  )
+}
+
+{
+  FEATURES.search && publishedAt && (
+    <meta
+      name="pagefind:published_at"
+      data-pagefind-meta="published_at[content]"
+      data-pagefind-sort="published_at[content]"
+      content={publishedAt}
+    />
+  )
+}
+
+{
+  FEATURES.search && typeof wordCount === 'number' && (
+    <meta
+      name="pagefind:word_count"
+      data-pagefind-meta="word_count[content]"
+      content={String(wordCount)}
+    />
+  )
+}
+
+{
+  FEATURES.search && tagsValue && (
+    <meta
+      name="pagefind:tags"
+      data-pagefind-meta="tags[content]"
+      content={tagsValue}
+    />
+  )
+}
+
+{
+  FEATURES.search && parentTitle && (
+    <meta
+      name="pagefind:parent_title"
+      data-pagefind-meta="parent_title[content]"
+      content={parentTitle}
+    />
+  )
+}
+
+{
+  FEATURES.search && parentUrl && (
+    <meta
+      name="pagefind:parent_url"
+      data-pagefind-meta="parent_url[content]"
+      content={parentUrl}
+    />
+  )
+}

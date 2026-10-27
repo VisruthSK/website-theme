@@ -1,0 +1,124 @@
+import { expect, test } from '@playwright/test'
+import { readFileSync } from 'node:fs'
+import { parseTheme } from '../../config/theme.ts'
+import { themeCss, themeStylesheet } from '../../src/integrations/theme-css.ts'
+import { SITES } from '../sites.ts'
+
+const example = JSON.parse(readFileSync('example/theme.json', 'utf8'))
+const minimal = JSON.parse(readFileSync('example-minimal/theme.json', 'utf8'))
+
+const failure = (input: unknown) => {
+  try {
+    parseTheme(input)
+  } catch (error) {
+    return (error as Error).message
+  }
+  throw new Error('expected the theme to be rejected')
+}
+
+test.describe('schema', () => {
+  test('both example configurations are valid and filled with defaults', () => {
+    const theme = parseTheme(minimal)
+    expect(theme.site.featured).toEqual([])
+    expect(theme.colors['ink-muted']).toEqual({
+      light: 'color-mix(in oklab, var(--foreground) 65%, transparent)',
+      dark: 'color-mix(in oklab, var(--foreground) 75%, transparent)',
+    })
+    expect(theme.fonts.directory).toBe('src/assets/fonts')
+    expect(parseTheme(example).features.typeset).toBe(true)
+  })
+
+  test('unknown keys are rejected with their path', () => {
+    expect(failure({ ...example, extra: 1 })).toContain('(root)')
+    expect(
+      failure({ ...example, site: { ...example.site, colour: 'red' } }),
+    ).toMatch(/site: Unrecognized key/)
+  })
+
+  test('missing values name the key', () => {
+    const { background: _, ...colors } = example.colors
+    expect(failure({ ...example, colors })).toContain('colors.background')
+  })
+
+  test('navigation must name a configured section', () => {
+    expect(
+      failure({ ...example, navigation: [{ section: 'missing' }] }),
+    ).toContain('navigation.0.section: unknown section missing')
+  })
+
+  test('a drop cap needs a face and sections must be distinct', () => {
+    const { dropCap: _, ...fonts } = example.fonts
+    expect(failure({ ...example, fonts })).toContain('fonts.dropCap')
+    expect(
+      failure({
+        ...example,
+        sections: [example.sections[0], example.sections[0]],
+      }),
+    ).toContain('duplicate section essays')
+  })
+})
+
+test.describe('generated stylesheet', () => {
+  const root = new URL('../../example/', import.meta.url)
+  const file = new URL('src/generated/theme.css', root)
+  const css = themeStylesheet(SITES.example.theme, file, root)
+
+  test('palette names become custom properties and references', () => {
+    expect(css).toContain('--paper: oklch(0.985 0.004 250);')
+    expect(css).toContain(
+      '--background: light-dark(var(--paper), var(--paper-dark));',
+    )
+    expect(css).toContain('--focus-ring: 2px solid var(--ring);')
+  })
+
+  test('font faces point at the configured files', () => {
+    expect(css).toContain("font-family: 'Source Serif 4';")
+    expect(css).toContain(
+      "src: url('../assets/fonts/source-serif-4-400-italic.woff2') format('woff2');",
+    )
+    expect(css).toContain("--font-serif: 'Source Serif 4', ui-serif,")
+    expect(css).toContain("--font-mono: 'JetBrains Mono', ui-monospace,")
+    expect(css).toContain('STIXTwoMath-Regular.woff2')
+  })
+
+  test('disabled features and missing faces leave no rules behind', () => {
+    const minimalCss = themeStylesheet(SITES.minimal.theme, file, root)
+    expect(minimalCss).not.toContain('STIX')
+    expect(minimalCss).not.toContain('--font-math')
+    expect(minimalCss).toContain('--font-mono: ui-monospace, monospace;')
+    expect(minimalCss).toContain(
+      "--font-serif: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;",
+    )
+  })
+})
+
+test.describe('stylesheet transform', () => {
+  const css = `p { font-size: var(--prose-font-size); text-indent: var(--prose-indent); @feature dropCap { .drop-cap { float: left; } } } @feature search { .hit { color: red; } }`
+
+  test('prose settings and enabled features are substituted in place', () => {
+    const { transform } = themeCss(SITES.example.theme)
+    const output = transform(css, '/x/styles/prose.css') as string
+    expect(output).toContain('font-size: 1.125rem')
+    expect(output).toContain('text-indent: 1.35em')
+    expect(output).toContain('.drop-cap { float: left; }')
+    expect(output).not.toContain('@feature')
+  })
+
+  test('disabled features and their stylesheets are removed', () => {
+    const { transform } = themeCss(SITES.minimal.theme)
+    const output = transform(css, '/x/styles/prose.css') as string
+    expect(output).toContain('font-size: 1.0625rem')
+    expect(output).not.toContain('drop-cap')
+    expect(output).not.toContain('.hit')
+    expect(transform('.c { color: red }', '/u/styles/callout.css')).toBe('')
+    expect(
+      transform(
+        '.b { color: red }',
+        '/t/components/Bibliography.astro?astro&type=style&index=0&lang.css',
+      ),
+    ).toBe('')
+    expect(transform('.c { color: red }', '/u/styles/layout.css')).toBe(
+      undefined,
+    )
+  })
+})

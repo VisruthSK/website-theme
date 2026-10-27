@@ -1,0 +1,25 @@
+---
+import EntryCard from '@/components/EntryCard.astro'
+import MetaPage from '@/components/MetaPage.astro'
+import { TEXT } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+import { getSectionPostsChrono } from '@/lib/section-posts'
+
+const posts = await getSectionPostsChrono()
+---
+
+<Layout crumbs={[{ label: 'Recent', href: '/recent' }]}>
+  <MetaPage
+    slot="head"
+    title="Recent"
+    description={TEXT.recentDescription}
+  />
+  <page-heading>
+    <h1>Recent</h1>
+  </page-heading>
+  <ul data-entries>
+    {posts.map((entry) => (
+      <EntryCard heading="h2" entry={entry} />
+    ))}
+  </ul>
+</Layout>

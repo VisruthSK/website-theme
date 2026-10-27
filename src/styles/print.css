@@ -1,0 +1,56 @@
+@media print {
+  html page-header,
+  html page-footer,
+  html side-note,
+  [data-theme-toggle] {
+    display: none;
+  }
+
+  html page-grid {
+    display: block;
+    padding: 0;
+  }
+
+  html page-content {
+    max-inline-size: none;
+    margin: 0;
+  }
+
+  @feature typeset {
+    prose-content p.j {
+      white-space: normal;
+      word-spacing: normal !important;
+    }
+
+    prose-content p.j .jl {
+      word-spacing: normal !important;
+      letter-spacing: normal !important;
+      margin-left: 0 !important;
+    }
+
+    prose-content p.j .jh {
+      width: auto !important;
+    }
+  }
+
+  prose-content a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    overflow-wrap: anywhere;
+  }
+
+  pre {
+    white-space: pre-wrap;
+  }
+
+  pre,
+  figure,
+  blockquote,
+  img {
+    break-inside: avoid;
+  }
+
+  :is(h1, h2, h3, h4) {
+    break-after: avoid;
+  }
+}

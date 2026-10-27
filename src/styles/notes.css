@@ -1,0 +1,194 @@
+@keyframes footnote-flash {
+  from {
+    background-color: var(--footnote-flash);
+  }
+
+  to {
+    background-color: transparent;
+  }
+}
+
+:root {
+  --footnote-flash: color-mix(in srgb, var(--flourish) 18%, transparent);
+  --margin-column: calc(
+    (min(100vw, var(--grid-max-width)) - 13 * var(--grid-gutter)) / 12
+  );
+  --margin-note-width: calc(3 * var(--margin-column) + 2 * var(--grid-gutter));
+}
+
+prose-content {
+  a[data-footnote-ref] {
+    color: var(--flourish);
+    text-decoration-line: none;
+    scroll-margin-block-start: 25svh;
+
+    &:is(:hover, :focus-visible) {
+      color: var(--foreground);
+    }
+  }
+
+  .footnote-sentence:has(a[data-footnote-ref]:target) {
+    border-radius: var(--radius-sm);
+    box-decoration-break: clone;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: footnote-flash 1.6s ease-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      background-color: var(--footnote-flash);
+    }
+  }
+
+  a[data-footnote-backref] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    min-inline-size: 1.5rem;
+    min-block-size: 1.5rem;
+    color: var(--muted-foreground);
+    text-decoration-line: none;
+
+    &:is(:hover, :focus-visible) {
+      color: var(--foreground);
+    }
+  }
+
+  .footnote-backref-icon {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+
+  .footnotes {
+    @feature marginNotes {
+      @media (width >= 64rem) {
+        display: none;
+      }
+    }
+
+    overflow-wrap: anywhere;
+    overflow-x: hidden;
+
+    h2 {
+      margin-block-start: 0;
+    }
+
+    ol {
+      padding-inline-start: 1.25rem;
+    }
+
+    li::marker {
+      color: var(--flourish);
+    }
+
+    li {
+      min-inline-size: 0;
+      padding-block: 0.15rem;
+      scroll-margin-block-start: 6rem;
+    }
+
+    li p {
+      margin: 0;
+      text-align: left;
+      text-indent: 0;
+    }
+  }
+
+  @feature citations {
+    a[data-citation-preview] {
+      &::after {
+        content: attr(data-citation-preview);
+        position: fixed;
+        inset-inline: max(1rem, env(safe-area-inset-left))
+          max(1rem, env(safe-area-inset-right));
+        inset-block-end: max(1rem, env(safe-area-inset-bottom));
+        z-index: 60;
+        box-sizing: border-box;
+        contain: layout paint style;
+        inline-size: min(36rem, calc(100vw - 2rem));
+        max-inline-size: calc(100vw - 2rem);
+        max-block-size: min(45vh, 18rem);
+        margin-inline: auto;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: var(--background);
+        box-shadow: var(--shadow-popover);
+        color: var(--foreground);
+        font-family: var(--font-serif);
+        font-size: 1.0625rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+        text-indent: 0;
+        white-space: normal;
+        overflow: hidden auto;
+        overflow-wrap: anywhere;
+        overscroll-behavior: contain;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(0.25rem);
+        transition:
+          opacity var(--duration-fast) ease,
+          transform var(--duration-fast) ease,
+          visibility var(--duration-fast) ease;
+      }
+    }
+
+    a[data-citation-preview] {
+      @media (hover: hover) {
+        &:is(:hover, :focus-visible)::after {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
+
+@feature marginNotes {
+  side-note {
+    display: none;
+  }
+
+  @media (width >= 64rem) {
+    side-note {
+      display: block;
+      float: right;
+      clear: right;
+      inline-size: var(--margin-note-width);
+      margin-inline-end: calc(
+        -1 * (var(--margin-note-width) + var(--grid-gutter))
+      );
+      margin-block: 0.2em 0.75em;
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      line-height: 1.45;
+      font-style: normal;
+      font-variant-numeric: oldstyle-nums proportional-nums;
+      text-align: left;
+      text-indent: 0;
+      text-wrap: pretty;
+      overflow-wrap: anywhere;
+      color: var(--ink-subtle);
+    }
+
+    side-note > a:first-child {
+      position: relative;
+      top: -0.5em;
+      margin-inline-end: 0.5em;
+      color: var(--flourish);
+      font-size: 75%;
+      line-height: 0;
+      text-decoration-line: none;
+    }
+
+    side-note a:not(:first-child) {
+      color: var(--foreground);
+    }
+  }
+}

@@ -1,0 +1,68 @@
+---
+import EntryCard from '@/components/EntryCard.astro'
+import MetaPage from '@/components/MetaPage.astro'
+import { FEATURED_POST_IDS, SITE } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+import { getSectionPosts, getSectionPostsChrono } from '@/lib/section-posts'
+
+const allSectionPosts = await getSectionPosts()
+
+const featuredPosts = FEATURED_POST_IDS.map((id) =>
+  allSectionPosts.find((entry) => entry.id === id),
+).filter((entry) => entry !== undefined)
+
+const featuredIds = new Set(featuredPosts.map((entry) => entry.id))
+
+const recentPosts = (await getSectionPostsChrono())
+  .filter((entry) => !featuredIds.has(entry.id) && entry.data.rss !== false)
+  .slice(0, SITE.featuredPostCount)
+---
+
+<Layout>
+  <MetaPage slot="head" title="Home" />
+
+  <header>
+    <h1>{SITE.title}</h1>
+    <p>{SITE.description}</p>
+  </header>
+
+  {featuredPosts.length > 0 && (
+    <entry-group>
+      <h2>Featured Posts</h2>
+      <ul data-entries>
+        {featuredPosts.map((entry) => (
+          <EntryCard entry={entry} />
+        ))}
+      </ul>
+    </entry-group>
+  )}
+
+  <entry-group>
+    <h2>Recent Posts</h2>
+    <ul data-entries>
+      {recentPosts.map((entry) => (
+        <EntryCard entry={entry} />
+      ))}
+    </ul>
+    <p>
+      <a href="/recent">View all posts →</a>
+    </p>
+  </entry-group>
+</Layout>
+
+<style>
+  header {
+    margin-block-end: var(--space-m);
+
+    h1 {
+      font-size: var(--step-3);
+      font-weight: var(--font-weight-medium);
+      line-height: calc(var(--leading-offset) + 1em);
+    }
+
+    p {
+      margin-block-start: var(--space-3xs);
+      color: var(--muted-foreground);
+    }
+  }
+</style>

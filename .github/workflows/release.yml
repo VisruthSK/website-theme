@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: node scripts/flatten.mjs "$RUNNER_TEMP/release" --check
+      - name: Commit the flat tree to the release branch
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin release; then
+            git worktree add "$RUNNER_TEMP/branch" origin/release
+            git -C "$RUNNER_TEMP/branch" switch -c release
+          else
+            git worktree add --detach "$RUNNER_TEMP/branch"
+            git -C "$RUNNER_TEMP/branch" switch --orphan release
+          fi
+          cd "$RUNNER_TEMP/branch"
+          git rm -rq --ignore-unmatch .
+          cp -R "$RUNNER_TEMP/release/." .
+          git add -A
+          git commit -m "Release $TAG"
+          git tag "release-$TAG"
+          git push origin release "release-$TAG"

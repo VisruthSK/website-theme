@@ -1,0 +1,13 @@
+upstream
+pnpm-lock.yaml
+*.astro
+dist
+.astro
+.release
+src/generated
+public/pagefind
+example*/src/content
+config/theme.schema.json
+tests/**/*-snapshots
+playwright-report
+test-results

@@ -1,0 +1,13 @@
+website-theme is a hard fork of astro-erudite (https://github.com/jktrn/astro-erudite),
+Copyright (c) 2026 enscribe, used under the MIT License in LICENSES/astro-erudite-MIT.
+It is not affiliated with or endorsed by the author of astro-erudite.
+
+src/lib/typeset/optical.ts ports the optical margin measurement of Justif
+(https://github.com/lyallcooper/justif), Copyright (c) 2026 Lyall Cooper, MIT
+License. The notice is kept in that file.
+
+The icons in src/icons are from Lucide (LICENSES/lucide-ISC), except github.svg,
+which is from Simple Icons (CC0 1.0).
+
+The fonts in example/ and example-minimal/ are under the SIL Open Font License
+1.1. Each licence sits next to its font files.

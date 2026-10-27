@@ -1,0 +1,88 @@
+---
+import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
+import {
+  getParentPost,
+  getPostStats,
+  isSubpost,
+  type PostEntry,
+} from '@/lib/data-utils'
+import { canonicalizePathSegments, formatDate } from '@/lib/site-utils'
+import { formatCount, formatTitleAsHtml } from '@/lib/text'
+
+interface Props {
+  entry: PostEntry
+  showSectionLabel?: boolean
+  heading?: 'h2' | 'h3'
+}
+
+const { entry, showSectionLabel = true, heading: Heading = 'h3' } = Astro.props
+const { collection } = entry
+const section = SECTIONS[COLLECTION_TO_SECTION[collection]]
+const basePath = section.href
+const stats = await getPostStats(entry)
+const parentPost = isSubpost(entry.id)
+  ? await getParentPost(entry.id, collection)
+  : null
+
+const tags = entry.data.tags ?? []
+const displayTags = entry.data.draft ? ['draft', ...tags] : tags
+const href = canonicalizePathSegments(basePath, entry.id)
+const seriesHref = parentPost
+  ? canonicalizePathSegments(basePath, parentPost.id)
+  : undefined
+const showCombined =
+  stats.combinedWordCount !== null &&
+  stats.combinedWordCount !== stats.wordCount
+---
+
+<li class="interactive-card">
+  <a href={href} aria-label={entry.data.title} class="card-overlay"></a>
+  <div class="card-body">
+    {showSectionLabel && <div class="card-eyebrow">{section.label}</div>}
+    <Heading
+      class="card-title"
+      set:html={formatTitleAsHtml(entry.data.title)}
+    />
+    <p class="card-excerpt">{entry.data.description}</p>
+    <div class="meta-row">
+      <time datetime={entry.data.date.toISOString()}>
+        {formatDate(entry.data.date)}
+      </time>
+      <span class="meta-divider" aria-hidden="true"></span>
+      <span>
+        {formatCount(stats.wordCount)} words
+        {showCombined && ` (${formatCount(stats.combinedWordCount!)} total)`}
+      </span>
+      <span class="meta-divider" aria-hidden="true"></span>
+      <span>
+        {stats.readingTime}
+        {showCombined && ` (${stats.combinedReadingTime} total)`}
+      </span>
+      {stats.subpostCount > 0 && (
+        <>
+          <span class="meta-divider" aria-hidden="true" />
+          <span>
+            {stats.subpostCount} chapter{stats.subpostCount === 1 ? '' : 's'}
+          </span>
+        </>
+      )}
+    </div>
+    {(seriesHref || displayTags.length > 0) && (
+      <div class="chip-list">
+        {seriesHref && (
+          <a href={seriesHref} class="chip">
+            {parentPost!.data.title}
+          </a>
+        )}
+        {displayTags.map((tag) => (
+          <a
+            href={canonicalizePathSegments('/tags', encodeURIComponent(tag))}
+            class:list={['chip', tag === 'draft' && 'chip-draft']}
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</li>

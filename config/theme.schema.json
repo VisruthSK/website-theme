@@ -1,0 +1,1439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "site": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string",
+          "format": "uri"
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locale": {
+          "default": "en-US",
+          "type": "string",
+          "minLength": 1
+        },
+        "dir": {
+          "default": "ltr",
+          "type": "string",
+          "enum": [
+            "ltr",
+            "rtl"
+          ]
+        },
+        "postsPerPage": {
+          "default": 10,
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "featuredPostCount": {
+          "default": 3,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "featured": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "footer": {
+          "type": "string"
+        },
+        "themeColor": {
+          "type": "object",
+          "properties": {
+            "light": {
+              "type": "string",
+              "minLength": 1
+            },
+            "dark": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "light",
+            "dark"
+          ],
+          "additionalProperties": false
+        },
+        "manifest": {
+          "type": "object",
+          "properties": {
+            "background": {
+              "type": "string",
+              "minLength": 1
+            },
+            "theme": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "background",
+            "theme"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "href",
+        "author",
+        "themeColor",
+        "manifest"
+      ],
+      "additionalProperties": false
+    },
+    "text": {
+      "default": {
+        "recentDescription": "Every post in reverse chronological order.",
+        "searchPlaceholder": "Search"
+      },
+      "type": "object",
+      "properties": {
+        "recentDescription": {
+          "default": "Every post in reverse chronological order.",
+          "type": "string",
+          "minLength": 1
+        },
+        "searchPlaceholder": {
+          "default": "Search",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "sections": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "collection": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        },
+        "required": [
+          "slug",
+          "label",
+          "collection"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "navigation": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "section": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]*$"
+              }
+            },
+            "required": [
+              "section"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "href": {
+                "type": "string",
+                "minLength": 1
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "href",
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "socials": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "href": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "icon": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          }
+        },
+        "required": [
+          "href",
+          "label",
+          "icon"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "palette": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]*$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "colors": {
+      "type": "object",
+      "properties": {
+        "background": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "foreground": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "primary": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "secondary": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "secondary-foreground": {
+          "default": "var(--foreground)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "muted": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "muted-foreground": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "accent": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "accent-foreground": {
+          "default": "var(--foreground)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "border": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "ring": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "primary-foreground": {
+          "default": "var(--background)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "destructive": {
+          "default": "var(--danger)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "danger": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "danger-hover": {
+          "default": "var(--danger)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "danger-foreground": {
+          "default": "var(--background)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "warning": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "surface-hover": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "surface-accent-muted": {
+          "default": "color-mix(in oklab, var(--accent) 15%, transparent)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "surface-accent-soft": {
+          "default": "color-mix(in oklab, var(--accent) 40%, transparent)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "surface-warning": {
+          "default": "color-mix(in oklab, var(--warning) 12%, transparent)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "highlight": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "highlight-border": {
+          "default": "color-mix(in oklab, var(--warning) 40%, transparent)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "ink-faint": {
+          "default": {
+            "light": "color-mix(in oklab, var(--foreground) 50%, transparent)",
+            "dark": "color-mix(in oklab, var(--foreground) 60%, transparent)"
+          },
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "ink-muted": {
+          "default": {
+            "light": "color-mix(in oklab, var(--foreground) 65%, transparent)",
+            "dark": "color-mix(in oklab, var(--foreground) 75%, transparent)"
+          },
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "ink-subtle": {
+          "default": {
+            "light": "color-mix(in oklab, var(--foreground) 75%, transparent)",
+            "dark": "color-mix(in oklab, var(--foreground) 82%, transparent)"
+          },
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "ink-soft": {
+          "default": {
+            "light": "color-mix(in oklab, var(--foreground) 85%, transparent)",
+            "dark": "color-mix(in oklab, var(--foreground) 90%, transparent)"
+          },
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "ink-strong": {
+          "default": {
+            "light": "color-mix(in oklab, var(--foreground) 92%, transparent)",
+            "dark": "color-mix(in oklab, var(--foreground) 96%, transparent)"
+          },
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "border-subtle": {
+          "default": "color-mix(in oklab, var(--border) 80%, transparent)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "border-accent": {
+          "default": "color-mix(in oklab, var(--accent) 60%, transparent)",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "flourish": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "background",
+        "foreground",
+        "primary",
+        "secondary",
+        "muted",
+        "muted-foreground",
+        "accent",
+        "border",
+        "ring",
+        "danger",
+        "warning",
+        "surface-hover",
+        "highlight",
+        "flourish"
+      ],
+      "additionalProperties": false
+    },
+    "fonts": {
+      "type": "object",
+      "properties": {
+        "directory": {
+          "default": "src/assets/fonts",
+          "type": "string",
+          "minLength": 1
+        },
+        "stripHinting": {
+          "default": false,
+          "type": "boolean"
+        },
+        "body": {
+          "type": "object",
+          "properties": {
+            "family": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fallback": {
+              "default": [
+                "ui-serif",
+                "system-ui",
+                "serif",
+                "Apple Color Emoji",
+                "Segoe UI Emoji",
+                "Segoe UI Symbol",
+                "Noto Color Emoji"
+              ],
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "faces": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "pattern": "^[^/\\\\]+\\.(?:woff2|woff|ttf|otf)$"
+                  },
+                  "weight": {
+                    "default": 400,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "style": {
+                    "default": "normal",
+                    "type": "string",
+                    "enum": [
+                      "normal",
+                      "italic"
+                    ]
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "family",
+            "faces"
+          ],
+          "additionalProperties": false
+        },
+        "heading": {
+          "type": "object",
+          "properties": {
+            "family": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fallback": {
+              "default": [
+                "ui-sans-serif",
+                "system-ui",
+                "sans-serif",
+                "Apple Color Emoji",
+                "Segoe UI Emoji",
+                "Segoe UI Symbol",
+                "Noto Color Emoji"
+              ],
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "faces": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "pattern": "^[^/\\\\]+\\.(?:woff2|woff|ttf|otf)$"
+                  },
+                  "weight": {
+                    "default": 400,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "style": {
+                    "default": "normal",
+                    "type": "string",
+                    "enum": [
+                      "normal",
+                      "italic"
+                    ]
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "family",
+            "faces"
+          ],
+          "additionalProperties": false
+        },
+        "mono": {
+          "type": "object",
+          "properties": {
+            "family": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fallback": {
+              "default": [
+                "ui-monospace",
+                "SFMono-Regular",
+                "Menlo",
+                "Monaco",
+                "Consolas",
+                "Courier New",
+                "monospace"
+              ],
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "faces": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "pattern": "^[^/\\\\]+\\.(?:woff2|woff|ttf|otf)$"
+                  },
+                  "weight": {
+                    "default": 400,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "style": {
+                    "default": "normal",
+                    "type": "string",
+                    "enum": [
+                      "normal",
+                      "italic"
+                    ]
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "family",
+            "faces"
+          ],
+          "additionalProperties": false
+        },
+        "dropCap": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "pattern": "^[^/\\\\]+\\.(?:woff2|woff|ttf|otf)$"
+            },
+            "weight": {
+              "default": 400,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "style": {
+              "default": "normal",
+              "type": "string",
+              "enum": [
+                "normal",
+                "italic"
+              ]
+            },
+            "family": {
+              "type": "string",
+              "minLength": 1
+            },
+            "size": {
+              "default": "5.9rem",
+              "type": "string",
+              "pattern": "^\\d+(?:\\.\\d+)?rem$"
+            }
+          },
+          "required": [
+            "file",
+            "family"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "body",
+        "heading"
+      ],
+      "additionalProperties": false
+    },
+    "prose": {
+      "default": {
+        "fontSize": "1.125rem",
+        "lineHeight": "1.75rem",
+        "indent": "1.35em"
+      },
+      "type": "object",
+      "properties": {
+        "fontSize": {
+          "default": "1.125rem",
+          "type": "string",
+          "pattern": "^\\d+(?:\\.\\d+)?rem$"
+        },
+        "lineHeight": {
+          "default": "1.75rem",
+          "type": "string",
+          "pattern": "^\\d+(?:\\.\\d+)?rem$"
+        },
+        "indent": {
+          "default": "1.35em",
+          "type": "string",
+          "pattern": "^\\d+(?:\\.\\d+)?em$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "features": {
+      "default": {
+        "typeset": true,
+        "citations": true,
+        "marginNotes": true,
+        "math": true,
+        "callouts": true,
+        "dropCap": true,
+        "search": true,
+        "externalLinkIcons": true
+      },
+      "type": "object",
+      "properties": {
+        "typeset": {
+          "default": true,
+          "type": "boolean"
+        },
+        "citations": {
+          "default": true,
+          "type": "boolean"
+        },
+        "marginNotes": {
+          "default": true,
+          "type": "boolean"
+        },
+        "math": {
+          "default": true,
+          "type": "boolean"
+        },
+        "callouts": {
+          "default": true,
+          "type": "boolean"
+        },
+        "dropCap": {
+          "default": true,
+          "type": "boolean"
+        },
+        "search": {
+          "default": true,
+          "type": "boolean"
+        },
+        "externalLinkIcons": {
+          "default": true,
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "bibliographies": {
+      "default": "src/data/bibliographies",
+      "type": "string",
+      "minLength": 1
+    },
+    "prebuilt": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[\\w.-]+$"
+      }
+    },
+    "unhinted": {
+      "default": [
+        "/_astro/*",
+        "/pagefind/*"
+      ],
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "starts_with",
+        "pattern": "^\\/.*"
+      }
+    }
+  },
+  "required": [
+    "site",
+    "sections",
+    "navigation",
+    "colors",
+    "fonts"
+  ],
+  "additionalProperties": false
+}

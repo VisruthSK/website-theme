@@ -1,0 +1,25 @@
+---
+import MetaPage from '@/components/MetaPage.astro'
+import { SECTIONS, SECTION_SLUGS } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+import { getSortedTags } from '@/lib/data-utils'
+
+const sortedTags = await getSortedTags(
+  SECTION_SLUGS.map((slug) => SECTIONS[slug].collection),
+)
+---
+
+<Layout crumbs={[{ label: 'Tags', href: '/tags' }]}>
+  <MetaPage slot="head" title="Tags" />
+  <page-heading><h1>Tags</h1></page-heading>
+  <div class="chip-list">
+    {
+      sortedTags.map(({ tag, count }) => (
+        <a href={`/tags/${encodeURIComponent(tag)}`} class="chip">
+          #{tag}
+          <span>({count})</span>
+        </a>
+      ))
+    }
+  </div>
+</Layout>

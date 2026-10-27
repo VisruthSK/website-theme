@@ -1,0 +1,15 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*", "./upstream/src/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "config/**/*",
+    "scripts/**/*",
+    "tests/**/*",
+    "playwright.config.ts"
+  ]
+}

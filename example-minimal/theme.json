@@ -1,0 +1,105 @@
+{
+  "$schema": "../config/theme.schema.json",
+  "site": {
+    "title": "Field Journal",
+    "description": "A second consumer with its own fonts, colours and sections.",
+    "href": "https://journal.example.net/",
+    "author": "Sample Writer",
+    "locale": "en-GB",
+    "postsPerPage": 5,
+    "themeColor": { "light": "#f4f6ef", "dark": "#121610" },
+    "manifest": { "background": "#f4f6ef", "theme": "#121610" }
+  },
+  "text": {
+    "recentDescription": "Every journal entry, newest first.",
+    "searchPlaceholder": "Search the journal"
+  },
+  "sections": [
+    { "slug": "journal", "label": "Journal", "collection": "entries" }
+  ],
+  "navigation": [
+    { "section": "journal" },
+    { "href": "/tags", "label": "Tags" },
+    { "href": "/recent", "label": "Recent" }
+  ],
+  "colors": {
+    "background": {
+      "light": "oklch(0.97 0.012 120)",
+      "dark": "oklch(0.17 0.012 140)"
+    },
+    "foreground": {
+      "light": "oklch(0.22 0.03 150)",
+      "dark": "oklch(0.93 0.012 120)"
+    },
+    "primary": {
+      "light": "oklch(0.42 0.1 150)",
+      "dark": "oklch(0.78 0.11 145)"
+    },
+    "secondary": {
+      "light": "oklch(0.92 0.02 130)",
+      "dark": "oklch(0.26 0.02 140)"
+    },
+    "muted": {
+      "light": "oklch(0.92 0.02 130)",
+      "dark": "oklch(0.26 0.02 140)"
+    },
+    "muted-foreground": {
+      "light": "oklch(0.45 0.03 150)",
+      "dark": "oklch(0.76 0.02 130)"
+    },
+    "accent": {
+      "light": "oklch(0.92 0.02 130)",
+      "dark": "oklch(0.26 0.02 140)"
+    },
+    "border": {
+      "light": "oklch(0.8 0.025 130)",
+      "dark": "oklch(0.42 0.025 140)"
+    },
+    "ring": { "light": "oklch(0.45 0.12 150)", "dark": "oklch(0.75 0.12 145)" },
+    "danger": { "light": "oklch(0.5 0.16 30)", "dark": "oklch(0.72 0.14 30)" },
+    "warning": { "light": "oklch(0.56 0.11 85)", "dark": "oklch(0.8 0.11 90)" },
+    "surface-hover": {
+      "light": "oklch(0.945 0.015 125)",
+      "dark": "oklch(0.22 0.015 140)"
+    },
+    "highlight": {
+      "light": "oklch(0.88 0.08 95)",
+      "dark": "oklch(0.36 0.06 95)"
+    },
+    "flourish": {
+      "light": "oklch(0.42 0.1 150)",
+      "dark": "oklch(0.78 0.11 145)"
+    }
+  },
+  "fonts": {
+    "body": {
+      "family": "Atkinson Hyperlegible",
+      "fallback": ["ui-sans-serif", "system-ui", "sans-serif"],
+      "faces": [
+        { "file": "atkinson-hyperlegible-400-normal.woff2" },
+        { "file": "atkinson-hyperlegible-400-italic.woff2", "style": "italic" },
+        { "file": "atkinson-hyperlegible-700-normal.woff2", "weight": 700 }
+      ]
+    },
+    "heading": {
+      "family": "Literata",
+      "fallback": ["ui-serif", "Georgia", "serif"],
+      "faces": [{ "file": "literata-700-normal.woff2", "weight": 700 }]
+    }
+  },
+  "prose": {
+    "fontSize": "1.0625rem",
+    "lineHeight": "1.7rem",
+    "indent": "1.5em"
+  },
+  "features": {
+    "typeset": true,
+    "citations": false,
+    "marginNotes": false,
+    "math": false,
+    "callouts": false,
+    "dropCap": false,
+    "search": false,
+    "externalLinkIcons": false
+  }
+}

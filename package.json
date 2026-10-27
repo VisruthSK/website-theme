@@ -1,0 +1,56 @@
+{
+  "name": "website-theme",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev --root example",
+    "build": "node scripts/build.mjs example example-minimal",
+    "check": "astro check --root example && astro check --root example-minimal",
+    "test": "playwright test",
+    "format": "prettier --check .",
+    "knip": "knip",
+    "schema": "node scripts/schema.mjs",
+    "flatten": "node scripts/flatten.mjs"
+  },
+  "dependencies": {
+    "@astrojs/markdown-satteri": "0.4.4",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "@expressive-code/plugin-collapsible-sections": "^0.42.0",
+    "@expressive-code/plugin-line-numbers": "^0.42.0",
+    "@playform/compress": "0.2.5",
+    "astro": "^7.4.1",
+    "github-slugger": "^2.0.0",
+    "hast-util-select": "^6.0.4",
+    "hast-util-to-html": "^9.0.5",
+    "hastscript": "^9.0.1",
+    "satteri": "^0.10.5",
+    "satteri-expressive-code": "^0.1.24",
+    "satteri-validate-links": "^0.2.0",
+    "temml": "^0.14.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.11",
+    "@axe-core/playwright": "^4.14.0",
+    "@kitlangton/justice": "^0.4.0",
+    "@playwright/test": "^1.64.1",
+    "@types/hast": "^3.0.5",
+    "@types/mdast": "^4.0.4",
+    "@web-alchemy/fonttools": "^1.4.0",
+    "bibtex-parse": "^2.1.0",
+    "entities": "^8.1.0",
+    "esbuild": "0.28.1",
+    "harfbuzzjs": "^1.6.3",
+    "hast-util-from-html": "^2.0.3",
+    "knip": "^6.42.0",
+    "mdast-util-to-hast": "^13.2.1",
+    "pagefind": "^1.5.2",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "wawoff2": "^2.0.1"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}
