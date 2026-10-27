@@ -55,6 +55,16 @@ async function load(theme: Theme, root: URL) {
     fileURLToPath(new URL(`${theme.fonts.directory}/`, root)),
     typefaceFiles(theme.fonts),
   )
+  const roman = faces('roman', [])
+  if (
+    theme.features.dropCap &&
+    theme.fonts.body.smallCaps &&
+    roman.advance('aeo') === faces('roman', ['smcp']).advance('aeo')
+  ) {
+    throw new Error(
+      'fonts.body.smallCaps is true but the body font has no small capitals; set it to false.',
+    )
+  }
   return { faces, edges: edgeTables(faces), constants, source }
 }
 

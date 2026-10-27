@@ -107,6 +107,20 @@ test.describe('generated stylesheet', () => {
     expect(css).toContain("--font-math: 'STIX Two Math', math;")
   })
 
+  test('small capitals follow the body font setting', () => {
+    expect(css).toContain('--opening-caps: normal;')
+    const capable = parseTheme({
+      ...example,
+      fonts: {
+        ...example.fonts,
+        body: { ...example.fonts.body, smallCaps: true },
+      },
+    })
+    expect(themeStylesheet(capable, file, root)).toContain(
+      '--opening-caps: small-caps;',
+    )
+  })
+
   test('the math font can be swapped', () => {
     const swapped = parseTheme({
       ...example,

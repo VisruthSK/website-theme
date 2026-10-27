@@ -529,8 +529,8 @@
         },
         "ring": {
           "default": {
-            "light": "#bbbbbb",
-            "dark": "#606060"
+            "light": "#838383",
+            "dark": "#7b7b7b"
           },
           "anyOf": [
             {
@@ -1096,8 +1096,8 @@
         },
         "flourish": {
           "default": {
-            "light": "#8d8d8d",
-            "dark": "#6e6e6e"
+            "light": "#646464",
+            "dark": "#b4b4b4"
           },
           "anyOf": [
             {
@@ -1192,6 +1192,10 @@
                 ],
                 "additionalProperties": false
               }
+            },
+            "smallCaps": {
+              "default": true,
+              "type": "boolean"
             }
           },
           "required": [

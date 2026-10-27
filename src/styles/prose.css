@@ -75,7 +75,7 @@ prose-content {
 
     > p .opening-words {
       color: var(--flourish);
-      font-variant-caps: small-caps;
+      font-variant-caps: var(--opening-caps);
       letter-spacing: 0.03em;
     }
   }

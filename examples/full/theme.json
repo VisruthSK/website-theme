@@ -73,6 +73,7 @@
   "fonts": {
     "body": {
       "family": "IBM Plex Sans",
+      "smallCaps": false,
       "faces": [
         {
           "file": "plex-sans-400-normal.woff2"
@@ -107,7 +108,7 @@
     "dropCap": {
       "family": "IBM Plex Sans",
       "file": "plex-sans-600-normal.woff2",
-      "size": "5.3rem",
+      "size": "6.1rem",
       "weight": 600
     }
   }

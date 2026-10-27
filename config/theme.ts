@@ -131,7 +131,9 @@ const family = (stack: string[]) =>
 const fonts = z.strictObject({
   directory: nonEmpty.default('src/assets/fonts'),
   stripHinting: z.boolean().default(false),
-  body: family(['ui-serif', 'system-ui', 'serif', ...EMOJI]),
+  body: family(['ui-serif', 'system-ui', 'serif', ...EMOJI]).extend({
+    smallCaps: z.boolean().default(true),
+  }),
   heading: family(['ui-sans-serif', 'system-ui', 'sans-serif', ...EMOJI]),
   mono: family([
     'ui-monospace',

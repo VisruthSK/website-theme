@@ -107,6 +107,7 @@ export function themeStylesheet(theme: Theme, file: URL, root: URL) {
   ]
   const mathFamily = fonts.math?.family ?? BUNDLED_MATH.family
   const families = [
+    `--opening-caps: ${fonts.body.smallCaps ? 'small-caps' : 'normal'};`,
     `--font-sans: ${stack(fonts.heading, [])};`,
     `--font-serif: ${stack(fonts.body, [])};`,
     `--font-mono: ${stack(fonts.mono, ['ui-monospace', 'monospace'])};`,
