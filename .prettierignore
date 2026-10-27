@@ -1,4 +1,4 @@
-upstream
+astro-erudite
 pnpm-lock.yaml
 *.astro
 dist
@@ -6,7 +6,7 @@ dist
 .release
 src/generated
 public/pagefind
-example*/src/content
+examples/*/src/content
 config/theme.schema.json
 tests/**/*-snapshots
 playwright-report

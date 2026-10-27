@@ -1,5 +1,5 @@
 {
-  "$schema": "../config/theme.schema.json",
+  "$schema": "../../config/theme.schema.json",
   "site": {
     "title": "Field Journal",
     "description": "A second consumer with its own fonts, colours and sections.",

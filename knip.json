@@ -1,8 +1,8 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": [
-    "example*/astro.config.ts",
-    "example*/src/content.config.ts",
+    "examples/*/astro.config.ts",
+    "examples/*/src/content.config.ts",
     "src/pages/**/*.{astro,ts}",
     "src/scripts/*.js",
     "scripts/*.mjs",
@@ -13,11 +13,11 @@
     "config/**/*.ts",
     "scripts/*.mjs",
     "tests/**/*.ts",
-    "example*/*.ts",
-    "example*/src/**/*.ts",
-    "upstream/src/**/*.{ts,astro}"
+    "examples/*/*.ts",
+    "examples/*/src/**/*.ts",
+    "astro-erudite/src/**/*.{ts,astro}"
   ],
-  "ignore": ["upstream/**"],
+  "ignore": ["astro-erudite/**"],
   "ignoreUnresolved": ["^@/generated/"],
-  "paths": { "@/*": ["src/*", "upstream/src/*"] }
+  "paths": { "@/*": ["src/*", "astro-erudite/src/*"] }
 }

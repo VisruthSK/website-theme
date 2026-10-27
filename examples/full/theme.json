@@ -1,5 +1,5 @@
 {
-  "$schema": "../config/theme.schema.json",
+  "$schema": "../../config/theme.schema.json",
   "site": {
     "title": "Example Site",
     "description": "A demonstration site for the theme.",

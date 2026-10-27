@@ -3,9 +3,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "astro dev --root example",
-    "build": "node scripts/build.mjs example example-minimal",
-    "check": "astro check --root example && astro check --root example-minimal",
+    "dev": "astro dev --root examples/full",
+    "build": "node scripts/build.mjs examples/full examples/minimal",
+    "check": "astro check --root examples/full && astro check --root examples/minimal",
     "test": "playwright test",
     "format": "prettier --check .",
     "knip": "knip",

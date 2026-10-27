@@ -2,16 +2,16 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*", "../src/*", "../upstream/src/*"]
+      "@/*": ["./src/*", "../../src/*", "../../astro-erudite/src/*"]
     }
   },
   "include": [
     ".astro/types.d.ts",
     "**/*",
-    "../src/**/*",
-    "../config/**/*",
-    "../tests/**/*",
-    "../playwright.config.ts"
+    "../../src/**/*",
+    "../../config/**/*",
+    "../../tests/**/*",
+    "../../playwright.config.ts"
   ],
   "exclude": ["dist", "public/pagefind", "src/generated"]
 }

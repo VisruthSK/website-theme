@@ -25,9 +25,9 @@ const load = (dir: string) =>
 export const SITES = {
   example: {
     name: 'example',
-    dir: 'example',
+    dir: 'examples/full',
     port: 4321,
-    theme: load('example'),
+    theme: load('examples/full'),
     typeset: [
       '/essays/margins/',
       '/essays/rivers/',
@@ -53,9 +53,9 @@ export const SITES = {
   },
   minimal: {
     name: 'minimal',
-    dir: 'example-minimal',
+    dir: 'examples/minimal',
     port: 4322,
-    theme: load('example-minimal'),
+    theme: load('examples/minimal'),
     typeset: [
       '/journal/coastal-path/',
       '/journal/winter-light/',

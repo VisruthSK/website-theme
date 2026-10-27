@@ -14,7 +14,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, relative, resolve } from 'node:path'
 
 const theme = resolve(import.meta.dirname, '..')
-const upstream = join(theme, 'upstream', 'src')
+const astroErudite = join(theme, 'astro-erudite', 'src')
 const [target] = process.argv.slice(2).filter((arg) => !arg.startsWith('--'))
 const out = resolve(target ?? join(theme, '.release'))
 const EXTENSIONS = [
@@ -54,7 +54,7 @@ const copied = new Set()
 const fromUpstreamFiles = new Set()
 
 function include(source) {
-  const target = join(out, 'src', relative(upstream, source))
+  const target = join(out, 'src', relative(astroErudite, source))
   if (existsSync(target) || copied.has(source)) return
   copied.add(source)
   fromUpstreamFiles.add(target)
@@ -80,13 +80,13 @@ while (queue.length) {
     if (specifier.startsWith('@/')) base = specifier.slice(2)
     else if (specifier.startsWith('.'))
       base = relative(
-        upstream,
-        resolve(dirname(join(upstream, fromUpstream)), specifier),
+        astroErudite,
+        resolve(dirname(join(astroErudite, fromUpstream)), specifier),
       )
     else continue
     if (base.startsWith('..')) continue
     if (find(join(out, 'src', base))) continue
-    const source = join(upstream, base)
+    const source = join(astroErudite, base)
     if (existsSync(source) && statSync(source).isDirectory()) {
       files(source).forEach(include)
       continue
@@ -100,14 +100,14 @@ while (queue.length) {
 
 const commit = execFileSync(
   'git',
-  ['-C', join(theme, 'upstream'), 'rev-parse', 'HEAD'],
+  ['-C', join(theme, 'astro-erudite'), 'rev-parse', 'HEAD'],
   {
     encoding: 'utf8',
   },
 ).trim()
 mkdirSync(join(out, 'LICENSES'), { recursive: true })
 cpSync(
-  join(theme, 'upstream', 'LICENSE'),
+  join(theme, 'astro-erudite', 'LICENSE'),
   join(out, 'LICENSES', 'astro-erudite-MIT'),
 )
 writeFileSync(
@@ -115,13 +115,13 @@ writeFileSync(
   `${readFileSync(join(theme, 'NOTICE'), 'utf8').trimEnd()}\n\nThis release includes files from astro-erudite at commit ${commit}.\n`,
 )
 console.log(
-  `Flattened ${copied.size} upstream files into ${relative(theme, out) || out}`,
+  `Flattened ${copied.size} astro-erudite files into ${relative(theme, out) || out}`,
 )
 
 if (process.argv.includes('--check')) {
   const site = join(tmpdir(), `theme-release-check-${process.pid}`)
   rmSync(site, { recursive: true, force: true })
-  cpSync(join(theme, 'example'), site, {
+  cpSync(join(theme, 'examples', 'full'), site, {
     recursive: true,
     filter: (path) =>
       !/[\\/](?:dist|node_modules|\.astro|generated|pagefind)$/.test(path),
@@ -134,10 +134,10 @@ if (process.argv.includes('--check')) {
   )
   writeFileSync(
     join(site, 'astro.config.ts'),
-    readFileSync(join(theme, 'example', 'astro.config.ts'), 'utf8').replace(
-      '../src/',
-      './theme/src/',
-    ),
+    readFileSync(
+      join(theme, 'examples', 'full', 'astro.config.ts'),
+      'utf8',
+    ).replace('../../src/', './theme/src/'),
   )
   writeFileSync(
     join(site, 'tsconfig.json'),

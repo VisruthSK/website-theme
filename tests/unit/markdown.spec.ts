@@ -16,7 +16,7 @@ const astro = (frontmatter: Record<string, unknown> = {}) => ({
   },
 })
 
-const citations = cite('example/src/data/bibliographies')
+const citations = cite('examples/full/src/data/bibliographies')
 
 const render = (
   source: string,

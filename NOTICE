@@ -9,5 +9,5 @@ License. The notice is kept in that file.
 The icons in src/icons are from Lucide (LICENSES/lucide-ISC), except github.svg,
 which is from Simple Icons (CC0 1.0).
 
-The fonts in example/ and example-minimal/ are under the SIL Open Font License
+The fonts in examples/ are under the SIL Open Font License
 1.1. Each licence sits next to its font files.

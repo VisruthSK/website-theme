@@ -19,7 +19,7 @@ import {
   headingAnchors,
   inlineExpressiveCode,
   temmlMath,
-} from '../lib/markdown/upstream'
+} from '../lib/markdown/astro-erudite'
 import { localHeadersPlugin } from '../lib/local-headers'
 import { bundleCss } from './bundle-css'
 import { earlyHints } from './early-hints'

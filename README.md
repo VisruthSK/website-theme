@@ -20,7 +20,7 @@ Add the theme to a site as a submodule at `theme/`:
 git submodule add -b release <theme repository URL> theme
 ```
 
-The `release` branch is a flattened tree with the upstream files it needs copied in. The default branch keeps upstream as a nested submodule and needs `git submodule update --init --recursive`.
+The `release` branch is a flattened tree with the astro-erudite files it needs copied in. The default branch keeps astro-erudite as a nested submodule and needs `git submodule update --init --recursive`.
 
 The site then needs four files:
 
@@ -44,13 +44,15 @@ export const collections = defineCollections()
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "paths": { "@/*": ["./src/*", "./theme/src/*", "./theme/upstream/src/*"] }
+    "paths": {
+      "@/*": ["./src/*", "./theme/src/*", "./theme/astro-erudite/src/*"]
+    }
   },
   "exclude": [
     "dist",
     "src/generated",
-    "theme/upstream",
-    "theme/example*",
+    "theme/astro-erudite",
+    "theme/examples",
     "theme/tests",
     "theme/scripts"
   ]
@@ -81,7 +83,7 @@ Content goes in `src/content/<collection>/` for each section and `src/content/pa
 | `prebuilt`       | Directories under `public/` holding HTML the theme should not rewrite or link-check, such as slide decks.                                                                                                                                                |
 | `unhinted`       | Paths that get no `Link: rel=preload` early hints in the generated `_headers`.                                                                                                                                                                           |
 
-`example/theme.json` uses every key; `example-minimal/theme.json` shows a site with different fonts and colours, one section and most features off.
+`examples/full/theme.json` uses every key; `examples/minimal/theme.json` shows a site with different fonts and colours, one section and most features off.
 
 The typesetter needs a regular body face at weight 400. Italic and bold are measured from their own files when configured and from the regular face otherwise. Paragraphs with code are left to the browser when no `mono` font is configured.
 
@@ -94,28 +96,28 @@ Two font settings exist because browsers render some fonts differently from how 
 
 `@/*` resolves through an ordered list of directories, and the first file found wins:
 
-| Where                        | Order                                          |
-| ---------------------------- | ---------------------------------------------- |
-| This repository              | `src/*`, `upstream/src/*`                      |
-| A site on the default branch | `src/*`, `theme/src/*`, `theme/upstream/src/*` |
-| A site on `release`          | `src/*`, `theme/src/*`                         |
+| Where                        | Order                                               |
+| ---------------------------- | --------------------------------------------------- |
+| This repository              | `src/*`, `astro-erudite/src/*`                      |
+| A site on the default branch | `src/*`, `theme/src/*`, `theme/astro-erudite/src/*` |
+| A site on `release`          | `src/*`, `theme/src/*`                              |
 
 A file in a higher layer replaces the same path below it. Theme code imports only through `@/`, so a site can replace any component, library module or stylesheet by adding a file at the same path. Upstream files are never edited.
 
 Routes cannot be shadowed by path, so the theme registers its pages with `injectRoute` and skips any route whose file exists in the site's `src/pages/`. A site replaces the home page, for example, with its own `src/pages/index.astro`.
 
-## Updating from upstream
+## Updating astro-erudite
 
-`upstream/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it once a month. Since February 2026 it prefers the newest semver-tagged release on the tracked branch over newer untagged commits, so pull requests normally move to a release. Pull requests run the full test suite on both example sites.
+`astro-erudite/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it once a month. Since February 2026 it prefers the newest semver-tagged release on the tracked branch over newer untagged commits, so pull requests normally move to a release. Pull requests run the full test suite on both example sites.
 
 ## Deploying an example
 
 Both examples are complete sites. On Cloudflare Pages, connect the repository (with submodules enabled) and set:
 
-| Setting                | Value                                                                    |
-| ---------------------- | ------------------------------------------------------------------------ |
-| Build command          | `pnpm install --frozen-lockfile && pnpm exec astro build --root example` |
-| Build output directory | `example/dist`                                                           |
-| Node version           | `NODE_VERSION` set to the version in `.node-version`                     |
+| Setting                | Value                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| Build command          | `pnpm install --frozen-lockfile && pnpm exec astro build --root examples/full` |
+| Build output directory | `examples/full/dist`                                                           |
+| Node version           | `NODE_VERSION` set to the version in `.node-version`                           |
 
-Use `example-minimal` for the second site. Each example's `public/_headers` carries the strict Content Security Policy the site is tested under.
+Use `examples/minimal` for the second site. Each example's `public/_headers` carries the strict Content Security Policy the site is tested under.

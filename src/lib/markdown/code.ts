@@ -1,5 +1,5 @@
 import expressiveCode from 'satteri-expressive-code'
-import { ecRenderer } from './upstream'
+import { ecRenderer } from './astro-erudite'
 
 export const codeAssets = ecRenderer
 

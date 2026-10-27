@@ -1,0 +1,10 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*", "../../src/*", "../../astro-erudite/src/*"]
+    }
+  },
+  "include": [".astro/types.d.ts", "**/*", "../../src/**/*", "../../config/**/*"],
+  "exclude": ["dist", "public/pagefind", "src/generated"]
+}

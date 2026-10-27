@@ -4,8 +4,8 @@ import { parseTheme } from '../../config/theme.ts'
 import { themeCss, themeStylesheet } from '../../src/integrations/theme-css.ts'
 import { SITES } from '../sites.ts'
 
-const example = JSON.parse(readFileSync('example/theme.json', 'utf8'))
-const minimal = JSON.parse(readFileSync('example-minimal/theme.json', 'utf8'))
+const example = JSON.parse(readFileSync('examples/full/theme.json', 'utf8'))
+const minimal = JSON.parse(readFileSync('examples/minimal/theme.json', 'utf8'))
 
 const failure = (input: unknown) => {
   try {
@@ -72,7 +72,7 @@ test.describe('schema', () => {
 })
 
 test.describe('generated stylesheet', () => {
-  const root = new URL('../../example/', import.meta.url)
+  const root = new URL('../../examples/full/', import.meta.url)
   const file = new URL('src/generated/theme.css', root)
   const css = themeStylesheet(SITES.example.theme, file, root)
 
