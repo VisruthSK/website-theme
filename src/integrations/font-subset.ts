@@ -50,13 +50,21 @@ function textInTags(html: string, tags: string) {
 }
 
 export function fontSubset(theme: Theme): AstroIntegration {
-  const { faces } = theme.fonts.body
-  const boldStems = faces
-    .filter(({ weight }) => weight >= 600)
-    .map(({ file }) => stem(file))
-  const italicStems = faces
-    .filter(({ style }) => style === 'italic')
-    .map(({ file }) => stem(file))
+  const { body, heading, mono, dropCap } = theme.fonts
+  const shared = new Set(
+    [
+      ...heading.faces,
+      ...(mono?.faces ?? []),
+      ...(dropCap ? [dropCap] : []),
+    ].map(({ file }) => stem(file)),
+  )
+  const only = (keep: (face: (typeof body.faces)[number]) => boolean) =>
+    body.faces
+      .filter(keep)
+      .map(({ file }) => stem(file))
+      .filter((name) => !shared.has(name))
+  const boldStems = only(({ weight }) => weight >= 600)
+  const italicStems = only(({ style }) => style === 'italic')
   const prebuilt = theme.prebuilt.flatMap((directory) => [
     `${directory}/`,
     `${directory}${sep}`,
