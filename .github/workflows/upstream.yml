@@ -1,0 +1,43 @@
+name: Upstream release
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - name: Move upstream to its newest release tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git -C upstream fetch --tags --quiet
+          latest=$(git -C upstream tag --list 'v*' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+          if [ -z "$latest" ]; then exit 0; fi
+          current=$(git -C upstream rev-parse HEAD)
+          target=$(git -C upstream rev-parse "$latest^{commit}")
+          if [ "$current" = "$target" ] || ! git -C upstream merge-base --is-ancestor "$current" "$target"; then
+            exit 0
+          fi
+          branch="upstream/$latest"
+          if git ls-remote --exit-code --heads origin "$branch"; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git -C upstream checkout --quiet "$latest"
+          git add upstream
+          git commit --quiet -m "Update astro-erudite to $latest"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "Update astro-erudite to $latest" \
+            --body "Moves the upstream submodule to the release tag $latest."

@@ -21,6 +21,11 @@ const FIXED_TOKENS = [
   ['duration-fast', '200ms'],
 ]
 
+const BUNDLED_MATH = {
+  family: 'STIX Two Math',
+  file: 'STIXTwoMath-Regular.woff2',
+}
+
 const FORMATS: Record<string, string> = {
   woff2: 'woff2',
   woff: 'woff',
@@ -86,19 +91,26 @@ export function themeStylesheet(theme: Theme, file: URL, root: URL) {
       []),
     ...(features.math
       ? [
-          fontFace(
-            'STIX Two Math',
-            { file: 'STIXTwoMath-Regular.woff2', weight: 400, style: 'normal' },
-            '@/assets/fonts/STIXTwoMath-Regular.woff2',
-          ),
+          fonts.math
+            ? fontFace(fonts.math.family, {
+                file: fonts.math.file,
+                weight: 400,
+                style: 'normal',
+              })
+            : fontFace(
+                BUNDLED_MATH.family,
+                { file: BUNDLED_MATH.file, weight: 400, style: 'normal' },
+                `@/assets/fonts/${BUNDLED_MATH.file}`,
+              ),
         ]
       : []),
   ]
+  const mathFamily = fonts.math?.family ?? BUNDLED_MATH.family
   const families = [
     `--font-sans: ${stack(fonts.heading, [])};`,
     `--font-serif: ${stack(fonts.body, [])};`,
     `--font-mono: ${stack(fonts.mono, ['ui-monospace', 'monospace'])};`,
-    ...(features.math ? [`--font-math: 'STIX Two Math', math;`] : []),
+    ...(features.math ? [`--font-math: ${stackEntry(mathFamily)}, math;`] : []),
   ]
   const block = (selector: string, lines: string[]) =>
     `${selector} {\n${lines.map((line) => `  ${line}`).join('\n')}\n}`

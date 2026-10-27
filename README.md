@@ -65,21 +65,21 @@ Content goes in `src/content/<collection>/` for each section and `src/content/pa
 
 `config/theme.schema.json` describes every key; point `$schema` at it for editor completion. The build fails with the key path when a value is missing, unknown or invalid.
 
-| Key              | Contents                                                                                                                                                                                       |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `site`           | `title`, `description`, `href`, `author`, `locale`, `dir`, `postsPerPage`, `featuredPostCount`, `featured` post ids, optional `footer` text, `themeColor` and `manifest` colours.              |
-| `text`           | `recentDescription` and `searchPlaceholder`.                                                                                                                                                   |
-| `sections`       | `slug`, `label` and content `collection` for each section, in display order. `pages` is reserved.                                                                                              |
-| `navigation`     | Sidebar links: `{ "section": slug }` or `{ "href", "label" }`.                                                                                                                                 |
-| `socials`        | Footer links with an `icon` name. Icons are looked up in `src/icons/<name>.svg`, first in the site, then in the theme.                                                                         |
-| `palette`        | Named colours, emitted as `--<name>`.                                                                                                                                                          |
-| `colors`         | Values for the theme's colour tokens, either one value or `{ "light", "dark" }`. A palette name stands for `var(--<name>)`; anything else is used as CSS. Derived tokens have defaults.        |
-| `fonts`          | `directory`, `body`, `heading` and optional `mono`, each with `family`, `fallback` and `faces` (`file`, `weight`, `style`), and an optional `dropCap` face.                                    |
-| `prose`          | `fontSize` (rem), `lineHeight` (rem) and `indent` (em). The stylesheet and the typesetter both read these.                                                                                     |
-| `features`       | `typeset`, `citations`, `marginNotes`, `math`, `callouts`, `dropCap`, `search`, `externalLinkIcons`. All default to `true`; `false` removes the feature's plugins, routes, scripts and styles. |
-| `bibliographies` | Directory of `.bib` files, relative to the site root.                                                                                                                                          |
-| `prebuilt`       | Directories under `public/` holding HTML the theme should not rewrite or link-check, such as slide decks.                                                                                      |
-| `unhinted`       | Paths that get no `Link: rel=preload` early hints in the generated `_headers`.                                                                                                                 |
+| Key              | Contents                                                                                                                                                                                                                                                 |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `site`           | `title`, `description`, `href`, `author`, `locale`, `dir`, `postsPerPage`, `featuredPostCount`, `featured` post ids, optional `footer` text, `themeColor` and `manifest` colours.                                                                        |
+| `text`           | `recentDescription` and `searchPlaceholder`.                                                                                                                                                                                                             |
+| `sections`       | `slug`, `label` and content `collection` for each section, in display order. `pages` is reserved.                                                                                                                                                        |
+| `navigation`     | Sidebar links: `{ "section": slug }` or `{ "href", "label" }`.                                                                                                                                                                                           |
+| `socials`        | Footer links with an `icon` name. Icons are looked up in `src/icons/<name>.svg`, first in the site, then in the theme.                                                                                                                                   |
+| `palette`        | Named colours, emitted as `--<name>`.                                                                                                                                                                                                                    |
+| `colors`         | Values for the theme's colour tokens, either one value or `{ "light", "dark" }`. A palette name stands for `var(--<name>)`; anything else is used as CSS. Every token has a default taken from astro-erudite's greys, so `colors` can be omitted.        |
+| `fonts`          | `directory`, `body`, `heading` and optional `mono`, each with `family`, `fallback` and `faces` (`file`, `weight`, `style`), and an optional `dropCap` face, and an optional `math` font (`family`, `file`; STIX Two Math is bundled and used otherwise). |
+| `prose`          | `fontSize` (rem), `lineHeight` (rem) and `indent` (em). The stylesheet and the typesetter both read these.                                                                                                                                               |
+| `features`       | `typeset`, `citations`, `marginNotes`, `math`, `callouts`, `dropCap`, `search`, `externalLinkIcons`. All default to `true`; `false` removes the feature's plugins, routes, scripts and styles.                                                           |
+| `bibliographies` | Directory of `.bib` files, relative to the site root.                                                                                                                                                                                                    |
+| `prebuilt`       | Directories under `public/` holding HTML the theme should not rewrite or link-check, such as slide decks.                                                                                                                                                |
+| `unhinted`       | Paths that get no `Link: rel=preload` early hints in the generated `_headers`.                                                                                                                                                                           |
 
 `example/theme.json` uses every key; `example-minimal/theme.json` shows a site with different fonts and colours, one section and most features off.
 
@@ -106,35 +106,16 @@ Routes cannot be shadowed by path, so the theme registers its pages with `inject
 
 ## Updating from upstream
 
-`upstream/` is a pinned submodule of astro-erudite. Dependabot opens a pull request when upstream moves; the tests run on both example sites. After merging, the next release picks up the new files.
+`upstream/` is a submodule pinned to a commit of astro-erudite. A weekly workflow (`.github/workflows/upstream.yml`) opens a pull request when astro-erudite publishes a newer release tag that contains the pinned commit; commits to upstream's main branch are ignored. The tests run on both example sites before it can merge. After merging, the next release picks up the new files. The workflow needs _Settings → Actions → Allow GitHub Actions to create pull requests_.
 
-## Releases
+## Deploying an example
 
-Pushing a `v*` tag runs `.github/workflows/release.yml`. It flattens the tree with `node scripts/flatten.mjs`, which copies `src/`, `config/` and the licences, then traces imports from the theme's files and copies only the upstream files they reach. `--check` builds `example/` as a separate site from the flat tree and rejects the release if that fails. The workflow then commits the tree to the `release` branch.
+Both examples are complete sites. On Cloudflare Pages, connect the repository (with submodules enabled) and set:
 
-## Development
+| Setting                | Value                                                                    |
+| ---------------------- | ------------------------------------------------------------------------ |
+| Build command          | `pnpm install --frozen-lockfile && pnpm exec astro build --root example` |
+| Build output directory | `example/dist`                                                           |
+| Node version           | `NODE_VERSION` set to the version in `.node-version`                     |
 
-```sh
-git submodule update --init
-pnpm install
-pnpm dev
-```
-
-| Command                    | Does                                                           |
-| -------------------------- | -------------------------------------------------------------- |
-| `pnpm build`               | Builds both example sites.                                     |
-| `pnpm check`               | Runs `astro check` on both.                                    |
-| `pnpm test`                | Runs the Playwright suite in Chromium, Firefox and WebKit.     |
-| `pnpm knip`, `pnpm format` | Unused code and formatting.                                    |
-| `pnpm schema`              | Regenerates `config/theme.schema.json` from `config/theme.ts`. |
-| `pnpm flatten --check`     | Builds the release tree and the example from it.               |
-
-The suite has unit tests (`tests/unit/`) for the plan codec, optical margins, each markdown plugin, schema errors and the generated stylesheet, and browser tests for layout, typesetting at sixteen widths, footnotes, citations, search under the CSP, feeds, focus rings, contrast, axe on every page in light and dark, build output and visual snapshots. Specs read each example's `theme.json` and skip what its features switch off.
-
-Snapshots are taken on Linux. To update them, add the `update-snapshots` label to a pull request.
-
-Prettier does not format `.astro` files, because the Astro formatter adds whitespace inside inline elements and that whitespace renders.
-
-## Licence
-
-MIT. See `LICENSE`, `NOTICE` and `LICENSES/`.
+Use `example-minimal` for the second site. Each example's `public/_headers` carries the strict Content Security Policy the site is tested under.

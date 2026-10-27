@@ -11,6 +11,20 @@ const color = z.union([
 ])
 
 const COLOR_DEFAULTS = {
+  background: { light: '#fcfcfc', dark: '#111111' },
+  foreground: { light: '#202020', dark: '#eeeeee' },
+  primary: { light: '#202020', dark: '#eeeeee' },
+  secondary: { light: '#f0f0f0', dark: '#222222' },
+  muted: { light: '#f0f0f0', dark: '#222222' },
+  'muted-foreground': { light: '#646464', dark: '#b4b4b4' },
+  accent: { light: '#f0f0f0', dark: '#222222' },
+  border: { light: '#d9d9d9', dark: '#3a3a3a' },
+  ring: { light: '#bbbbbb', dark: '#606060' },
+  danger: { light: '#ce2c31', dark: '#ff9592' },
+  warning: { light: '#ab6400', dark: '#ffca16' },
+  'surface-hover': { light: '#f9f9f9', dark: '#191919' },
+  highlight: 'color-mix(in oklab, var(--warning) 25%, var(--background))',
+  flourish: { light: '#8d8d8d', dark: '#6e6e6e' },
   'secondary-foreground': 'var(--foreground)',
   'accent-foreground': 'var(--foreground)',
   'primary-foreground': 'var(--background)',
@@ -79,16 +93,16 @@ export const COLOR_TOKENS = [
   'flourish',
 ] as const
 
-const colors = z.strictObject(
-  Object.fromEntries(
-    COLOR_TOKENS.map((token) => [
-      token,
-      token in COLOR_DEFAULTS
-        ? color.default(COLOR_DEFAULTS[token as keyof typeof COLOR_DEFAULTS])
-        : color,
-    ]),
-  ) as Record<(typeof COLOR_TOKENS)[number], typeof color>,
-)
+const colors = z
+  .strictObject(
+    Object.fromEntries(
+      COLOR_TOKENS.map((token) => [
+        token,
+        color.default(COLOR_DEFAULTS[token]),
+      ]),
+    ) as Record<(typeof COLOR_TOKENS)[number], z.ZodDefault<typeof color>>,
+  )
+  .prefault({})
 
 const fileName = z.string().regex(/^[^/\\]+\.(?:woff2|woff|ttf|otf)$/)
 
@@ -128,6 +142,7 @@ const fonts = z.strictObject({
     'Courier New',
     'monospace',
   ]).optional(),
+  math: z.strictObject({ family: nonEmpty, file: fileName }).optional(),
   dropCap: face
     .extend({ family: nonEmpty, size: remLength.default('5.9rem') })
     .optional(),

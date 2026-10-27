@@ -230,9 +230,14 @@
       }
     },
     "colors": {
+      "default": {},
       "type": "object",
       "properties": {
         "background": {
+          "default": {
+            "light": "#fcfcfc",
+            "dark": "#111111"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -259,6 +264,10 @@
           ]
         },
         "foreground": {
+          "default": {
+            "light": "#202020",
+            "dark": "#eeeeee"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -285,6 +294,10 @@
           ]
         },
         "primary": {
+          "default": {
+            "light": "#202020",
+            "dark": "#eeeeee"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -311,6 +324,10 @@
           ]
         },
         "secondary": {
+          "default": {
+            "light": "#f0f0f0",
+            "dark": "#222222"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -364,6 +381,10 @@
           ]
         },
         "muted": {
+          "default": {
+            "light": "#f0f0f0",
+            "dark": "#222222"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -390,6 +411,10 @@
           ]
         },
         "muted-foreground": {
+          "default": {
+            "light": "#646464",
+            "dark": "#b4b4b4"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -416,6 +441,10 @@
           ]
         },
         "accent": {
+          "default": {
+            "light": "#f0f0f0",
+            "dark": "#222222"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -469,6 +498,10 @@
           ]
         },
         "border": {
+          "default": {
+            "light": "#d9d9d9",
+            "dark": "#3a3a3a"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -495,6 +528,10 @@
           ]
         },
         "ring": {
+          "default": {
+            "light": "#bbbbbb",
+            "dark": "#606060"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -575,6 +612,10 @@
           ]
         },
         "danger": {
+          "default": {
+            "light": "#ce2c31",
+            "dark": "#ff9592"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -655,6 +696,10 @@
           ]
         },
         "warning": {
+          "default": {
+            "light": "#ab6400",
+            "dark": "#ffca16"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -681,6 +726,10 @@
           ]
         },
         "surface-hover": {
+          "default": {
+            "light": "#f9f9f9",
+            "dark": "#191919"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -788,6 +837,7 @@
           ]
         },
         "highlight": {
+          "default": "color-mix(in oklab, var(--warning) 25%, var(--background))",
           "anyOf": [
             {
               "type": "string",
@@ -1045,6 +1095,10 @@
           ]
         },
         "flourish": {
+          "default": {
+            "light": "#8d8d8d",
+            "dark": "#6e6e6e"
+          },
           "anyOf": [
             {
               "type": "string",
@@ -1071,22 +1125,6 @@
           ]
         }
       },
-      "required": [
-        "background",
-        "foreground",
-        "primary",
-        "secondary",
-        "muted",
-        "muted-foreground",
-        "accent",
-        "border",
-        "ring",
-        "danger",
-        "warning",
-        "surface-hover",
-        "highlight",
-        "flourish"
-      ],
       "additionalProperties": false
     },
     "fonts": {
@@ -1284,6 +1322,24 @@
           ],
           "additionalProperties": false
         },
+        "math": {
+          "type": "object",
+          "properties": {
+            "family": {
+              "type": "string",
+              "minLength": 1
+            },
+            "file": {
+              "type": "string",
+              "pattern": "^[^/\\\\]+\\.(?:woff2|woff|ttf|otf)$"
+            }
+          },
+          "required": [
+            "family",
+            "file"
+          ],
+          "additionalProperties": false
+        },
         "dropCap": {
           "type": "object",
           "properties": {
@@ -1432,7 +1488,6 @@
     "site",
     "sections",
     "navigation",
-    "colors",
     "fonts"
   ],
   "additionalProperties": false

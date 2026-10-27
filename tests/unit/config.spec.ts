@@ -36,8 +36,21 @@ test.describe('schema', () => {
   })
 
   test('missing values name the key', () => {
-    const { background: _, ...colors } = example.colors
-    expect(failure({ ...example, colors })).toContain('colors.background')
+    const { title: _, ...site } = example.site
+    expect(failure({ ...example, site })).toContain('site.title')
+  })
+
+  test('colours default to the astro-erudite palette', () => {
+    const { palette: _, colors: __, ...bare } = example
+    const theme = parseTheme(bare)
+    expect(theme.colors.background).toEqual({
+      light: '#fcfcfc',
+      dark: '#111111',
+    })
+    expect(theme.colors.foreground).toEqual({
+      light: '#202020',
+      dark: '#eeeeee',
+    })
   })
 
   test('navigation must name a configured section', () => {
@@ -79,6 +92,22 @@ test.describe('generated stylesheet', () => {
     expect(css).toContain("--font-serif: 'Source Serif 4', ui-serif,")
     expect(css).toContain("--font-mono: 'JetBrains Mono', ui-monospace,")
     expect(css).toContain('STIXTwoMath-Regular.woff2')
+    expect(css).toContain("--font-math: 'STIX Two Math', math;")
+  })
+
+  test('the math font can be swapped', () => {
+    const swapped = parseTheme({
+      ...example,
+      fonts: {
+        ...example.fonts,
+        math: { family: 'Latin Modern Math', file: 'latinmodern-math.woff2' },
+      },
+    })
+    const output = themeStylesheet(swapped, file, root)
+    expect(output).toContain("font-family: 'Latin Modern Math';")
+    expect(output).toContain('latinmodern-math.woff2')
+    expect(output).toContain("--font-math: 'Latin Modern Math', math;")
+    expect(output).not.toContain('STIXTwoMath')
   })
 
   test('disabled features and missing faces leave no rules behind', () => {
