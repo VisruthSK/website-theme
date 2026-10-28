@@ -213,7 +213,7 @@ export async function themeConfig(
         hastPlugins: [
           externalLinks(theme.site.href, features.externalLinkIcons),
           headingAnchors,
-          opening(features.dropCap),
+          opening(features.dropCap, theme.prose.dropCapMinWords),
           footnotes(features.marginNotes),
           code,
         ],

@@ -23,7 +23,6 @@ const wordCount = (node: Node) =>
 const OPENING_PATTERN = /^(\S)(\S*)(\s+)(\S+)([\s\S]*)$/
 const MARKER_PATTERN = /^\{dropcap\}\s*/i
 const MIN_BODY_CHARS = 120
-const MIN_POST_WORDS = 500
 
 const blocks = (root: Root): Element[] =>
   root.children.filter((child): child is Element => child.type === 'element')
@@ -52,7 +51,7 @@ const leadingText = (paragraph: Element): Text | undefined => {
   return first?.type === 'text' ? first : undefined
 }
 
-export const opening = (dropCaps: boolean) =>
+export const opening = (dropCaps: boolean, minWords = 500) =>
   defineHastPlugin({
     name: 'opening',
     before(root, ctx) {
@@ -102,7 +101,7 @@ export const opening = (dropCaps: boolean) =>
         return
       }
 
-      if (dropcap !== true && wordCount(root) < MIN_POST_WORDS) return
+      if (dropcap !== true && wordCount(root) < minWords) return
 
       const body = end === -1 ? all : all.slice(end + 1)
       const paragraph = body.find(

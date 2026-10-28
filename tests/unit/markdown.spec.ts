@@ -139,6 +139,12 @@ test.describe('opening', () => {
     expect(html).toContain('<span class="opening-words">ord0 word1</span>')
   })
 
+  test('the word cutoff is configurable', () => {
+    expect(render(long(100), { hastPlugins: [opening(true, 50)] })).toContain(
+      'drop-cap',
+    )
+  })
+
   test('short posts, dropcap: false and the switch leave it out', () => {
     expect(render(long(100), { hastPlugins: [opening(true)] })).not.toContain(
       'drop-cap',

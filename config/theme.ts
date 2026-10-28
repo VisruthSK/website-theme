@@ -216,12 +216,9 @@ export const themeSchema = z
         fontSize: remLength.default('1.125rem'),
         lineHeight: remLength.default('1.75rem'),
         indent: emLength.default('1.35em'),
+        dropCapMinWords: z.int().nonnegative().default(500),
       })
-      .default({
-        fontSize: '1.125rem',
-        lineHeight: '1.75rem',
-        indent: '1.35em',
-      }),
+      .prefault({}),
     features: features.default({
       typeset: true,
       citations: true,
