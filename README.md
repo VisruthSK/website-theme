@@ -89,10 +89,10 @@ updates:
   - package-ecosystem: gitsubmodule
     directory: /
     schedule:
-      interval: monthly
+      interval: weekly
 ```
 
-Each pull request moves `theme/` to the latest release, and the site's own tests run on it before it merges.
+A pull request opens only when there is a new release and moves `theme/` to the latest release, and the site's own tests run on it before it merges.
 
 ## theme.json
 
@@ -176,4 +176,4 @@ pnpm dev
 
 ### Updating astro-erudite
 
-`astro-erudite/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it once a month. Since February 2026 it prefers the newest semver-tagged release on the tracked branch over newer untagged commits, so pull requests normally move to a release. Pull requests run the full test suite on both example sites.
+`astro-erudite/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it every week and opens a pull request only when astro-erudite has moved; it cannot be triggered by an upstream release, so weekly is the shortest sensible interval. Since February 2026 it prefers the newest semver-tagged release over newer untagged commits, so pull requests normally move to a release. Pull requests run the full test suite on both example sites.
