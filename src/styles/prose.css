@@ -126,7 +126,7 @@ prose-content {
 
 @feature callouts {
   prose-content [data-callout] > summary > span > span {
-    opacity: 0.85;
+    opacity: 1;
   }
 }
 
