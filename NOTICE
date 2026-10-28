@@ -12,3 +12,6 @@ which is from Simple Icons (CC0 1.0).
 
 The fonts in examples/ are under the SIL Open Font License 1.1. Each licence
 sits next to its font files.
+
+The math font STIX Two Math, bundled from astro-erudite and used unless a site
+sets fonts.math, is under the SIL Open Font License 1.1 (LICENSES/OFL-STIXTwoMath).
