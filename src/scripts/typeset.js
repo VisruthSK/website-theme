@@ -16,7 +16,7 @@ const STEPS = 5
 const STEP = 0.01
 const EPSILON = 0.0005
 const TOLERANCE = 0.5
-const CAP_TOLERANCE = 0.75
+const CAP_TOLERANCE = 3
 
 const decode = (data) => {
   const [head, ...rest] = data.split(';')
