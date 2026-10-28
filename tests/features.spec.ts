@@ -9,7 +9,7 @@ const traces = {
   math: [/STIXTwoMath/, /math-display\{/],
   callouts: [/data-callout/],
   dropCap: [/class="drop-cap"/, /\.drop-cap[{,\s]/],
-  search: [/\/pagefind\//, /name="pagefind:/],
+  search: [/pagefind\/pagefind/, /name="pagefind:/],
   externalLinkIcons: [/external-link-icon/],
 }
 

@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test'
 import { typesetConstants } from '../src/lib/typeset/constants.ts'
 import { decodePlan } from '../src/lib/typeset/encode.ts'
-import { expect, test } from './sites.ts'
+import { expect, test, isolatedPage } from './sites.ts'
 
 const TABLET = 600
 const viewports = [
@@ -334,12 +334,10 @@ test('typeset paragraphs keep their planned height at fractional scales', async 
 }) => {
   test.setTimeout(180_000)
   for (const deviceScaleFactor of [1.25, 1.5, 2]) {
-    const context = await browser.newContext({
+    const { context, page } = await isolatedPage(browser, site, {
       deviceScaleFactor,
       viewport: { width: 1600, height: 900 },
-      baseURL: `http://127.0.0.1:${site.port}`,
     })
-    const page = await context.newPage()
     for (const route of site.typeset) {
       await open(page, route)
       await settled(page)

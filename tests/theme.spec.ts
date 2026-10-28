@@ -1,4 +1,4 @@
-import { expect, sectionHref, test } from './sites.ts'
+import { expect, sectionHref, test, isolatedPage } from './sites.ts'
 
 const modes = ['light', 'dark'] as const
 
@@ -65,12 +65,10 @@ for (const stored of modes) {
     browser,
     site,
   }) => {
-    const context = await browser.newContext({
+    const { context, page } = await isolatedPage(browser, site, {
       javaScriptEnabled: false,
       colorScheme: stored,
-      baseURL: `http://127.0.0.1:${site.port}`,
     })
-    const page = await context.newPage()
     await page.goto('/')
     const background = () =>
       page

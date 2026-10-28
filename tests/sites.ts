@@ -1,4 +1,10 @@
-import { test as base, expect, type Page } from '@playwright/test'
+import {
+  test as base,
+  expect,
+  type Browser,
+  type BrowserContextOptions,
+  type Page,
+} from '@playwright/test'
 import { readFileSync } from 'node:fs'
 import { parseTheme, type Theme } from '../config/theme.ts'
 import { headersFor } from '../src/lib/local-headers.ts'
@@ -69,23 +75,39 @@ export const SITES = {
 
 export type SiteName = keyof typeof SITES
 
-export const baseOf = (site: Site) =>
+export const baseOf = (site: Pick<Site, 'theme'>) =>
   new URL(site.theme.site.href).pathname.replace(/[/]$/, '')
+
+const prefixed = (page: Page, site: Site) => {
+  const goto = page.goto.bind(page)
+  page.goto = (url, options) =>
+    goto(
+      url.startsWith('/') && !url.startsWith(`${baseOf(site)}/`)
+        ? `${baseOf(site)}${url}`
+        : url,
+      options,
+    )
+  return page
+}
+
+export async function isolatedPage(
+  browser: Browser,
+  site: Site,
+  options: BrowserContextOptions = {},
+) {
+  const context = await browser.newContext({
+    ...options,
+    baseURL: `http://127.0.0.1:${site.port}`,
+  })
+  return { context, page: prefixed(await context.newPage(), site) }
+}
 
 export const test = base.extend<{ site: Site }>({
   site: async ({}, use, testInfo) => {
     await use(SITES[testInfo.project.metadata.site as SiteName] as Site)
   },
   page: async ({ page, site }, use) => {
-    const goto = page.goto.bind(page)
-    page.goto = (url, options) =>
-      goto(
-        url.startsWith('/') && !`${url}`.startsWith(`${baseOf(site)}/`)
-          ? `${baseOf(site)}${url}`
-          : url,
-        options,
-      )
-    await use(page)
+    await use(prefixed(page, site))
   },
 })
 
