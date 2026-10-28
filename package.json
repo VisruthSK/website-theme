@@ -1,5 +1,7 @@
 {
   "name": "website-theme",
+  "description": "An Astro 7 theme for long-form writing, built on astro-erudite.",
+  "license": "MIT",
   "type": "module",
   "private": true,
   "scripts": {

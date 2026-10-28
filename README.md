@@ -1,8 +1,8 @@
 # website-theme
 
-A hard fork of [astro-erudite](https://github.com/jktrn/astro-erudite) by enscribe, kept as an overlay on top of it. This project is not affiliated with or endorsed by the author of astro-erudite.
+An Astro 7 theme for long-form writing, built on [astro-erudite](https://github.com/jktrn/astro-erudite) by enscribe. It keeps astro-erudite as a git submodule and overlays it: a file here replaces the astro-erudite file at the same path, and nothing inside astro-erudite is edited, so its new releases can be pulled in. It is not affiliated with or endorsed by the author of astro-erudite.
 
-The theme is an Astro 7 blog layout for long-form writing. It adds:
+On top of astro-erudite it adds:
 
 - Paragraphs broken into lines at build time and applied by a small script, with optical margins measured from the configured fonts.
 - Footnotes as margin notes on wide screens, and Pandoc-style citations resolved against BibTeX files.
@@ -111,23 +111,24 @@ Routes cannot be shadowed by path, so the theme registers its pages with `inject
 
 `astro-erudite/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it once a month. Since February 2026 it prefers the newest semver-tagged release on the tracked branch over newer untagged commits, so pull requests normally move to a release. Pull requests run the full test suite on both example sites.
 
-## Deploying an example
+## Stylesheets
 
-Both examples are complete sites. On Cloudflare Pages, connect the repository (with submodules enabled) and set:
+Every page links one shared `base` stylesheet, identical across the site and cached once. Pages with an article add an `article` sheet (prose, callouts, tables, footnotes, citations), pages with maths add `math`, and the search page adds `search`. A page also links the small stylesheets of its own route. The build decides this from each page's final HTML (`src/lib/page-styles.ts`), keeping the cascade order of the source, and disabled features contribute no CSS at all.
 
-| Setting                | Value                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------ |
-| Build command          | `pnpm install --frozen-lockfile && pnpm exec astro build --root examples/full` |
-| Build output directory | `examples/full/dist`                                                           |
-| Node version           | `NODE_VERSION` set to the version in `.node-version`                           |
+Inside a theme stylesheet, `@feature name { … }` keeps its rules only while the feature is on, and `@when name { … }` moves them into one of those sheets.
 
-Use `examples/minimal` for the second site. Each example's `public/_headers` carries the strict Content Security Policy the site is tested under.
+## Sub-paths
+
+The base path comes from `site.href`: `https://user.github.io/blog/` makes Astro's `base` `/blog`, and links, assets, feeds, the manifest, the sitemap and search results all follow it. Links written in content, such as `[About](/about/)`, gain the prefix too.
+
+## Deploying
+
+Both examples are complete sites. `public/_headers` in each carries the strict Content Security Policy the site is tested under, for hosts that read that file.
 
 ### GitHub Pages
 
 `.github/workflows/pages.yml` builds `examples/full` and publishes it. Set _Settings → Pages → Source_ to _GitHub Actions_ and run the workflow.
 
-- Pages serves a site from the root of a domain, and the theme links to `/essays/`, `/tags/` and so on, so the site has to live at `https://<user>.github.io/` or a custom domain, not under a project path such as `/website-theme/`.
-- Set `site.href` in `examples/full/theme.json` to that address before publishing. Feeds, the sitemap and canonical links use it.
-- Pages cannot send response headers, so `public/_headers` has no effect there. Cloudflare Pages applies it.
+- `site.href` in `examples/full/theme.json` is the published address, `https://visruthsk.github.io/website-theme/`; change it if the repository moves.
+- Pages cannot send response headers, so the Content Security Policy in `public/_headers` does not apply there.
 - Pages from a private repository needs a paid GitHub plan.

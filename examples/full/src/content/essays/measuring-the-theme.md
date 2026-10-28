@@ -6,11 +6,11 @@ tags: ['performance', 'accessibility', 'typography']
 bib: example
 ---
 
-This theme is a hard fork of astro-erudite, so the first question anyone should ask is what the fork costs. It adds a build-time line breaker, margin notes and citations on top of what astro-erudite already does. If those additions made pages heavier or harder to use, they would not be worth having. This essay measures that by building the same post with both and comparing what a browser has to download, how quickly it paints and what an automated audit finds.[^scope]
+This theme is built on astro-erudite, so the first question anyone should ask is what building on it costs. It adds a build-time line breaker, margin notes and citations on top of what astro-erudite already does. If those additions made pages heavier or harder to use, they would not be worth having. This essay measures that by building the same post with both and comparing what a browser has to download, how quickly it paints and what an automated audit finds.[^scope]
 
 ## Method
 
-Both sites were built from their own repositories with `astro build`, using Astro 7.4. The post you are reading was copied into astro-erudite unchanged apart from its front matter and its citations, which astro-erudite does not support. Each build was then served from a small static server that compresses responses with Brotli, as a host such as Cloudflare Pages does.
+Both sites were built from their own repositories with `astro build`, using Astro 7.4. The post you are reading was copied into astro-erudite unchanged apart from its front matter and its citations, which astro-erudite does not support. Each build was then served from a small static server that compresses responses with Brotli, as most static hosts do.
 
 - Lighthouse 13.5.0 audited each page on its default mobile profile.
 - Each page was audited 5 times and the median of each score is reported.

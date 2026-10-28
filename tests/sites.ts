@@ -79,7 +79,12 @@ export const test = base.extend<{ site: Site }>({
   page: async ({ page, site }, use) => {
     const goto = page.goto.bind(page)
     page.goto = (url, options) =>
-      goto(url.startsWith('/') ? `${baseOf(site)}${url}` : url, options)
+      goto(
+        url.startsWith('/') && !`${url}`.startsWith(`${baseOf(site)}/`)
+          ? `${baseOf(site)}${url}`
+          : url,
+        options,
+      )
     await use(page)
   },
 })

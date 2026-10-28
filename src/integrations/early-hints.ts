@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Theme } from '../../config/theme'
 export const TYPESET_SCRIPT =
-  /<script[^>]*\ssrc="?(\/_astro\/typeset\.[^"\s>]+\.js)/
+  /<script[^>]*\ssrc="?([^"\s>]*\/_astro\/typeset\.[^"\s>]+\.js)/
 
 function attribute(tag: string, name: string) {
   return new RegExp(`\\s${name}=(?:"([^"]*)"|([^\\s>]+))`)

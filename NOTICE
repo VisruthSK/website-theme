@@ -1,6 +1,7 @@
-website-theme is a hard fork of astro-erudite (https://github.com/jktrn/astro-erudite),
+website-theme is built on astro-erudite (https://github.com/jktrn/astro-erudite),
 Copyright (c) 2026 enscribe, used under the MIT License in LICENSES/astro-erudite-MIT.
-It is not affiliated with or endorsed by the author of astro-erudite.
+It uses astro-erudite as a git submodule and is not affiliated with or endorsed
+by the author of astro-erudite.
 
 src/lib/typeset/optical.ts ports the optical margin measurement of Justif
 (https://github.com/lyallcooper/justif), Copyright (c) 2026 Lyall Cooper, MIT

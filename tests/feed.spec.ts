@@ -1,4 +1,4 @@
-import { expect, test } from './sites.ts'
+import { baseOf, expect, test } from './sites.ts'
 
 test('every feed is valid and points at the configured host', async ({
   request,
@@ -11,7 +11,7 @@ test('every feed is valid and points at the configured host', async ({
     `${site.tag}rss.xml`,
   ]
   for (const path of paths) {
-    const response = await request.get(path)
+    const response = await request.get(`${baseOf(site)}${path}`)
     expect(response.ok(), path).toBeTruthy()
     expect(response.headers()['content-type']).toContain('xml')
     const body = await response.text()
