@@ -43,7 +43,7 @@ test.describe('search', () => {
       /margin/i,
     )
 
-    await search(page, 'the')
+    await search(page, 'lorem')
     const first = page.locator('[data-title]').first()
     const before = await first.textContent()
     await page.getByRole('button', { name: 'Go to page 2' }).click()
@@ -57,7 +57,7 @@ test.describe('search', () => {
     site,
   }) => {
     await open(page, site)
-    await search(page, 'placeholder text written for testing')
+    await search(page, 'lorem ipsum filler text for testing')
     const about = page.locator('.search-result__card').filter({
       has: page.locator('[data-title]', { hasText: 'About' }),
     })

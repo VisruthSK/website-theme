@@ -37,7 +37,6 @@ export const SITES = {
     typeset: [
       '/essays/margins/',
       '/essays/rivers/',
-      '/essays/lighthouses/',
       '/essays/bread/',
       '/essays/bread/starter/',
       '/essays/bread/baking/',
@@ -46,7 +45,7 @@ export const SITES = {
     citations: '/essays/rivers/',
     series: '/essays/bread/',
     code: '/notes/shell-loop/',
-    tag: '/tags/garden/',
+    tag: '/tags/lorem/',
     visual: [
       '/',
       '/essays/',
@@ -62,13 +61,9 @@ export const SITES = {
     dir: 'examples/minimal',
     port: 4322,
     theme: load('examples/minimal'),
-    typeset: [
-      '/journal/coastal-path/',
-      '/journal/winter-light/',
-      '/journal/repairs/',
-    ],
+    typeset: ['/journal/coastal-path/', '/journal/winter-light/'],
     footnotes: '/journal/winter-light/',
-    tag: '/tags/walking/',
+    tag: '/tags/lorem/',
     visual: ['/', '/journal/', '/journal/coastal-path/'],
   },
 } satisfies Record<string, Omit<Site, 'name'> & { name: string }>

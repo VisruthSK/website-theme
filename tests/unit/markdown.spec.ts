@@ -33,30 +33,27 @@ const numbers = (html: string) =>
 
 test.describe('citations', () => {
   test('@key renders a numbered link with a preview', () => {
-    const html = cited('As measured by @placeholder2019.')
+    const html = cited('As measured by @knuth1981.')
+    expect(html).toContain('<span class="citation">[<a href="#ref-knuth1981"')
     expect(html).toContain(
-      '<span class="citation">[<a href="#ref-placeholder2019"',
-    )
-    expect(html).toContain(
-      'data-citation-preview="Placeholder, Ada &amp; Sample, Ben (2019).',
+      'data-citation-preview="Knuth, Donald E. &amp; Plass, Michael F. (1981).',
     )
     expect(numbers(html)).toEqual(['1'])
   })
 
   test('groups keep citation order and stable numbers', () => {
+    expect(numbers(cited('Both [@knuth1984; @knuth1981] agree.'))).toEqual([
+      '1',
+      '2',
+    ])
     expect(
-      numbers(cited('Both [@sample2021; @placeholder2019] agree.')),
-    ).toEqual(['1', '2'])
-    expect(
-      numbers(
-        cited('First @sample2021, then @example2020, again [@sample2021].'),
-      ),
+      numbers(cited('First @knuth1984, then @cicero1914, again [@knuth1984].')),
     ).toEqual(['1', '2', '1'])
   })
 
   test('prefixes, locators and suppressed authors are kept', () => {
-    const html = cited('See [see @sample2021, p. 14; -@example2020].')
-    expect(html).toContain('see <a href="#ref-sample2021"')
+    const html = cited('See [see @knuth1984, p. 14; -@cicero1914].')
+    expect(html).toContain('see <a href="#ref-knuth1984"')
     expect(html).toContain('</a>, p. 14')
     expect(numbers(html)).toEqual(['1', '2'])
   })
@@ -68,7 +65,7 @@ test.describe('citations', () => {
 
   test('posts without a bibliography are untouched', () => {
     expect(
-      render('As @placeholder2019 says.', { mdastPlugins: [citations] }),
+      render('As @knuth1981 says.', { mdastPlugins: [citations] }),
     ).not.toContain('citation')
   })
 

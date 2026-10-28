@@ -1,17 +1,19 @@
 ---
-title: 'Renaming Files in a Loop'
+title: 'Code Blocks'
 date: 2024-12-05
-description: 'A small shell loop that saved an afternoon.'
+description: 'A fenced code block and inline code, with lorem ipsum filler.'
 tags: ['code']
 ---
 
-I had a folder of scanned pages named `scan 1.png`, `scan 2.png` and so on, and wanted them numbered with leading zeros so that they would sort properly. A short loop did it:
+THIS CONTENT IS ENTIRELY LLM WRITTEN
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. A fenced block gets syntax highlighting, and `inline code` stays in the line:
 
 ```bash
-for file in scan*.png; do
+for file in lorem*.txt; do
   number=${file//[^0-9]/}
-  mv "$file" "$(printf 'page-%03d.png' "$number")"
+  mv "$file" "$(printf 'ipsum-%03d.txt' "$number")"
 done
 ```
 
-The `${file//[^0-9]/}` expansion strips everything that is not a digit, and `printf` pads the result. Run it once with `echo` in front of `mv` to check the names before committing to them.
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.

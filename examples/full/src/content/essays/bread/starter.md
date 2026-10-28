@@ -1,23 +1,46 @@
 ---
-title: 'Keeping a Starter'
+title: 'Lorem Ipsum, Part Two'
 date: 2024-07-15
-description: 'Notes on feeding, neglecting and reviving a sourdough starter.'
-tags: ['food']
+description: 'The second part of a series, with lorem ipsum filler.'
+tags: ['lorem', 'series']
 ---
 
-A sourdough starter is a jar of flour and water that has been colonised by wild yeast and bacteria. Feed it regularly and it rises and falls like a slow tide, smelling faintly of apples and vinegar; neglect it and it collapses into a grey paste with a layer of dark liquid on top. Surprisingly, both states are recoverable, and most of the anxiety around starters comes from not knowing that.
+THIS CONTENT IS ENTIRELY LLM WRITTEN
 
-My starter began with equal weights of wholemeal flour and water, stirred twice a day for about a week. For the first few days nothing much happened, then a burst of bubbles appeared that turned out to be the wrong organisms getting a head start, then the jar went quiet again, and finally, around day seven, a steady rhythm set in. After that the starter doubled in size every few hours after feeding, which is the sign that it is ready to raise bread.
+Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
 
-Feeding is mostly arithmetic. Keep a small amount of the old starter, add fresh flour and water, and wait. The ratio between old and new controls how quickly the jar peaks: a spoonful of starter with a lot of fresh flour takes many hours, while a large amount of starter with a little flour peaks quickly. Adjusting that ratio is the easiest way to fit the starter around a working day instead of the other way round.
+## Consectetur adipiscing
 
-The real lesson came in August, when I went away for two weeks and left the jar at the back of the fridge without feeding it. On my return it looked dead: flat, sour, topped with liquid. I poured off the liquid, kept a spoonful from the bottom, and fed it as if nothing had happened. Two days later it was rising as strongly as before. Starters are far hardier than their reputation suggests, and a missed feeding is an inconvenience, not a catastrophe.
+Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat.
 
-If there is a rule worth keeping, it is this: watch the starter, not the clock. Recipes give times, but a warm kitchen speeds everything up and a cold one slows it down, and the jar itself will tell you when it is ready.
+Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. Nam nulla quam, gravida non, commodo a, sodales sit amet, nisi.
 
-There are many theories about what makes one starter better than another, and most of them are folklore. Flour from a particular mill, water from a particular spring, a starter inherited from a grandmother or a famous bakery: none of these seem to matter much after a few weeks, because the organisms that thrive in the jar are the ones suited to the conditions you give them. Your starter becomes a record of your kitchen, not of its origins.
+## Sed do eiusmod
 
-What does matter is consistency. A starter fed at the same times with the same flour settles into a predictable rhythm, and a predictable starter makes predictable bread. Most of the problems I had in the first few months came from changing two things at once and then not knowing which change had caused the result.
+Pellentesque fermentum dolor. Aliquam quam lectus, facilisis auctor, ultrices ut, elementum vulputate, nunc. Sed adipiscing ornare risus. Morbi est est, blandit sit amet, sagittis vel, euismod vel, velit. Pellentesque egestas sem. Suspendisse commodo ullamcorper magna.
 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-A note for anyone attempting the same: write down what you did while you are doing it, not afterwards. Memory is generous to the parts that went well and quietly forgets the rest, and the forgotten parts are usually the ones worth learning from.
+## Nam libero tempore
+
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+
+Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.
+
+Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+
+## Itaque earum rerum
+
+Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat.
+
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+
+Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?
+
+## Ut enim ad minima
+
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+
+Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.
+
+Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
