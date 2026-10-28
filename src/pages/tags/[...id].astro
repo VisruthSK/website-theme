@@ -1,4 +1,5 @@
 ---
+import { withBase } from '@/lib/base'
 import EntryCard from '@/components/EntryCard.astro'
 import MetaPage from '@/components/MetaPage.astro'
 import { SECTIONS, SECTION_SLUGS, SITE } from '@/consts'
@@ -25,7 +26,7 @@ export async function getStaticPaths() {
 }
 
 const { tag, posts } = Astro.props
-const feedHref = `/tags/${encodeURIComponent(tag)}/rss.xml`
+const feedHref = withBase(`/tags/${encodeURIComponent(tag)}/rss.xml`)
 ---
 
 <Layout
@@ -42,7 +43,7 @@ const feedHref = `/tags/${encodeURIComponent(tag)}/rss.xml`
     rel="alternate"
     type="application/rss+xml"
     title={`RSS feed for #${tag}`}
-    href={`${SITE.href.replace(/\/$/, '')}${feedHref}`}
+    href={new URL(feedHref, SITE.href).href}
   />
 
   <page-heading>

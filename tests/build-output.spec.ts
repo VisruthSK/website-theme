@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { PAGE_MARKERS } from '../src/lib/page-styles.ts'
-import { expect, test, type Site } from './sites.ts'
+import { baseOf, expect, test, type Site } from './sites.ts'
 
 const distOf = (site: Site) => join(process.cwd(), site.dir, 'dist')
 
@@ -41,7 +41,7 @@ test('stylesheets carry only the rules each page uses', ({ site }) => {
   for (const file of pages(site)) {
     const html = readFileSync(file, 'utf8')
     const linked = [
-      ...html.matchAll(/rel="stylesheet" href="\/_astro\/([^"]+)"/g),
+      ...html.matchAll(/rel="stylesheet" href="[^"]*\/_astro\/([^"]+)"/g),
     ].map(([, name]) => name)
     expect(linked.length, file).toBeGreaterThan(0)
     expect(
@@ -108,9 +108,13 @@ test('every internal link and anchor resolves', ({ site }) => {
     }
     return ids.get(file)!
   }
+  const root = baseOf(site)
   const target = (from: string, path: string) => {
+    if (path.startsWith('/') && root && !`${path}/`.startsWith(`${root}/`)) {
+      return undefined
+    }
     const base = path.startsWith('/')
-      ? join(dist, decodeURI(path))
+      ? join(dist, decodeURI(path.slice(root.length)))
       : join(dirname(from), decodeURI(path))
     return [base, `${base}.html`, join(base, 'index.html')].find(
       (candidate) => existsSync(candidate) && statSync(candidate).isFile(),

@@ -1,4 +1,5 @@
 ---
+import { withBase } from '@/lib/base'
 import EntryCard from '@/components/EntryCard.astro'
 import MetaPage from '@/components/MetaPage.astro'
 import { FEATURED_POST_IDS, SITE } from '@/consts'
@@ -45,7 +46,7 @@ const recentPosts = (await getSectionPostsChrono())
       ))}
     </ul>
     <p>
-      <a href="/recent">View all posts →</a>
+      <a href={withBase('/recent')}>View all posts →</a>
     </p>
   </entry-group>
 </Layout>

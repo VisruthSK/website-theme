@@ -69,9 +69,18 @@ export const SITES = {
 
 export type SiteName = keyof typeof SITES
 
+export const baseOf = (site: Site) =>
+  new URL(site.theme.site.href).pathname.replace(/[/]$/, '')
+
 export const test = base.extend<{ site: Site }>({
   site: async ({}, use, testInfo) => {
     await use(SITES[testInfo.project.metadata.site as SiteName] as Site)
+  },
+  page: async ({ page, site }, use) => {
+    const goto = page.goto.bind(page)
+    page.goto = (url, options) =>
+      goto(url.startsWith('/') ? `${baseOf(site)}${url}` : url, options)
+    await use(page)
   },
 })
 
@@ -85,9 +94,9 @@ export async function enforceCsp(page: Page, site: Site) {
   await page.route('**/*', async (route) => {
     const request = route.request()
     if (request.resourceType() !== 'document') return route.continue()
-    const policy = headersForPath(new URL(request.url()).pathname)[
-      'Content-Security-Policy'
-    ]
+    const policy = headersForPath(
+      new URL(request.url()).pathname.slice(baseOf(site).length) || '/',
+    )['Content-Security-Policy']
     if (!policy) return route.continue()
     const response = await route.fetch()
     await route.fulfill({

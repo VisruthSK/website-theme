@@ -1,4 +1,5 @@
 ---
+import { withBase } from '@/lib/base'
 import MetaPage from '@/components/MetaPage.astro'
 import { SECTIONS, SECTION_SLUGS } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
@@ -15,7 +16,7 @@ const sortedTags = await getSortedTags(
   <div class="chip-list">
     {
       sortedTags.map(({ tag, count }) => (
-        <a href={`/tags/${encodeURIComponent(tag)}`} class="chip">
+        <a href={withBase(`/tags/${encodeURIComponent(tag)}`)} class="chip">
           #{tag}
           <span>({count})</span>
         </a>

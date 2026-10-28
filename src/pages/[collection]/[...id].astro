@@ -1,4 +1,5 @@
 ---
+import { withBase } from '@/lib/base'
 import Bibliography from '@/components/Bibliography.astro'
 import PostMeta from '@/components/PostMeta.astro'
 import PagefindMeta from '@/components/PagefindMeta.astro'
@@ -176,7 +177,7 @@ const showCombined =
         <post-tags data-pagefind-ignore>
           {displayTags.map((tag) => (
             <a
-              href={canonicalizePathSegments('/tags', encodeURIComponent(tag))}
+              href={canonicalizePathSegments(withBase('/tags'), encodeURIComponent(tag))}
               class:list={['chip', tag === 'draft' && 'chip-draft']}
             >
               #{tag}

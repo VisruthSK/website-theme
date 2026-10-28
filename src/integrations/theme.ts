@@ -8,6 +8,7 @@ import { satteriValidateLinks } from 'satteri-validate-links'
 
 import { loadTheme, type Theme } from '../../config/theme'
 import { cite } from '../lib/markdown/cite'
+import { baseLinks } from '../lib/markdown/base-links'
 import { code } from '../lib/markdown/code'
 import { dashes } from '../lib/markdown/dashes'
 import { externalLinks } from '../lib/markdown/external-links'
@@ -143,13 +144,16 @@ export async function themeConfig(
   const theme = await loadTheme(new URL('theme.json', root))
   const bibliographies = fileURLToPath(new URL(theme.bibliographies, root))
   const { features } = theme
+  const { origin, pathname } = new URL(theme.site.href)
+  const base = pathname.replace(/\/$/, '')
   const localCsp = ['1', 'true', 'yes'].includes(
     (process.env.LOCAL_CSP ?? '').toLowerCase(),
   )
   const compress = (await import('@playform/compress')).default
 
   const config: AstroUserConfig = {
-    site: theme.site.href,
+    site: origin,
+    ...(base ? { base } : {}),
     compressHTML: true,
     image: {
       layout: 'constrained',
@@ -162,12 +166,12 @@ export async function themeConfig(
     integrations: [
       routes(theme),
       generatedAssets(theme),
-      inlineStyles(theme.prebuilt),
-      bundleCss(),
+      inlineStyles(theme.prebuilt, base),
+      bundleCss(base),
       sitemap(),
       ...(features.search ? [pagefindSearch()] : []),
-      linkCheck(theme.prebuilt),
-      earlyHints(theme),
+      linkCheck(theme.prebuilt, base),
+      earlyHints(theme, base),
       ...(features.typeset ? [typeset(theme, root)] : []),
       fontSubset(theme),
       compress({
@@ -212,6 +216,7 @@ export async function themeConfig(
         ],
         hastPlugins: [
           externalLinks(theme.site.href, features.externalLinkIcons),
+          ...(base ? [baseLinks(base)] : []),
           headingAnchors,
           opening(features.dropCap, theme.prose.dropCapMinWords),
           footnotes(features.marginNotes),

@@ -1,4 +1,9 @@
-const PAGEFIND_MODULE = '/pagefind/pagefind.js'
+const ROOT = new URL('../', import.meta.url)
+const PAGEFIND_MODULE = new URL('pagefind/pagefind.js', ROOT).href
+const withRoot = (path) =>
+  path.startsWith(ROOT.pathname)
+    ? path
+    : new URL(path.replace(/^[/]/, ''), ROOT).pathname
 const DEBOUNCE = 120
 const TAGS_SHOWN = 6
 const WORDS_PER_MINUTE = 200
@@ -163,7 +168,7 @@ const metaItems = (result) => {
   }
   if (result.parent.title && result.parent.url) {
     const link = element('a', 'search-result__meta-parent', result.parent.title)
-    link.href = result.parent.url
+    link.href = withRoot(result.parent.url)
     const item = element('span', 'meta-item', 'Part of ')
     item.append(link)
     items.push(item)
@@ -179,7 +184,7 @@ const metaItems = (result) => {
 const tagLinks = (result) =>
   result.tags.slice(0, TAGS_SHOWN).map((tag) => {
     const link = element('a', 'chip chip-interactive', `#${tag}`)
-    link.href = `/tags/${encodeURIComponent(tag)}/`
+    link.href = withRoot(`/tags/${encodeURIComponent(tag)}/`)
     const normalized = squash(tag).toLowerCase()
     if (
       result.terms.some(
@@ -195,7 +200,7 @@ const resultNode = (result) => {
   const node = template.content.firstElementChild.cloneNode(true)
   const part = (name) => node.querySelector(`[data-${name}]`)
 
-  part('link').href = result.url
+  part('link').href = withRoot(result.url)
   part('link').setAttribute('aria-label', result.title)
   part('section').textContent = result.sectionLabel
   part('title').innerHTML = highlight(result.title, result.terms)

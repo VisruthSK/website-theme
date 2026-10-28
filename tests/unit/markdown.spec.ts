@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { markdownToHtml } from 'satteri'
+import { baseLinks } from '../../src/lib/markdown/base-links.ts'
 import { cite, extractCitedKeys } from '../../src/lib/markdown/cite.ts'
 import { dashes } from '../../src/lib/markdown/dashes.ts'
 import { externalLinks } from '../../src/lib/markdown/external-links.ts'
@@ -78,6 +79,27 @@ test.describe('citations', () => {
 
 test('double hyphens become em dashes', () => {
   expect(render('one--two', { mdastPlugins: [dashes] })).toContain('one—two')
+})
+
+test.describe('base links', () => {
+  const html = render(
+    '[a](/essays/) ![b](/img/x.png) [c](https://x.org/) [d](//cdn.x.org/y) [e](/site/essays/) [f](#top) [g](relative/)',
+    { hastPlugins: [baseLinks('/site')] },
+  )
+
+  test('root-relative links and images gain the base', () => {
+    expect(html).toContain('href="/site/essays/"')
+    expect(html).toContain('src="/site/img/x.png"')
+  })
+
+  test('absolute, protocol-relative, prefixed and relative ones are left alone', () => {
+    expect(html).toContain('href="https://x.org/"')
+    expect(html).toContain('href="//cdn.x.org/y"')
+    expect(html).toContain('href="/site/essays/"')
+    expect(html).not.toContain('/site/site')
+    expect(html).toContain('href="#top"')
+    expect(html).toContain('href="relative/"')
+  })
 })
 
 test.describe('external links', () => {

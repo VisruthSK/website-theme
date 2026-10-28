@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test'
-import { SITES } from './tests/sites.ts'
+import { baseOf, SITES } from './tests/sites.ts'
 
 const browsers = {
   chromium: devices['Desktop Chrome'],
@@ -32,7 +32,7 @@ export default defineConfig({
   ],
   webServer: Object.values(SITES).map((site) => ({
     command: `node scripts/build.mjs ${site.dir} && pnpm exec astro preview --root ${site.dir} --host 127.0.0.1 --port ${site.port}`,
-    url: `http://127.0.0.1:${site.port}`,
+    url: `http://127.0.0.1:${site.port}${baseOf(site)}/`,
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,
     stdout: 'pipe',

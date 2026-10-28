@@ -1,4 +1,5 @@
 import { SITE } from '@/consts'
+import { withBase } from '@/lib/base'
 
 export const prerender = true
 
@@ -7,8 +8,8 @@ export async function GET() {
     name: SITE.title,
     short_name: SITE.title,
     description: SITE.description,
-    start_url: '/',
-    scope: '/',
+    start_url: withBase('/'),
+    scope: withBase('/'),
     display: 'minimal-ui',
     background_color: SITE.manifest.background,
     theme_color: SITE.manifest.theme,

@@ -1,4 +1,5 @@
 import { SECTIONS, SITE, type SectionSlug } from '@/consts'
+import { withBase } from '@/lib/base'
 import { buildFeedItem, resolveSiteUrl } from '@/lib/content-render'
 import {
   getAllPostsAndSubposts,
@@ -29,7 +30,12 @@ export async function renderFeed(
     (a, b) => (b.pubDate?.valueOf() ?? 0) - (a.pubDate?.valueOf() ?? 0),
   )
 
-  return rss({ title, description, site: baseUrl, items })
+  return rss({
+    title,
+    description,
+    site: new URL(withBase('/'), baseUrl).href,
+    items,
+  })
 }
 
 export async function buildSectionFeed(context: APIContext, slug: SectionSlug) {

@@ -1,4 +1,5 @@
 ---
+import { withBase } from '@/lib/base'
 import MetaPage from '@/components/MetaPage.astro'
 import Layout from '@/layouts/Layout.astro'
 ---
@@ -8,6 +9,6 @@ import Layout from '@/layouts/Layout.astro'
   <prose-content>
     <h1>404: Page not found</h1>
     <p>Oops! The page you're looking for doesn't exist.</p>
-    <p><a href="/">← Go to home page</a></p>
+    <p><a href={withBase('/')}>← Go to home page</a></p>
   </prose-content>
 </Layout>

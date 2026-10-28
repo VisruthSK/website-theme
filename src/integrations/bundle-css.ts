@@ -5,12 +5,14 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { arrangeStyles } from '../lib/page-styles'
 
-const STYLESHEET = /<link rel="stylesheet" href="(\/_astro\/[^"]+\.css)">/g
-
 const hash = (text: string) =>
   createHash('sha256').update(text).digest('hex').slice(0, 8)
 
-export function bundleCss(): AstroIntegration {
+export function bundleCss(base: string): AstroIntegration {
+  const stylesheet = new RegExp(
+    `<link rel="stylesheet" href="(${base}/_astro/[^"]+\\.css)">`,
+    'g',
+  )
   return {
     name: 'bundle-css',
     hooks: {
@@ -18,26 +20,27 @@ export function bundleCss(): AstroIntegration {
         const root = fileURLToPath(dir)
         const sources = new Map<string, string>()
         const written = new Set<string>()
+        const fileOf = (href: string) => join(root, href.slice(base.length))
 
         const emit = async (stem: string, css: string) => {
-          const name = `/_astro/${stem}.${hash(css)}.css`
-          if (!written.has(name)) {
-            written.add(name)
-            await writeFile(join(root, name), css)
+          const href = `${base}/_astro/${stem}.${hash(css)}.css`
+          if (!written.has(href)) {
+            written.add(href)
+            await writeFile(fileOf(href), css)
           }
-          return name
+          return href
         }
 
         for await (const file of glob('**/*.html', { cwd: root })) {
           const page = join(root, file)
           const html = await readFile(page, 'utf8')
-          const hrefs = [...html.matchAll(STYLESHEET)].map(([, href]) => href)
+          const hrefs = [...html.matchAll(stylesheet)].map(([, href]) => href)
           if (!hrefs.length) continue
 
           const sheets = await Promise.all(
             hrefs.map(async (href) => {
               if (!sources.has(href)) {
-                sources.set(href, await readFile(join(root, href), 'utf8'))
+                sources.set(href, await readFile(fileOf(href), 'utf8'))
               }
               return sources.get(href)!
             }),
@@ -53,7 +56,7 @@ export function bundleCss(): AstroIntegration {
           let first = true
           await writeFile(
             page,
-            html.replace(STYLESHEET, () => {
+            html.replace(stylesheet, () => {
               if (!first) return ''
               first = false
               return tags
@@ -61,9 +64,7 @@ export function bundleCss(): AstroIntegration {
           )
         }
 
-        await Promise.all(
-          [...sources.keys()].map((href) => rm(join(root, href))),
-        )
+        await Promise.all([...sources.keys()].map((href) => rm(fileOf(href))))
       },
     },
   }

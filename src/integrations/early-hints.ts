@@ -13,11 +13,11 @@ function attribute(tag: string, name: string) {
     .find(Boolean)
 }
 
-function hintsIn(html: string) {
+function hintsIn(html: string, base: string) {
   return [...html.matchAll(/<link\b[^>]*>/g)].flatMap(([tag]) => {
     const href = attribute(tag, 'href')
     const rel = attribute(tag, 'rel')
-    if (!href?.startsWith('/_astro/')) return []
+    if (!href?.startsWith(`${base}/_astro/`)) return []
     if (rel === 'stylesheet') return [`<${href}>; rel=preload; as=style`]
     if (rel === 'preload' && attribute(tag, 'as') === 'font') {
       return [
@@ -42,7 +42,7 @@ async function typesetSections(outputPath: string) {
   return { script, sections: [...sections].sort() }
 }
 
-export function earlyHints(theme: Theme): AstroIntegration {
+export function earlyHints(theme: Theme, base: string): AstroIntegration {
   const templatePages = [
     'index.html',
     ...theme.sections.map(({ slug }) => `${slug}/index.html`),
@@ -55,7 +55,7 @@ export function earlyHints(theme: Theme): AstroIntegration {
         const outputPath = fileURLToPath(dir)
         const perPage = await Promise.all(
           templatePages.map(async (page) =>
-            hintsIn(await readFile(join(outputPath, page), 'utf8')),
+            hintsIn(await readFile(join(outputPath, page), 'utf8'), base),
           ),
         )
         const shared = perPage[0].filter((hint) =>

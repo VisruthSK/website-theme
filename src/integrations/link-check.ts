@@ -8,7 +8,7 @@ import { siteHtmlPages } from './html-pages'
 const INTERNAL_REFERENCE =
   /\s(?:href|src)="(?!\/\/|[a-z][a-z0-9+.-]*:|#)([^"#?]+)/gi
 
-export function linkCheck(prebuilt: string[]): AstroIntegration {
+export function linkCheck(prebuilt: string[], base: string): AstroIntegration {
   return {
     name: 'link-check',
     hooks: {
@@ -32,11 +32,13 @@ export function linkCheck(prebuilt: string[]): AstroIntegration {
             INTERNAL_REFERENCE,
           )) {
             const path = decodeURI(link)
+            const inside = !base || path === base || path.startsWith(`${base}/`)
             const target = path.startsWith('/')
-              ? join(root, path)
+              ? join(root, path.slice(base.length))
               : resolve(dirname(page), path)
-            if (!exists(target) && !redirects.has(link))
-              broken.push(`${file}: ${link}`)
+            const found =
+              path.startsWith('/') && !inside ? false : exists(target)
+            if (!found && !redirects.has(link)) broken.push(`${file}: ${link}`)
           }
         }
 

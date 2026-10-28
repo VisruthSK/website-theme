@@ -32,7 +32,10 @@ function themeRules(selector: string, style: string) {
   ].join('\n')
 }
 
-export function inlineStyles(prebuilt: string[]): AstroIntegration {
+export function inlineStyles(
+  prebuilt: string[],
+  base: string,
+): AstroIntegration {
   return {
     name: 'inline-styles-to-classes',
     hooks: {
@@ -65,8 +68,9 @@ export function inlineStyles(prebuilt: string[]): AstroIntegration {
               `.${name}{${style}}\n${themeRules(`.${name}`, style)}`,
           )
           .join('\n')
-        const href = `/_astro/inline-styles.${hash(css)}.css`
-        await writeFile(join(root, href), css)
+        const name = `/_astro/inline-styles.${hash(css)}.css`
+        const href = `${base}${name}`
+        await writeFile(join(root, name), css)
 
         const link = `<link rel="stylesheet" href="${href}">`
         for (const [file, html] of pages) {

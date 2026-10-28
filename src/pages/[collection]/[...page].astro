@@ -63,7 +63,7 @@ const pageHref = (number: number) =>
     rel="alternate"
     type="application/rss+xml"
     title={feedLabel}
-    href={`${SITE.href.replace(/\/$/, '')}${feedHref}`}
+    href={new URL(feedHref, SITE.href).href}
   />
 
   <page-heading>

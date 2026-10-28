@@ -1,4 +1,5 @@
 ---
+import { withBase } from '@/lib/base'
 import ThemeToggle from '@/components/ThemeToggle.astro'
 import { NAVIGATION, SITE } from '@/consts'
 import MenuIcon from '@/icons/menu.svg'
@@ -22,7 +23,7 @@ const isExternal = (href: string) => href.startsWith('http')
     class="menu-toggle sr-only"
     aria-controls="site-nav"
   />
-  <a href="/" data-brand>
+  <a href={withBase('/')} data-brand>
     <span>{SITE.title}</span>
     {import.meta.env.DEV && <dev-badge>dev</dev-badge>}
   </a>
@@ -51,7 +52,7 @@ const isExternal = (href: string) => href.startsWith('http')
               {crumbs.map((crumb, i) => (
                 <li data-depth={i ? 1 : undefined}>
                   <a
-                    href={crumb.href}
+                    href={withBase(crumb.href)}
                     aria-current={i === crumbs.length - 1 ? 'page' : undefined}
                   >
                     {crumb.label}
@@ -66,7 +67,7 @@ const isExternal = (href: string) => href.startsWith('http')
         crumbs.map((crumb, i) => (
           <li data-depth={i ? 1 : undefined}>
             <a
-              href={crumb.href}
+              href={withBase(crumb.href)}
               aria-current={i === crumbs.length - 1 ? 'page' : undefined}
             >
               {crumb.label}
