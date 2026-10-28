@@ -2,6 +2,12 @@ import { dirname, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { COLOR_TOKENS, type Theme } from '../../config/theme'
+import {
+  PAGE_FILES,
+  PAGE_MARKERS,
+  wrapPageStyle,
+  type PageStyle,
+} from '../lib/page-styles'
 
 type Color = Theme['colors'][keyof Theme['colors']]
 type Face = { file: string; weight: number; style: string }
@@ -133,21 +139,34 @@ function matchingBrace(code: string, open: number) {
   throw new Error('Unbalanced @feature block')
 }
 
-function featureBlocks(code: string, features: Theme['features']) {
+function unwrapBlocks(
+  code: string,
+  directive: string,
+  resolve: (name: string, inner: string) => string,
+) {
+  const pattern = new RegExp(String.raw`@${directive}\s+([a-zA-Z]+)\s*\{`)
   let output = code
-  for (
-    let match = /@feature\s+([a-zA-Z]+)\s*\{/.exec(output);
-    match;
-    match = /@feature\s+([a-zA-Z]+)\s*\{/.exec(output)
-  ) {
+  for (let match = pattern.exec(output); match; match = pattern.exec(output)) {
     const open = match.index + match[0].length - 1
     const close = matchingBrace(output, open)
-    const name = match[1] as keyof Theme['features']
-    if (!(name in features)) throw new Error(`Unknown feature ${name}`)
-    const inner = features[name] ? output.slice(open + 1, close) : ''
+    const inner = resolve(match[1], output.slice(open + 1, close))
     output = output.slice(0, match.index) + inner + output.slice(close + 1)
   }
   return output
+}
+
+function featureBlocks(code: string, features: Theme['features']) {
+  return unwrapBlocks(code, 'feature', (name, inner) => {
+    if (!(name in features)) throw new Error(`Unknown feature ${name}`)
+    return features[name as keyof Theme['features']] ? inner : ''
+  })
+}
+
+function pageBlocks(code: string) {
+  return unwrapBlocks(code, 'when', (name, inner) => {
+    if (!(name in PAGE_MARKERS)) throw new Error(`Unknown page style ${name}`)
+    return wrapPageStyle(name, inner)
+  })
 }
 
 export function themeCss(theme: Theme) {
@@ -167,12 +186,19 @@ export function themeCss(theme: Theme) {
       const path = id.split('?')[0]
       if (!path.endsWith('.css') && !id.includes('type=style')) return
       if (blanked.some((pattern) => pattern.test(path))) return ''
-      if (!code.includes('@feature') && !code.includes('var(--prose-')) return
-      let output = featureBlocks(code, theme.features)
+      const page = PAGE_FILES.find(([pattern]) => pattern.test(path))?.[1]
+      if (
+        !page &&
+        !code.includes('@feature') &&
+        !code.includes('@when') &&
+        !code.includes('var(--prose-')
+      )
+        return
+      let output = pageBlocks(featureBlocks(code, theme.features))
       for (const [token, value] of Object.entries(prose)) {
         output = output.replaceAll(token, value)
       }
-      return output
+      return page ? wrapPageStyle(page, output) : output
     },
   }
 }

@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join } from 'node:path'
+import { PAGE_MARKERS } from '../src/lib/page-styles.ts'
 import { expect, test, type Site } from './sites.ts'
 
 const distOf = (site: Site) => join(process.cwd(), site.dir, 'dist')
@@ -27,6 +28,32 @@ test('every bundled font is subset to a small file', ({ site }) => {
   expect(fonts.length).toBeGreaterThan(0)
   for (const font of fonts) {
     expect(statSync(font).size, font).toBeLessThan(30_000)
+  }
+})
+
+test('stylesheets carry only the rules each page uses', ({ site }) => {
+  const sheets = new Map(
+    assets(site, '.css').map((file) => [file, readFileSync(file, 'utf8')]),
+  )
+  for (const [file, css] of sheets) {
+    expect(css, file).not.toMatch(/@feature|@when|\.zw-/)
+  }
+  for (const file of pages(site)) {
+    const html = readFileSync(file, 'utf8')
+    const linked = [
+      ...html.matchAll(/rel="stylesheet" href="\/_astro\/([^"]+)"/g),
+    ].map(([, name]) => name)
+    expect(linked.length, file).toBeGreaterThan(0)
+    expect(
+      linked.filter((name) => name.startsWith('base.')),
+      file,
+    ).toHaveLength(1)
+    for (const [stem, marker] of Object.entries(PAGE_MARKERS)) {
+      expect(
+        linked.some((name) => name.startsWith(`${stem}.`)),
+        `${file} ${stem}`,
+      ).toBe(marker.test(html))
+    }
   }
 })
 
