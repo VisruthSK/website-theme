@@ -1,0 +1,28 @@
+name: Bug report
+description: Something builds wrong, looks wrong or breaks.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you expected and what you got.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: A `theme.json` and the smallest content that shows it, or a link to a repository.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Theme version or commit
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and operating system
