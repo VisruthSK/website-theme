@@ -17,7 +17,7 @@ Everything that varies between sites lives in one validated `theme.json`.
 Add the theme to a site as a submodule at `theme/`, tracking the `release` branch:
 
 ```sh
-git submodule add -b release <theme repository URL> theme
+git submodule add -b release https://github.com/VisruthSK/website-theme.git theme
 ```
 
 `release` is a flattened tree with the astro-erudite files it needs copied in and a `package.json` listing what the theme needs to build. It only moves when a version is tagged, so following it means following releases. The default branch keeps astro-erudite as a nested submodule and is for working on the theme itself.
@@ -138,10 +138,6 @@ A file in a higher layer replaces the same path below it. Theme code imports onl
 
 Routes cannot be shadowed by path, so the theme registers its pages with `injectRoute` and skips any route whose file exists in the site's `src/pages/`. A site replaces the home page, for example, with its own `src/pages/index.astro`.
 
-## Updating astro-erudite
-
-`astro-erudite/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it once a month. Since February 2026 it prefers the newest semver-tagged release on the tracked branch over newer untagged commits, so pull requests normally move to a release. Pull requests run the full test suite on both example sites.
-
 ## Stylesheets
 
 Every page links one shared `base` stylesheet, identical across the site and cached once. Pages with an article add an `article` sheet (prose, callouts, tables, footnotes, citations), pages with maths add `math`, and the search page adds `search`. A page also links the small stylesheets of its own route. The build decides this from each page's final HTML (`src/lib/page-styles.ts`), keeping the cascade order of the source, and disabled features contribute no CSS at all.
@@ -162,4 +158,22 @@ Both examples are complete sites. `public/_headers` in each carries the strict C
 
 - `site.href` in `examples/full/theme.json` is the published address, `https://visruthsk.github.io/website-theme/`; change it if the repository moves.
 - Pages cannot send response headers, so the Content Security Policy in `public/_headers` does not apply there.
-- Pages from a private repository needs a paid GitHub plan.
+
+## Developing
+
+```sh
+git clone --recurse-submodules https://github.com/VisruthSK/website-theme.git
+cd website-theme
+pnpm install
+pnpm dev
+```
+
+`pnpm dev` serves `examples/full`. `pnpm check`, `pnpm knip` and `pnpm format` lint; `pnpm test` builds both examples and runs the suite in Chromium, Firefox and WebKit, and `pnpm exec playwright test --project=unit` runs only the unit tests.
+
+- Nothing inside `astro-erudite/` is edited. To change what it provides, add a file at the same path under `src/`.
+- Anything that varies between sites belongs in `theme.json` and `config/theme.ts`, and a feature that is switched off leaves nothing in the build.
+- Visual snapshots are generated on Linux. Run the _Update visual snapshots_ workflow from the Actions tab, or label a pull request `update-snapshots`.
+
+### Updating astro-erudite
+
+`astro-erudite/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it once a month. Since February 2026 it prefers the newest semver-tagged release on the tracked branch over newer untagged commits, so pull requests normally move to a release. Pull requests run the full test suite on both example sites.
