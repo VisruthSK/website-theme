@@ -2,7 +2,7 @@
   "$schema": "../../config/theme.schema.json",
   "site": {
     "title": "Field Journal",
-    "description": "A second consumer with its own fonts, colours and sections.",
+    "description": "THIS CONTENT IS ENTIRELY LLM WRITTEN",
     "href": "https://journal.example.net/",
     "author": "Sample Writer",
     "locale": "en-GB",

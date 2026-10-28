@@ -2,15 +2,16 @@
 
 An Astro 7 theme for long-form writing, built on [astro-erudite](https://github.com/jktrn/astro-erudite) by enscribe. It keeps astro-erudite as a git submodule and overlays it: a file here replaces the astro-erudite file at the same path, and nothing inside astro-erudite is edited, so its new releases can be pulled in. It is not affiliated with or endorsed by the author of astro-erudite.
 
-On top of astro-erudite it adds:
+From astro-erudite it keeps the native-CSS design system, the Sätteri Markdown processor, Expressive Code, Temml maths, series, the table of contents, heading anchors, callouts, tags, RSS and sitemaps. The theme adds:
 
-- Paragraphs broken into lines at build time and applied by a small script, with optical margins measured from the configured fonts.
-- Footnotes as margin notes on wide screens, and Pandoc-style citations resolved against BibTeX files.
-- Drop caps, callouts, maths, code blocks, sections with series, tags, feeds and Pagefind search.
-- A strict Content Security Policy: no inline scripts or styles reach the built pages.
-- Fonts subset at build time to the glyphs the pages use.
-
-Everything that varies between sites lives in one validated `theme.json`.
+- Line breaking at build time with [Justice](https://github.com/kitlangton/justice), applied by a small script, and optical margins ported from [Justif](https://github.com/lyallcooper/justif) and measured from the configured fonts.
+- Footnotes set as margin notes on wide screens.
+- Pandoc-style citations resolved against BibTeX files.
+- Drop caps and small-capital opening words.
+- Pagefind search.
+- One validated `theme.json` for sections, navigation, colours, fonts and features, in place of astro-erudite's authors and projects.
+- Fonts subset at build time to the glyphs the pages use, with swappable body, heading, mono and maths fonts.
+- Hosting under a sub-path, and per-page stylesheets: a shared base plus article, maths and search sheets only where a page uses them.
 
 ## Using it
 
@@ -176,4 +177,4 @@ pnpm dev
 
 ### Updating astro-erudite
 
-`astro-erudite/` is a submodule pinned to a commit of astro-erudite. Dependabot opens a pull request when it moves, and the suite runs on both examples before it merges.
+`astro-erudite/` is a submodule pinned to a commit of astro-erudite. To move to a new release, check out its tag inside the submodule (`git -C astro-erudite fetch --tags && git -C astro-erudite checkout v2.1.0`), commit the new pointer and run the suite.

@@ -1,16 +1,18 @@
 ---
 title: 'Measuring the theme against astro-erudite'
 date: 2026-10-27
-description: 'Page weight, accessibility and Lighthouse scores for one post built with both.'
+description: 'Page weight, accessibility and Lighthouse scores for the same site built with both.'
 tags: ['performance', 'accessibility', 'typography']
 bib: example
 ---
 
-This theme is built on astro-erudite, so the first question anyone should ask is what building on it costs. It adds a build-time line breaker, margin notes and citations on top of what astro-erudite already does. If those additions made pages heavier or harder to use, they would not be worth having. This essay measures that by building the same post with both and comparing what a browser has to download, how quickly it paints and what an automated audit finds.[^scope]
+THIS CONTENT IS ENTIRELY LLM WRITTEN
+
+This theme is built on astro-erudite, so the first question anyone should ask is what building on it costs. It adds a build-time line breaker, margin notes and citations on top of what astro-erudite already does. If those additions made pages heavier or harder to use, they would not be worth having. This essay measures that by building the same site with both and comparing what a browser has to download, how quickly it paints and what an automated audit finds.[^scope]
 
 ## Method
 
-Both sites were built from their own repositories with `astro build`, using Astro 7.4. The post you are reading was copied into astro-erudite unchanged apart from its front matter and its citations, which astro-erudite does not support. Each build was then served from a small static server that compresses responses with Brotli, as most static hosts do.
+The posts of this example site were copied into an unmodified astro-erudite, with only their front matter changed and their citations removed, since astro-erudite has no citations. Both sites were built with `astro build` on Astro 7.4. Each build was served from a small static server that compresses responses with Brotli, as most static hosts do.
 
 - Lighthouse 13.5.0 audited each page on its default mobile profile.
 - Each page was audited 5 times and the median of each score is reported.
@@ -18,35 +20,29 @@ Both sites were built from their own repositories with `astro build`, using Astr
 - Every run started cold, with no cache.
 
 :::note[What is being compared]
-The two sites ship different fonts and different scripts. astro-erudite uses IBM Plex Sans as a variable font; this site's example uses static instances of the same family. The theme adds one script that applies the precomputed line breaks. Everything else that differs is part of the answer.
+The two sites use the same content, the same colours and the same typeface, IBM Plex Sans. astro-erudite ships it as variable font files and this theme as static instances. The theme adds one script that applies the precomputed line breaks. Everything else that differs is part of the answer.
 :::
 
 ## Results
 
+This page, audited in both builds:
+
 | Measure | astro-erudite | This theme | Change |
 | --- | ---: | ---: | ---: |
-| Performance score | 84 | 100 | +16 |
+| Performance score | 87 | 99 | +12 |
 | Accessibility score | 96 | 100 | +4 |
 | Best practices score | 100 | 100 | 0 |
 | SEO score | 92 | 100 | +8 |
-| First contentful paint (s) | 2.8 | 1.3 | −55% |
-| Largest contentful paint (s) | 3.8 | 1.7 | −56% |
-| Total blocking time (ms) | 0 | 47 | +47 |
+| First contentful paint (s) | 2.8 | 1.5 | −46% |
+| Largest contentful paint (s) | 3.5 | 1.7 | −52% |
+| Total blocking time (ms) | 0 | 0 | 0 |
 | Layout shift | 0.00 | 0.00 | 0 |
-| HTML (kB) | 13.3 | 7.8 | −41% |
-| CSS (kB) | 7.8 | 13.4 | +72% |
+| HTML (kB) | 13.0 | 7.6 | −42% |
+| CSS (kB) | 7.8 | 15.7 | +101% |
 | JavaScript (kB) | 2.7 | 7.1 | +157% |
-| Fonts (kB) | 441.6 | 54.7 | −88% |
-| Images (kB) | 49.8 | 0.0 | −100% |
-| **Total transfer (kB)** | **516.1** | **83.3** | **−84%** |
-
-Differences are relative to astro-erudite, computed as
-
-$$
-\Delta = \frac{t - e}{e} \times 100\%
-$$
-
-where $t$ is the value for this theme and $e$ the value for astro-erudite. For the total transfer of this post, $e = 516.1$ kB and $t = 83.3$ kB, so $\Delta = −84\%$. A negative $\Delta$ means the theme sent fewer bytes.
+| Fonts (kB) | 441.6 | 70.7 | −84% |
+| Images (kB) | 0.4 | 0.0 | −100% |
+| **Total transfer (kB)** | **466.5** | **101.3** | **−78%** |
 
 ## What the extra script costs
 
@@ -103,14 +99,14 @@ Run it against each site's `dist` directory and compare the totals. Use the medi
 
 ## What to take from it
 
-Most of the saving is fonts. The theme subsets every font file to the glyphs its pages use when it builds, so this post loads 54.7 kB of fonts where astro-erudite loads 441.6 kB. The home page follows the same pattern, at 38.4 kB against 211.0 kB in total.
+Most of the saving is fonts. The theme subsets every font file to the glyphs its pages use when it builds, so this page loads 70.7 kB of fonts where astro-erudite loads 441.6 kB. The other pages follow the same pattern: 44.6 kB against 211.0 kB in total for the home page, and 69.0 kB against 159.4 kB for Margin Notes.
 
-The theme is not smaller in every column. It sends 13.4 kB of CSS to astro-erudite's 7.8 kB, and 7.1 kB of script to 2.7 kB, because the line breaker, margin notes and citations add their own rules and code. The script also shows up as blocking time, a median of 47 ms across the runs against none for astro-erudite, and as much as 162 ms on the worst run, probably because applying the plans happens on the main thread. Those costs are small next to what subsetting returns, but they are real.
+The theme is not smaller in every column. It sends 15.7 kB of CSS to astro-erudite's 7.8 kB and 7.1 kB of script to 2.7 kB, because the line breaker, margin notes and citations bring their own rules and code. Blocking time stayed within 2 ms of zero on every run for both.
 
-The accessibility scores differ for two concrete reasons. Lighthouse reported low-contrast text and an anchor with no destination on astro-erudite's post, and nothing on the theme's. The theme's default palette keeps astro-erudite's greys but darkens its light-mode focus ring, which measures 1.9:1 against the page, below the 3:1 that WCAG asks for.
+The accessibility scores differ for concrete reasons. Lighthouse reported low-contrast text on every astro-erudite page and an anchor with no destination on this one, and nothing on the theme's. The theme's default palette keeps astro-erudite's greys but darkens its light-mode focus ring, which measures 1.9:1 against the page, below the 3:1 that WCAG asks for.
 
-Two caveats apply. The sample is one post on one machine, so read differences of a point or two as noise. And astro-erudite's post header fetches the author's avatar from GitHub, which accounts for the 49.8 kB of images above. That is content, not theme, and it would disappear on a site without one.
+The sample is one machine and one set of posts, so read differences of a point or two as noise.
 
-[^scope]: One post is a small sample. The comparison says how the two themes treat the same markdown, not how every site built on them will behave.
+[^scope]: The comparison says how the two themes treat the same markdown, not how every site built on them will behave.
 
 [^plan]: A paragraph's plan is a list of numbers, one per line, encoded as text in an attribute on the paragraph. The browser reads it, sets each line's spacing and finishes.

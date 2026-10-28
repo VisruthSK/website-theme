@@ -2,12 +2,12 @@
   "$schema": "../../config/theme.schema.json",
   "site": {
     "title": "Example Site",
-    "description": "A demonstration site for the theme.",
+    "description": "THIS CONTENT IS ENTIRELY LLM WRITTEN",
     "href": "https://visruthsk.github.io/website-theme/",
     "author": "Example Author",
     "postsPerPage": 3,
     "featured": ["measuring-the-theme", "margins"],
-    "footer": "Placeholder text, written for testing.",
+    "footer": "Lorem ipsum filler text for testing.",
     "themeColor": {
       "light": "#fcfcfc",
       "dark": "#111111"

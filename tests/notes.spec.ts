@@ -84,7 +84,7 @@ test('citations show their reference on hover', async ({ page, site }) => {
   await visit(page, site, site.citations!, 'light')
   const citation = page.locator('prose-content a.citation-link').first()
   expect(await citation.getAttribute('data-citation-preview')).toContain(
-    'Velocity Profiles',
+    'De Finibus Bonorum',
   )
   await citation.hover()
   await expect
