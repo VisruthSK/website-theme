@@ -92,11 +92,6 @@ jobs:
       - run: node scripts/build.mjs examples/minimal
       - uses: treosh/lighthouse-ci-action@v12
         with:
-          urls: |
-            http://localhost/
-            http://localhost/journal/
-            http://localhost/journal/coastal-path/
-            http://localhost/journal/winter-light/
           staticDistDir: examples/minimal/dist
           configPath: .github/lighthouserc.json
           runs: 1
