@@ -114,6 +114,27 @@ writeFileSync(
   join(out, 'NOTICE'),
   `${readFileSync(join(theme, 'NOTICE'), 'utf8').trimEnd()}\n\nThis release includes files from astro-erudite at commit ${commit}.\n`,
 )
+const { name, description, license, type, dependencies } = JSON.parse(
+  readFileSync(join(theme, 'package.json'), 'utf8'),
+)
+const { astro, ...runtime } = dependencies
+writeFileSync(
+  join(out, 'package.json'),
+  `${JSON.stringify(
+    {
+      name,
+      description,
+      license,
+      type,
+      private: true,
+      dependencies: runtime,
+      peerDependencies: { astro },
+    },
+    null,
+    2,
+  )}
+`,
+)
 console.log(
   `Flattened ${copied.size} astro-erudite files into ${relative(theme, out) || out}`,
 )

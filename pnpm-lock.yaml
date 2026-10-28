@@ -34,15 +34,36 @@ importers:
       '@expressive-code/plugin-line-numbers':
         specifier: ^0.44.3
         version: 0.44.3
+      '@kitlangton/justice':
+        specifier: ^0.4.0
+        version: 0.4.0
       '@playform/compress':
         specifier: 0.2.5
         version: 0.2.5(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
+      '@web-alchemy/fonttools':
+        specifier: ^1.4.0
+        version: 1.4.0
       astro:
         specifier: ^7.4.1
         version: 7.4.2(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.1)
+      bibtex-parse:
+        specifier: ^2.1.0
+        version: 2.1.0
+      entities:
+        specifier: ^8.1.0
+        version: 8.1.0
+      esbuild:
+        specifier: 0.28.1
+        version: 0.28.1
       github-slugger:
         specifier: ^2.0.0
         version: 2.0.0
+      harfbuzzjs:
+        specifier: ^1.6.3
+        version: 1.6.4
+      hast-util-from-html:
+        specifier: ^2.0.3
+        version: 2.0.3
       hast-util-select:
         specifier: ^6.0.4
         version: 6.0.4
@@ -52,6 +73,12 @@ importers:
       hastscript:
         specifier: ^9.0.1
         version: 9.0.1
+      mdast-util-to-hast:
+        specifier: ^13.2.1
+        version: 13.2.1
+      pagefind:
+        specifier: ^1.5.2
+        version: 1.5.2
       satteri:
         specifier: ^0.10.5
         version: 0.10.5
@@ -64,6 +91,9 @@ importers:
       temml:
         specifier: ^0.14.0
         version: 0.14.0
+      wawoff2:
+        specifier: ^2.0.1
+        version: 2.0.1
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.11
@@ -71,9 +101,6 @@ importers:
       '@axe-core/playwright':
         specifier: ^4.14.0
         version: 4.14.0(playwright-core@1.64.1)
-      '@kitlangton/justice':
-        specifier: ^0.4.0
-        version: 0.4.0
       '@playwright/test':
         specifier: ^1.64.1
         version: 1.64.1
@@ -83,42 +110,15 @@ importers:
       '@types/mdast':
         specifier: ^4.0.4
         version: 4.0.4
-      '@web-alchemy/fonttools':
-        specifier: ^1.4.0
-        version: 1.4.0
-      bibtex-parse:
-        specifier: ^2.1.0
-        version: 2.1.0
-      entities:
-        specifier: ^8.1.0
-        version: 8.1.0
-      esbuild:
-        specifier: 0.28.1
-        version: 0.28.1
-      harfbuzzjs:
-        specifier: ^1.6.3
-        version: 1.6.4
-      hast-util-from-html:
-        specifier: ^2.0.3
-        version: 2.0.3
       knip:
         specifier: ^6.42.0
         version: 6.43.0
-      mdast-util-to-hast:
-        specifier: ^13.2.1
-        version: 13.2.1
-      pagefind:
-        specifier: ^1.5.2
-        version: 1.5.2
       prettier:
         specifier: ^3.9.10
         version: 3.9.10
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
-      wawoff2:
-        specifier: ^2.0.1
-        version: 2.0.1
 
 packages:
 

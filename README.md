@@ -14,15 +14,37 @@ Everything that varies between sites lives in one validated `theme.json`.
 
 ## Using it
 
-Add the theme to a site as a submodule at `theme/`:
+Add the theme to a site as a submodule at `theme/`, tracking the `release` branch:
 
 ```sh
 git submodule add -b release <theme repository URL> theme
 ```
 
-The `release` branch is a flattened tree with the astro-erudite files it needs copied in. The default branch keeps astro-erudite as a nested submodule and needs `git submodule update --init --recursive`.
+`release` is a flattened tree with the astro-erudite files it needs copied in and a `package.json` listing what the theme needs to build. It only moves when a version is tagged, so following it means following releases. The default branch keeps astro-erudite as a nested submodule and is for working on the theme itself.
 
-The site then needs four files:
+The site needs these files:
+
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - theme
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+```
+
+```json
+// package.json
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "astro": "^7.4.1",
+    "website-theme": "workspace:*"
+  }
+}
+```
 
 ```ts
 // astro.config.ts
@@ -44,24 +66,33 @@ export const collections = defineCollections()
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*", "./theme/src/*", "./theme/astro-erudite/src/*"]
-    }
+    "paths": { "@/*": ["./src/*", "./theme/src/*"] }
   },
-  "exclude": [
-    "dist",
-    "src/generated",
-    "theme/astro-erudite",
-    "theme/examples",
-    "theme/tests",
-    "theme/scripts"
-  ]
+  "exclude": ["dist", "src/generated"]
 }
 ```
 
-and `theme.json`, described below. The site's `package.json` must list the theme's dependencies, as in this repository's `package.json`. `themeConfig` takes a second argument, an Astro config merged over the theme's, for site-only settings such as the dev server port.
+and a `theme.json`, described below. Because `theme/` is a workspace package, `pnpm install` brings in everything the theme builds with, so the site lists only Astro and the theme. Clone a site with `git clone --recurse-submodules`.
+
+`themeConfig` takes a second argument, an Astro config merged over the theme's, for site-only settings such as the dev server port.
 
 Content goes in `src/content/<collection>/` for each section and `src/content/pages/` for standalone pages, fonts in `src/assets/fonts/`, and bibliographies in `src/data/bibliographies/`. The build writes generated files to `src/generated/`, which should be ignored by git.
+
+### Updating
+
+Pull the newest release with `git submodule update --remote theme` and commit the new pointer. To have GitHub do it, add Dependabot to the site:
+
+```yaml
+# .github/dependabot.yml
+version: 2
+updates:
+  - package-ecosystem: gitsubmodule
+    directory: /
+    schedule:
+      interval: monthly
+```
+
+Each pull request moves `theme/` to the latest release, and the site's own tests run on it before it merges.
 
 ## theme.json
 
