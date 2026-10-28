@@ -92,7 +92,7 @@ updates:
       interval: weekly
 ```
 
-A pull request opens only when there is a new release and moves `theme/` to the latest release, and the site's own tests run on it before it merges.
+Each pull request moves `theme/` to the latest release, and the site's own tests run on it before it merges.
 
 ## theme.json
 
@@ -140,7 +140,7 @@ Routes cannot be shadowed by path, so the theme registers its pages with `inject
 
 ## Stylesheets
 
-Every page links one shared `base` stylesheet, identical across the site and cached once. Pages with an article add an `article` sheet (prose, callouts, tables, footnotes, citations), pages with maths add `math`, and the search page adds `search`. A page also links the small stylesheets of its own route. The build decides this from each page's final HTML (`src/lib/page-styles.ts`), keeping the cascade order of the source, and disabled features contribute no CSS at all.
+Every page links one shared `base` stylesheet, identical across the site and cached once. Pages with an article add an `article` sheet (prose, callouts, tables, footnotes, citations), pages with maths add `math`, and the search page adds `search`. A page also links the small stylesheets of its own route. The build decides this from each page's final HTML (`src/lib/page-styles.ts`), and disabled features contribute no CSS at all.
 
 Inside a theme stylesheet, `@feature name { … }` keeps its rules only while the feature is on, and `@when name { … }` moves them into one of those sheets.
 
@@ -176,4 +176,4 @@ pnpm dev
 
 ### Updating astro-erudite
 
-`astro-erudite/` is a submodule pinned to a commit of astro-erudite. Dependabot checks it every week and opens a pull request only when astro-erudite has moved; it cannot be triggered by an upstream release, so weekly is the shortest sensible interval. Since February 2026 it prefers the newest semver-tagged release over newer untagged commits, so pull requests normally move to a release. Pull requests run the full test suite on both example sites.
+`astro-erudite/` is a submodule pinned to a commit of astro-erudite. Dependabot opens a pull request when it moves, and the suite runs on both examples before it merges.
