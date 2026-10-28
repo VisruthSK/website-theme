@@ -301,7 +301,8 @@ test('opening and closing characters protrude by the planned amount', async ({
           for (const span of paragraph.querySelectorAll<HTMLElement>('.jl')) {
             const rect = span.getBoundingClientRect()
             const size = parseFloat(getComputedStyle(span).fontSize)
-            if (span.style.marginLeft && rect.top > box.top + 40) {
+            const clear = paragraph.querySelector('.drop-cap') ? 100 : 40
+            if (span.style.marginLeft && rect.top > box.top + clear) {
               found.push({
                 side: 'leading',
                 offset: left - rect.left,
