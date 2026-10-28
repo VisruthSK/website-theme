@@ -146,7 +146,11 @@ const fonts = z.strictObject({
   ]).optional(),
   math: z.strictObject({ family: nonEmpty, file: fileName }).optional(),
   dropCap: face
-    .extend({ family: nonEmpty, size: remLength.default('5.9rem') })
+    .extend({
+      family: nonEmpty,
+      size: remLength.default('5.9rem'),
+      tolerance: z.number().positive().default(0.35),
+    })
     .optional(),
 })
 

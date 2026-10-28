@@ -91,6 +91,7 @@ Two font settings exist because browsers render some fonts differently from how 
 
 - `fonts.stripHinting` (default `false`) removes hinting instructions when fonts are subset. Without them, Chromium on Linux auto-hints some fonts and widens their glyphs, so keep it off unless you have checked your fonts.
 - `fonts.dropCap.size` (default `5.9rem`) is the drop cap's font size. Browsers that support `initial-letter` size the cap themselves; pick the size at which the fallback matches them, or drop-cap paragraphs fall back to native justification.
+- `fonts.dropCap.tolerance` (default `0.35`) is how far, in em, a browser's own sizing of the initial letter may differ from the plan before the paragraph keeps native justification. Browsers differ from each other and from letter to letter, so a site whose drop-cap paragraphs fall back can raise it; line verification still catches overflow.
 
 ## Overlay and shadowing
 

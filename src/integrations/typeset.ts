@@ -50,7 +50,10 @@ function proseParagraphs(tree: Root): Found[] {
 }
 
 async function load(theme: Theme, root: URL) {
-  const { constants, source } = typesetConstants(theme.prose)
+  const { constants, source } = typesetConstants(
+    theme.prose,
+    theme.fonts.dropCap?.tolerance ?? 0.35,
+  )
   const faces = await loadFaces(
     fileURLToPath(new URL(`${theme.fonts.directory}/`, root)),
     typefaceFiles(theme.fonts),

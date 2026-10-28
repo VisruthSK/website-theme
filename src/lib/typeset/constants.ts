@@ -5,6 +5,7 @@ export interface Constants {
   INDENT: number
   CAP_CLEARANCE: number
   CAP_SCALE: number
+  CAP_TOLERANCE: number
   STRETCH: number
   TRACKING: number
   SHRINK: number
@@ -12,7 +13,10 @@ export interface Constants {
 
 const ROOT_FONT_SIZE = 16
 
-export function typesetConstants(prose: { fontSize: string; indent: string }) {
+export function typesetConstants(
+  prose: { fontSize: string; indent: string },
+  capTolerance = 0.35,
+) {
   const ratio = parseFloat(prose.fontSize)
   const planSize = ratio * ROOT_FONT_SIZE
   const indent = parseFloat(prose.indent)
@@ -23,6 +27,7 @@ export function typesetConstants(prose: { fontSize: string; indent: string }) {
     INDENT: indent,
     CAP_CLEARANCE: 1.5 / planSize,
     CAP_SCALE: 10,
+    CAP_TOLERANCE: capTolerance,
     STRETCH: 0.5,
     TRACKING: 0.3 / planSize,
     SHRINK: 1 / 3,
@@ -37,6 +42,7 @@ export function typesetConstants(prose: { fontSize: string; indent: string }) {
     'export const STRETCH = 0.5',
     'export const TRACKING = 0.3 / PLAN_SIZE',
     'export const SHRINK = 1 / 3',
+    `export const CAP_TOLERANCE = ${capTolerance}`,
   ].join('\n')
   return { constants, source }
 }

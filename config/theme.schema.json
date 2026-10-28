@@ -1373,6 +1373,11 @@
               "default": "5.9rem",
               "type": "string",
               "pattern": "^\\d+(?:\\.\\d+)?rem$"
+            },
+            "tolerance": {
+              "default": 0.35,
+              "type": "number",
+              "exclusiveMinimum": 0
             }
           },
           "required": [
