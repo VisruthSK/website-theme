@@ -1,4 +1,6 @@
 prose-content {
+  --prose-marker: var(--ink-muted);
+
   font-size: var(--prose-font-size);
   line-height: var(--prose-line-height);
   font-variant-numeric: oldstyle-nums proportional-nums;
