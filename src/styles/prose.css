@@ -1,5 +1,5 @@
 prose-content {
-  --prose-marker: var(--ink-muted);
+  --prose-marker: var(--flourish);
 
   font-size: var(--prose-font-size);
   line-height: var(--prose-line-height);
