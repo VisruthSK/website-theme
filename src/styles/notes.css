@@ -173,6 +173,8 @@ prose-content {
       text-align: left;
       text-indent: 0;
       text-wrap: pretty;
+      white-space: normal;
+      font-variant-ligatures: normal;
       overflow-wrap: anywhere;
       color: var(--ink-subtle);
     }
