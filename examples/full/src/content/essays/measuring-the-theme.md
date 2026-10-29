@@ -99,7 +99,7 @@ Run it against each site's `dist` directory and compare the totals. Use the medi
 
 ## What to take from it
 
-Most of the saving is fonts. The theme subsets every font file to the glyphs its pages use when it builds, so this page loads 70.7 kB of fonts where astro-erudite loads 441.6 kB. The other pages follow the same pattern: 44.6 kB against 211.0 kB in total for the home page, and 69.0 kB against 159.4 kB for Margin Notes.
+Most of the saving is fonts. The theme subsets every font file to the glyphs its pages use when it builds, so this page loads 70.7 kB of fonts where astro-erudite loads 441.6 kB. The other pages follow the same pattern: 44.6 kB against 211.0 kB in total for the home page.
 
 The theme is not smaller in every column. It sends 15.7 kB of CSS to astro-erudite's 7.8 kB and 7.1 kB of script to 2.7 kB, because the line breaker, margin notes and citations bring their own rules and code. Blocking time stayed within 2 ms of zero on every run for both.
 

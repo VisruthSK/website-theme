@@ -38,9 +38,9 @@ test.describe('search', () => {
         failures.push(message.text())
     })
     await open(page, site)
-    await search(page, 'margin')
+    await search(page, 'everything')
     await expect(page.locator('[data-title] mark').first()).toContainText(
-      /margin/i,
+      /everything/i,
     )
 
     await search(page, 'lorem')

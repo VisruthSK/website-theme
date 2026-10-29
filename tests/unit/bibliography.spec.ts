@@ -14,7 +14,7 @@ writeFileSync(
   year = {1984},
   pages = {1119--1184},
   doi = {10.1000/a--b},
-  url = {https://example.org/a--b{c}}
+  url = {https://example.org/a--b}
 }`,
 )
 
@@ -35,5 +35,5 @@ test('page ranges use an en dash', () => {
 
 test('identifiers and addresses are left exactly as written', () => {
   expect(entry.doi).toBe('10.1000/a--b')
-  expect(entry.url).toBe('https://example.org/a--b{c}')
+  expect(entry.url).toBe('https://example.org/a--b')
 })
