@@ -2,12 +2,7 @@ import { dirname, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { COLOR_TOKENS, type Theme } from '../../config/theme'
-import {
-  PAGE_FILES,
-  PAGE_MARKERS,
-  wrapPageStyle,
-  type PageStyle,
-} from '../lib/page-styles'
+import { PAGE_FILES, PAGE_MARKERS, wrapPageStyle } from '../lib/page-styles'
 
 type Color = Theme['colors'][keyof Theme['colors']]
 type Face = { file: string; weight: number; style: string }
