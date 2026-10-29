@@ -10,18 +10,21 @@ const color = z.union([
   z.strictObject({ light: nonEmpty, dark: nonEmpty }),
 ])
 
-const COLOR_DEFAULTS = {
+const BRAND_DEFAULTS = {
   background: { light: '#fcfcfc', dark: '#111111' },
   foreground: { light: '#202020', dark: '#eeeeee' },
   primary: { light: '#202020', dark: '#eeeeee' },
-  secondary: { light: '#f0f0f0', dark: '#222222' },
-  muted: { light: '#f0f0f0', dark: '#222222' },
-  'muted-foreground': { light: '#646464', dark: '#b4b4b4' },
-  accent: { light: '#f0f0f0', dark: '#222222' },
+  secondary: { light: '#646464', dark: '#b4b4b4' },
+  tertiary: { light: '#f0f0f0', dark: '#222222' },
+  success: { light: '#218358', dark: '#3dd68c' },
+  info: { light: '#0d74ce', dark: '#70b8ff' },
+  warning: { light: '#ab6400', dark: '#ffca16' },
+  danger: { light: '#ce2c31', dark: '#ff9592' },
+} as const
+
+const COLOR_DEFAULTS = {
   border: { light: '#d9d9d9', dark: '#3a3a3a' },
   ring: { light: '#838383', dark: '#7b7b7b' },
-  danger: { light: '#ce2c31', dark: '#ff9592' },
-  warning: { light: '#ab6400', dark: '#ffca16' },
   'surface-hover': { light: '#f9f9f9', dark: '#191919' },
   highlight: 'color-mix(in oklab, var(--warning) 25%, var(--background))',
   flourish: { light: '#646464', dark: '#b4b4b4' },
@@ -77,6 +80,8 @@ export const COLOR_TOKENS = [
   'danger-hover',
   'danger-foreground',
   'warning',
+  'success',
+  'info',
   'surface-hover',
   'surface-accent-muted',
   'surface-accent-soft',
@@ -93,16 +98,64 @@ export const COLOR_TOKENS = [
   'flourish',
 ] as const
 
+const slug = z.string().regex(/^[a-z0-9][a-z0-9-]*$/)
+
 const colors = z
   .strictObject(
     Object.fromEntries(
-      COLOR_TOKENS.map((token) => [
-        token,
-        color.default(COLOR_DEFAULTS[token]),
-      ]),
-    ) as Record<(typeof COLOR_TOKENS)[number], z.ZodDefault<typeof color>>,
+      COLOR_TOKENS.map((token) => [token, color.optional()]),
+    ) as Record<(typeof COLOR_TOKENS)[number], z.ZodOptional<typeof color>>,
   )
   .prefault({})
+
+const brand = z
+  .strictObject({
+    palette: z.record(slug, nonEmpty).default({}),
+    background: color.default(BRAND_DEFAULTS.background),
+    foreground: color.default(BRAND_DEFAULTS.foreground),
+    primary: color.default(BRAND_DEFAULTS.primary),
+    secondary: color.default(BRAND_DEFAULTS.secondary),
+    tertiary: color.default(BRAND_DEFAULTS.tertiary),
+    success: color.default(BRAND_DEFAULTS.success),
+    info: color.default(BRAND_DEFAULTS.info),
+    warning: color.default(BRAND_DEFAULTS.warning),
+    danger: color.default(BRAND_DEFAULTS.danger),
+  })
+  .prefault({})
+
+type ColorToken = (typeof COLOR_TOKENS)[number]
+type Brand = z.output<typeof brand>
+
+type Color = z.output<typeof color>
+
+const fromBrand = (roles: Brand) => ({
+  background: roles.background,
+  foreground: roles.foreground,
+  primary: roles.primary,
+  secondary: roles.tertiary,
+  muted: roles.tertiary,
+  accent: roles.tertiary,
+  'muted-foreground': roles.secondary,
+  success: roles.success,
+  info: roles.info,
+  warning: roles.warning,
+  danger: roles.danger,
+})
+
+function resolveColors(
+  explicit: Partial<Record<ColorToken, Color>>,
+  roles: Brand,
+) {
+  const derived: Partial<Record<ColorToken, Color>> = fromBrand(roles)
+  return Object.fromEntries(
+    COLOR_TOKENS.map((token) => [
+      token,
+      explicit[token] ??
+        derived[token] ??
+        COLOR_DEFAULTS[token as keyof typeof COLOR_DEFAULTS],
+    ]),
+  ) as Record<ColorToken, Color>
+}
 
 const fileName = z.string().regex(/^[^/\\]+\.(?:woff2|woff|ttf|otf)$/)
 
@@ -156,8 +209,6 @@ const fonts = z.strictObject({
 
 const link = z.strictObject({ href: nonEmpty, label: nonEmpty })
 
-const slug = z.string().regex(/^[a-z0-9][a-z0-9-]*$/)
-
 const features = z.strictObject({
   typeset: z.boolean().default(true),
   citations: z.boolean().default(true),
@@ -208,7 +259,7 @@ export const themeSchema = z
       .min(1),
     navigation: z.array(z.union([z.strictObject({ section: slug }), link])),
     socials: z.array(link.extend({ icon: slug })).default([]),
-    palette: z.record(slug, nonEmpty).default({}),
+    brand,
     colors,
     fonts,
     prose: z
@@ -265,6 +316,10 @@ export const themeSchema = z
         issue(['fonts', 'body', 'faces'], 'typeset needs a regular 400 face')
     }
   })
+  .transform((theme) => ({
+    ...theme,
+    colors: resolveColors(theme.colors, theme.brand),
+  }))
 
 export type Theme = z.output<typeof themeSchema>
 

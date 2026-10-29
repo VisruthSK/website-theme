@@ -127,6 +127,26 @@ prose-content {
 }
 
 @feature callouts {
+  prose-content [data-callout='note'] {
+    --accent: var(--info);
+  }
+
+  prose-content [data-callout='tip'] {
+    --accent: var(--success);
+  }
+
+  prose-content [data-callout='warning'] {
+    --accent: var(--warning);
+  }
+
+  prose-content [data-callout='caution'] {
+    --accent: var(--danger);
+  }
+
+  prose-content [data-callout='important'] {
+    --accent: var(--primary);
+  }
+
   prose-content [data-callout] > summary > span > span {
     opacity: 1;
   }
