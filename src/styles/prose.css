@@ -87,8 +87,13 @@ prose-content {
       hanging-punctuation: none;
       font-variant-ligatures: none;
 
-      .jb {
+      .jb,
+      side-note {
         white-space: normal;
+      }
+
+      side-note {
+        font-variant-ligatures: normal;
       }
 
       .jh {

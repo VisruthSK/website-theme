@@ -39,6 +39,14 @@ test.describe('footnotes', () => {
       const box = (await note.boundingBox())!
       expect(box.x).toBeGreaterThanOrEqual(prose.x + prose.width)
       expect(box.x + box.width).toBeLessThanOrEqual(1280)
+      expect(
+        await note.evaluate((element) => getComputedStyle(element).whiteSpace),
+      ).not.toBe('nowrap')
+      const lineHeight = await note.evaluate((element) =>
+        parseFloat(getComputedStyle(element).lineHeight),
+      )
+      const text = (await note.innerText()).trim()
+      if (text.length > 60) expect(box.height).toBeGreaterThan(lineHeight * 1.5)
       expect(box.y).toBeGreaterThanOrEqual(previousBottom - 1)
       previousBottom = box.y + box.height
     }

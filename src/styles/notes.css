@@ -180,7 +180,7 @@ prose-content {
     side-note > a:first-child {
       position: relative;
       top: -0.5em;
-      margin-inline-end: 0.5em;
+      margin-inline-end: 0.25em;
       color: var(--flourish);
       font-size: 75%;
       line-height: 0;
