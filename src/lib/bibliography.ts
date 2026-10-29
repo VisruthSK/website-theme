@@ -30,30 +30,51 @@ const cache = new Map<string, Bibliography>()
 
 const collapse = (value: string) => value.replace(/\s+/g, ' ').trim()
 
+const typeset = (value: string) =>
+  value.replace(/[{}]/g, '').replace(/---/g, '—').replace(/--/g, '–')
+
+function splitAuthors(value: string): string[] {
+  const authors: string[] = []
+  let depth = 0
+  let start = 0
+  for (let index = 0; index < value.length; index += 1) {
+    if (value[index] === '{') depth += 1
+    else if (value[index] === '}') depth -= 1
+    else if (depth === 0) {
+      const separator = /^\s+and\s+/i.exec(value.slice(index))
+      if (separator) {
+        authors.push(value.slice(start, index))
+        index += separator[0].length - 1
+        start = index + 1
+      }
+    }
+  }
+  authors.push(value.slice(start))
+  return authors.map((author) => typeset(author.trim())).filter(Boolean)
+}
+
 function toEntry(raw: unknown): BibliographyEntry {
   const { key, id, fields: list = [] } = raw as BibtexEntry
   const fields = Object.fromEntries(
     list.map(({ name, value }) => [name, collapse(value)]),
   )
   const field = (name: string) => fields[name] ?? ''
+  const text = (name: string) => typeset(field(name))
 
   return {
     key: key || id || '',
-    author: field('author')
-      .split(/\s+and\s+/i)
-      .map((author) => author.trim())
-      .filter(Boolean),
-    title: field('title'),
+    author: splitAuthors(field('author')),
+    title: text('title'),
     year: parseInt(field('year')) || new Date().getFullYear(),
-    journal: field('journal'),
-    publisher: field('publisher'),
+    journal: text('journal'),
+    publisher: text('publisher'),
     doi: field('doi'),
-    pages: field('pages'),
-    volume: field('volume'),
-    issue: field('number') || field('issue'),
+    pages: text('pages'),
+    volume: text('volume'),
+    issue: typeset(field('number') || field('issue')),
     url: field('url'),
-    booktitle: field('booktitle'),
-    organization: field('organization'),
+    booktitle: text('booktitle'),
+    organization: text('organization'),
   }
 }
 
