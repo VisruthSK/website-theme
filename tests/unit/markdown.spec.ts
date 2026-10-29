@@ -133,6 +133,7 @@ test.describe('footnotes', () => {
       hastPlugins: [footnotes(true)],
     })
     expect(html).toContain('<side-note role="note" aria-label="Footnote 1"')
+    expect(html).toContain('</a> The note.</side-note>')
     expect(html).toContain('<h2 id="footnotes">Footnotes')
     expect(html).toContain(
       '<span class="footnote-sentence">Another one with a note.',

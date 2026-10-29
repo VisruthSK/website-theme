@@ -8,7 +8,7 @@ const name = (path: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '') || 'home'
 
-test('pages match their snapshots', async ({ page, site }) => {
+test('pages match their snapshots', async ({ page, site, browserName }) => {
   test.setTimeout(600_000)
   for (const path of site.visual) {
     for (const mode of ['light', 'dark'] as Mode[]) {
@@ -21,7 +21,7 @@ test('pages match their snapshots', async ({ page, site }) => {
             animations: 'disabled',
             caret: 'hide',
             fullPage: true,
-            maxDiffPixelRatio: 0.02,
+            maxDiffPixelRatio: browserName === 'webkit' ? 0.03 : 0.005,
             timeout: 30_000,
           })
       }

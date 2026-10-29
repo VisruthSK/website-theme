@@ -181,7 +181,7 @@ export const footnotes = (marginNotes: boolean) => () => {
           if (marginNotes && note) {
             ctx.insertAfter(ctx.parent(node), {
               type: 'raw',
-              value: `<side-note role="note" aria-label="Footnote ${label}" data-pagefind-ignore><a href="#${node.properties.id}" aria-label="Back to reference ${label}">${label}</a>${note}</side-note>`,
+              value: `<side-note role="note" aria-label="Footnote ${label}" data-pagefind-ignore><a href="#${node.properties.id}" aria-label="Back to reference ${label}">${label}</a> ${note}</side-note>`,
             })
           }
         },

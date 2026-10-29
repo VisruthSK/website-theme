@@ -39,6 +39,17 @@ test.describe('footnotes', () => {
       const box = (await note.boundingBox())!
       expect(box.x).toBeGreaterThanOrEqual(prose.x + prose.width)
       expect(box.x + box.width).toBeLessThanOrEqual(1280)
+      expect(
+        await note.evaluate((element) => getComputedStyle(element).whiteSpace),
+      ).not.toBe('nowrap')
+      expect(
+        await note.evaluate(
+          (element) => element.scrollWidth <= element.clientWidth,
+        ),
+        'a note never overflows its column',
+      ).toBe(true)
+      const number = (await note.locator('> a:first-child').innerText()).trim()
+      expect((await note.innerText()).startsWith(`${number} `)).toBe(true)
       expect(box.y).toBeGreaterThanOrEqual(previousBottom - 1)
       previousBottom = box.y + box.height
     }
