@@ -58,18 +58,18 @@ test.describe('schema', () => {
       ...example,
       colors: { ring: 'red' },
       brand: {
-        palette: { cream: '#f6efe1', taupe: '#6b5b52', blush: '#eae0d8' },
-        background: { light: 'cream', dark: '#000' },
-        secondary: 'taupe',
-        tertiary: { light: 'blush', dark: '#111' },
+        palette: { paper: '#fafafa', slate: '#555555', mist: '#eeeeee' },
+        background: { light: 'paper', dark: '#000' },
+        secondary: 'slate',
+        tertiary: { light: 'mist', dark: '#111' },
         info: '#00f',
       },
     })
-    expect(theme.colors.background).toEqual({ light: 'cream', dark: '#000' })
-    expect(theme.colors['muted-foreground']).toBe('taupe')
+    expect(theme.colors.background).toEqual({ light: 'paper', dark: '#000' })
+    expect(theme.colors['muted-foreground']).toBe('slate')
     for (const token of ['secondary', 'muted', 'accent'] as const) {
       expect(theme.colors[token], token).toEqual({
-        light: 'blush',
+        light: 'mist',
         dark: '#111',
       })
     }
