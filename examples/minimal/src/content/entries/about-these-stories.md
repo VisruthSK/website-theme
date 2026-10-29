@@ -19,6 +19,12 @@ Open any of the stories on a wide screen and look at the right edge of the text.
 
 On a phone the same page is set by the browser instead. The theme does not justify text on narrow screens, because there is too little room on a line to do it well, and a ragged edge reads better than uneven gaps.
 
+Three things are worth checking:
+
+1. The right edge of the text is straight.
+2. The gaps between words are even.
+3. Punctuation hangs into the margin.
+
 ## The notes
 
 The footnotes on the Poe story appear in the margin on a wide screen and at the foot of the page on a narrow one. Both come from the same markup, and no script is needed to move them. Each one links back to the sentence it belongs to.

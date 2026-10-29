@@ -58,7 +58,10 @@ Citations are numbered in the order they first appear and link to the reference 
 
 - Lists keep the same measure and spacing as paragraphs.
 - Nested lists indent by a fixed step.
-- Task lists and ordered lists look the same way.
+
+1. Ordered lists number their items in the same colour as the text around them.
+2. The numbers are text, so they need the same contrast as text.
+3. A third item shows the numbers lining up.
 
 Every one of these features can be switched off in `theme.json`, and the build then leaves no trace of it in the output. The second example site does exactly that, so it makes a useful comparison with this page: it has no margin notes, no maths and no citations, and its pages are correspondingly lighter.
 

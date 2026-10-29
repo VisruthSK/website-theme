@@ -70,3 +70,38 @@ for (const mode of ['light', 'dark'] as Mode[]) {
     ).toEqual([])
   })
 }
+
+for (const mode of ['light', 'dark'] as Mode[]) {
+  test(`list numbers meet text contrast (${mode})`, async ({ page, site }) => {
+    await visit(page, site, site.typeset[0], mode)
+    const ratio = await page.evaluate(() => {
+      const marker = getComputedStyle(
+        document.querySelector('prose-content ol > li')!,
+        '::marker',
+      ).color
+      const canvas = document.createElement('canvas')
+      canvas.width = canvas.height = 1
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })!
+      const composited = (color: string) => {
+        ctx.clearRect(0, 0, 1, 1)
+        ctx.fillStyle = getComputedStyle(document.body).backgroundColor
+        ctx.fillRect(0, 0, 1, 1)
+        ctx.fillStyle = color
+        ctx.fillRect(0, 0, 1, 1)
+        return [...ctx.getImageData(0, 0, 1, 1).data.slice(0, 3)]
+      }
+      const linear = (c: number) =>
+        c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+      const luminance = ([r, g, b]: number[]) =>
+        0.2126 * linear(r / 255) +
+        0.7152 * linear(g / 255) +
+        0.0722 * linear(b / 255)
+      const [high, low] = [
+        luminance(composited(marker)),
+        luminance(composited(getComputedStyle(document.body).backgroundColor)),
+      ].sort((a, b) => b - a)
+      return (high + 0.05) / (low + 0.05)
+    })
+    expect(ratio).toBeGreaterThanOrEqual(4.5)
+  })
+}
