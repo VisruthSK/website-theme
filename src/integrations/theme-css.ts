@@ -44,9 +44,10 @@ const stackEntry = (name: string) =>
   /^[a-z-]+$/i.test(name) ? name : `'${name}'`
 
 export function themeStylesheet(theme: Theme, file: URL, root: URL) {
-  const { palette, colors, fonts, features } = theme
+  const { colors, fonts, features } = theme
+  const { palette } = theme.brand
   const resolve = (value: string) =>
-    value in palette ? `var(--${value})` : value
+    value in palette ? `var(--brand-${value})` : value
   const color = (value: Color) =>
     typeof value === 'string'
       ? resolve(value)
@@ -78,7 +79,9 @@ export function themeStylesheet(theme: Theme, file: URL, root: URL) {
 
   const tokens = [
     'color-scheme: light dark;',
-    ...Object.entries(palette).map(([name, value]) => `--${name}: ${value};`),
+    ...Object.entries(palette).map(
+      ([name, value]) => `--brand-${name}: ${value};`,
+    ),
     ...COLOR_TOKENS.map((token) => `--${token}: ${color(colors[token])};`),
     ...FIXED_TOKENS.map(([name, value]) => `--${name}: ${value};`),
   ]

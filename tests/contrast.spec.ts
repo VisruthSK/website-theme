@@ -11,6 +11,8 @@ const pairs = [
   { name: 'flourish', fg: '--flourish', bg: '--background', need: 4.5 },
   { name: 'focus ring', fg: '--ring', bg: '--background', need: 3 },
   { name: 'primary', fg: '--primary', bg: '--background', need: 3 },
+  { name: 'success', fg: '--success', bg: '--background', need: 3 },
+  { name: 'info', fg: '--info', bg: '--background', need: 3 },
   { name: 'danger', fg: '--danger-foreground', bg: '--danger', need: 4.5 },
   { name: 'accent', fg: '--accent-foreground', bg: '--accent', need: 4.5 },
   { name: 'hover', fg: '--foreground', bg: '--surface-hover', need: 4.5 },

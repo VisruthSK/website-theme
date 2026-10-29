@@ -217,22 +217,22 @@
         "additionalProperties": false
       }
     },
-    "palette": {
-      "default": {},
-      "type": "object",
-      "propertyNames": {
-        "type": "string",
-        "pattern": "^[a-z0-9][a-z0-9-]*$"
-      },
-      "additionalProperties": {
-        "type": "string",
-        "minLength": 1
-      }
-    },
-    "colors": {
+    "brand": {
       "default": {},
       "type": "object",
       "properties": {
+        "palette": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
         "background": {
           "default": {
             "light": "#fcfcfc",
@@ -325,93 +325,6 @@
         },
         "secondary": {
           "default": {
-            "light": "#f0f0f0",
-            "dark": "#222222"
-          },
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "light": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "dark": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "light",
-                "dark"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "secondary-foreground": {
-          "default": "var(--foreground)",
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "light": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "dark": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "light",
-                "dark"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "muted": {
-          "default": {
-            "light": "#f0f0f0",
-            "dark": "#222222"
-          },
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "light": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "dark": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "light",
-                "dark"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "muted-foreground": {
-          "default": {
             "light": "#646464",
             "dark": "#b4b4b4"
           },
@@ -440,7 +353,7 @@
             }
           ]
         },
-        "accent": {
+        "tertiary": {
           "default": {
             "light": "#f0f0f0",
             "dark": "#222222"
@@ -470,37 +383,10 @@
             }
           ]
         },
-        "accent-foreground": {
-          "default": "var(--foreground)",
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "light": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "dark": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "light",
-                "dark"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "border": {
+        "success": {
           "default": {
-            "light": "#d9d9d9",
-            "dark": "#3a3a3a"
+            "light": "#218358",
+            "dark": "#3dd68c"
           },
           "anyOf": [
             {
@@ -527,149 +413,11 @@
             }
           ]
         },
-        "ring": {
+        "info": {
           "default": {
-            "light": "#838383",
-            "dark": "#7b7b7b"
+            "light": "#0d74ce",
+            "dark": "#70b8ff"
           },
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "light": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "dark": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "light",
-                "dark"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "primary-foreground": {
-          "default": "var(--background)",
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "light": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "dark": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "light",
-                "dark"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "destructive": {
-          "default": "var(--danger)",
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "light": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "dark": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "light",
-                "dark"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "danger": {
-          "default": {
-            "light": "#ce2c31",
-            "dark": "#ff9592"
-          },
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "light": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "dark": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "light",
-                "dark"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "danger-hover": {
-          "default": "var(--danger)",
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "object",
-              "properties": {
-                "light": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "dark": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "light",
-                "dark"
-              ],
-              "additionalProperties": false
-            }
-          ]
-        },
-        "danger-foreground": {
-          "default": "var(--background)",
           "anyOf": [
             {
               "type": "string",
@@ -725,11 +473,538 @@
             }
           ]
         },
-        "surface-hover": {
+        "danger": {
           "default": {
-            "light": "#f9f9f9",
-            "dark": "#191919"
+            "light": "#ce2c31",
+            "dark": "#ff9592"
           },
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "colors": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "background": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "foreground": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "primary": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "secondary": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "secondary-foreground": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "muted": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "muted-foreground": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "accent": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "accent-foreground": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "border": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "ring": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "primary-foreground": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "destructive": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "danger": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "danger-hover": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "danger-foreground": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "warning": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "success": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "info": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "light": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dark": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "light",
+                "dark"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "surface-hover": {
           "anyOf": [
             {
               "type": "string",
@@ -756,7 +1031,6 @@
           ]
         },
         "surface-accent-muted": {
-          "default": "color-mix(in oklab, var(--accent) 15%, transparent)",
           "anyOf": [
             {
               "type": "string",
@@ -783,7 +1057,6 @@
           ]
         },
         "surface-accent-soft": {
-          "default": "color-mix(in oklab, var(--accent) 40%, transparent)",
           "anyOf": [
             {
               "type": "string",
@@ -810,7 +1083,6 @@
           ]
         },
         "surface-warning": {
-          "default": "color-mix(in oklab, var(--warning) 12%, transparent)",
           "anyOf": [
             {
               "type": "string",
@@ -837,7 +1109,6 @@
           ]
         },
         "highlight": {
-          "default": "color-mix(in oklab, var(--warning) 25%, var(--background))",
           "anyOf": [
             {
               "type": "string",
@@ -864,7 +1135,6 @@
           ]
         },
         "highlight-border": {
-          "default": "color-mix(in oklab, var(--warning) 40%, transparent)",
           "anyOf": [
             {
               "type": "string",
@@ -891,10 +1161,6 @@
           ]
         },
         "ink-faint": {
-          "default": {
-            "light": "color-mix(in oklab, var(--foreground) 50%, transparent)",
-            "dark": "color-mix(in oklab, var(--foreground) 60%, transparent)"
-          },
           "anyOf": [
             {
               "type": "string",
@@ -921,10 +1187,6 @@
           ]
         },
         "ink-muted": {
-          "default": {
-            "light": "color-mix(in oklab, var(--foreground) 65%, transparent)",
-            "dark": "color-mix(in oklab, var(--foreground) 75%, transparent)"
-          },
           "anyOf": [
             {
               "type": "string",
@@ -951,10 +1213,6 @@
           ]
         },
         "ink-subtle": {
-          "default": {
-            "light": "color-mix(in oklab, var(--foreground) 75%, transparent)",
-            "dark": "color-mix(in oklab, var(--foreground) 82%, transparent)"
-          },
           "anyOf": [
             {
               "type": "string",
@@ -981,10 +1239,6 @@
           ]
         },
         "ink-soft": {
-          "default": {
-            "light": "color-mix(in oklab, var(--foreground) 85%, transparent)",
-            "dark": "color-mix(in oklab, var(--foreground) 90%, transparent)"
-          },
           "anyOf": [
             {
               "type": "string",
@@ -1011,10 +1265,6 @@
           ]
         },
         "ink-strong": {
-          "default": {
-            "light": "color-mix(in oklab, var(--foreground) 92%, transparent)",
-            "dark": "color-mix(in oklab, var(--foreground) 96%, transparent)"
-          },
           "anyOf": [
             {
               "type": "string",
@@ -1041,7 +1291,6 @@
           ]
         },
         "border-subtle": {
-          "default": "color-mix(in oklab, var(--border) 80%, transparent)",
           "anyOf": [
             {
               "type": "string",
@@ -1068,7 +1317,6 @@
           ]
         },
         "border-accent": {
-          "default": "color-mix(in oklab, var(--accent) 60%, transparent)",
           "anyOf": [
             {
               "type": "string",
@@ -1095,10 +1343,6 @@
           ]
         },
         "flourish": {
-          "default": {
-            "light": "#646464",
-            "dark": "#b4b4b4"
-          },
           "anyOf": [
             {
               "type": "string",

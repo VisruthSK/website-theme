@@ -41,7 +41,7 @@ test.describe('schema', () => {
   })
 
   test('colours default to the astro-erudite palette', () => {
-    const { palette: _, colors: __, ...bare } = example
+    const { brand: _, colors: __, ...bare } = example
     const theme = parseTheme(bare)
     expect(theme.colors.background).toEqual({
       light: '#fcfcfc',
@@ -51,6 +51,40 @@ test.describe('schema', () => {
       light: '#202020',
       dark: '#eeeeee',
     })
+  })
+
+  test('brand roles fill the colour tokens they stand for', () => {
+    const theme = parseTheme({
+      ...example,
+      colors: { ring: 'red' },
+      brand: {
+        palette: { cream: '#f6efe1', taupe: '#6b5b52', blush: '#eae0d8' },
+        background: { light: 'cream', dark: '#000' },
+        secondary: 'taupe',
+        tertiary: { light: 'blush', dark: '#111' },
+        info: '#00f',
+      },
+    })
+    expect(theme.colors.background).toEqual({ light: 'cream', dark: '#000' })
+    expect(theme.colors['muted-foreground']).toBe('taupe')
+    for (const token of ['secondary', 'muted', 'accent'] as const) {
+      expect(theme.colors[token], token).toEqual({
+        light: 'blush',
+        dark: '#111',
+      })
+    }
+    expect(theme.colors.info).toBe('#00f')
+    expect(theme.colors.ring).toBe('red')
+    expect(theme.colors.success).toEqual({ light: '#218358', dark: '#3dd68c' })
+  })
+
+  test('an explicit colour beats the brand role it would come from', () => {
+    const theme = parseTheme({
+      ...example,
+      brand: { background: '#abcdef' },
+      colors: { background: '#123456' },
+    })
+    expect(theme.colors.background).toBe('#123456')
   })
 
   test('navigation must name a configured section', () => {
@@ -76,22 +110,24 @@ test.describe('generated stylesheet', () => {
   const file = new URL('src/generated/theme.css', root)
   const css = themeStylesheet(SITES.example.theme, file, root)
 
-  test('palette names become custom properties and references', () => {
+  test('brand palette names become --brand custom properties and references', () => {
     const named = themeStylesheet(
       parseTheme({
         ...example,
-        palette: {
-          paper: 'oklch(0.985 0.004 250)',
-          'paper-dark': 'oklch(0.17 0.015 255)',
+        brand: {
+          palette: {
+            paper: 'oklch(0.985 0.004 250)',
+            'paper-dark': 'oklch(0.17 0.015 255)',
+          },
+          background: { light: 'paper', dark: 'paper-dark' },
         },
-        colors: { background: { light: 'paper', dark: 'paper-dark' } },
       }),
       file,
       root,
     )
-    expect(named).toContain('--paper: oklch(0.985 0.004 250);')
+    expect(named).toContain('--brand-paper: oklch(0.985 0.004 250);')
     expect(named).toContain(
-      '--background: light-dark(var(--paper), var(--paper-dark));',
+      '--background: light-dark(var(--brand-paper), var(--brand-paper-dark));',
     )
     expect(named).toContain('--focus-ring: 2px solid var(--ring);')
   })
