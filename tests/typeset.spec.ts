@@ -160,11 +160,7 @@ test('every route lays out exactly as planned at every width', async ({
       }
     }
     expect(checked, route).toBeGreaterThan(0)
-    const allowed = test.info().project.name.endsWith('firefox') ? 0.03 : 0.01
-    expect(
-      fallbacks.length / (checked + fallbacks.length),
-      `${route} kept native justification ${fallbacks.join(' ')}`,
-    ).toBeLessThanOrEqual(allowed)
+    expect(fallbacks, `${route} kept native justification`).toEqual([])
   }
 })
 

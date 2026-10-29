@@ -42,11 +42,14 @@ test.describe('footnotes', () => {
       expect(
         await note.evaluate((element) => getComputedStyle(element).whiteSpace),
       ).not.toBe('nowrap')
-      const lineHeight = await note.evaluate((element) =>
-        parseFloat(getComputedStyle(element).lineHeight),
-      )
-      const text = (await note.innerText()).trim()
-      if (text.length > 60) expect(box.height).toBeGreaterThan(lineHeight * 1.5)
+      expect(
+        await note.evaluate(
+          (element) => element.scrollWidth <= element.clientWidth,
+        ),
+        'a note never overflows its column',
+      ).toBe(true)
+      const number = (await note.locator('> a:first-child').innerText()).trim()
+      expect((await note.innerText()).startsWith(`${number} `)).toBe(true)
       expect(box.y).toBeGreaterThanOrEqual(previousBottom - 1)
       previousBottom = box.y + box.height
     }

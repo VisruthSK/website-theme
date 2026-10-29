@@ -21,7 +21,7 @@ test('pages match their snapshots', async ({ page, site }) => {
             animations: 'disabled',
             caret: 'hide',
             fullPage: true,
-            maxDiffPixelRatio: 0.02,
+            maxDiffPixelRatio: 0.001,
             timeout: 30_000,
           })
       }
