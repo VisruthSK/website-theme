@@ -2,12 +2,12 @@
   "$schema": "../../config/theme.schema.json",
   "site": {
     "title": "Example Site",
-    "description": "THIS CONTENT IS ENTIRELY LLM WRITTEN",
+    "description": "Public domain stories, and an LLM written benchmark",
     "href": "https://visruthsk.github.io/website-theme/",
     "author": "Example Author",
     "postsPerPage": 3,
-    "featured": ["measuring-the-theme", "margins"],
-    "footer": "Lorem ipsum filler text for testing.",
+    "featured": ["everything", "measuring-the-theme"],
+    "footer": "Story text from Project Gutenberg, in the public domain.",
     "themeColor": {
       "light": "#fcfcfc",
       "dark": "#111111"

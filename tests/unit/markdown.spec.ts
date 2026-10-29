@@ -47,12 +47,12 @@ test.describe('citations', () => {
       '2',
     ])
     expect(
-      numbers(cited('First @knuth1984, then @cicero1914, again [@knuth1984].')),
+      numbers(cited('First @knuth1984, then @wilde1888, again [@knuth1984].')),
     ).toEqual(['1', '2', '1'])
   })
 
   test('prefixes, locators and suppressed authors are kept', () => {
-    const html = cited('See [see @knuth1984, p. 14; -@cicero1914].')
+    const html = cited('See [see @knuth1984, p. 14; -@wilde1888].')
     expect(html).toContain('see <a href="#ref-knuth1984"')
     expect(html).toContain('</a>, p. 14')
     expect(numbers(html)).toEqual(['1', '2'])

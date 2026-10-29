@@ -2,7 +2,7 @@
   "$schema": "../../config/theme.schema.json",
   "site": {
     "title": "Field Journal",
-    "description": "THIS CONTENT IS ENTIRELY LLM WRITTEN",
+    "description": "Public domain stories in a quiet setting",
     "href": "https://journal.example.net/",
     "author": "Sample Writer",
     "locale": "en-GB",

@@ -28,6 +28,12 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.7.4
         version: 3.7.4
+      '@citation-js/core':
+        specifier: ^0.9.0
+        version: 0.9.0
+      '@citation-js/plugin-bibtex':
+        specifier: ^0.9.0
+        version: 0.9.0(@citation-js/core@0.9.0)
       '@expressive-code/plugin-collapsible-sections':
         specifier: ^0.44.3
         version: 0.44.3
@@ -46,9 +52,6 @@ importers:
       astro:
         specifier: ^7.4.1
         version: 7.4.2(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.1)
-      bibtex-parse:
-        specifier: ^2.1.0
-        version: 2.1.0
       entities:
         specifier: ^8.1.0
         version: 8.1.0
@@ -313,6 +316,24 @@ packages:
   '@capsizecss/unpack@4.0.1':
     resolution: {integrity: sha512-CuNiSqg7+e1cO/GjffyMOm5Tt2jUF9CWHHnvQ/UkqvtkGfHdgwEC0wpmq7fkN3gxwpRnrAN0WzO3vREKmNolMQ==}
     engines: {node: '>=18'}
+
+  '@citation-js/core@0.9.0':
+    resolution: {integrity: sha512-IIIfDFirx8B7eYiYIg412If3WVJAefJUS7IsAnkW3YSuThHK4fW9Ibog6wCqmT6pfXW1VM9wfGPFvO2J5k859A==}
+    engines: {node: '>=22.12.0'}
+
+  '@citation-js/date@0.5.1':
+    resolution: {integrity: sha512-1iDKAZ4ie48PVhovsOXQ+C6o55dWJloXqtznnnKy6CltJBQLIuLLuUqa8zlIvma0ZigjVjgDUhnVaNU1MErtZw==}
+    engines: {node: '>=10.0.0'}
+
+  '@citation-js/name@0.4.2':
+    resolution: {integrity: sha512-brSPsjs2fOVzSnARLKu0qncn6suWjHVQtrqSUrnqyaRH95r/Ad4wPF5EsoWr+Dx8HzkCGb/ogmoAzfCsqlTwTQ==}
+    engines: {node: '>=6'}
+
+  '@citation-js/plugin-bibtex@0.9.0':
+    resolution: {integrity: sha512-9n8EVP/kq+v7VuoWVI+p8SRE3KikQYd2c78NSRq9btC4b3XzuBA3qFI3uF6xyxbNLPtY7+Y4BQDayta2yrl1zQ==}
+    engines: {node: '>=22.12.0'}
+    peerDependencies:
+      '@citation-js/core': ^0.9.0
 
   '@clack/core@1.5.1':
     resolution: {integrity: sha512-iHTrHA8MtVuLl2TfZySmcKv1qO2PoyC9Z7pfSDozEuV5vtY3/wcOPKJXlqJ5Oq2Cx5DDGQGAMVx6HZfRRoVEbQ==}
@@ -1330,9 +1351,6 @@ packages:
   bcp-47-match@2.0.3:
     resolution: {integrity: sha512-JtTezzbAibu8G0R9op9zb3vcWZd9JF6M0xOYGPn0fNCd7wOpRB1mU2mH9T8gaBGbAAyIIVgB2G7xG0GP98zMAQ==}
 
-  bibtex-parse@2.1.0:
-    resolution: {integrity: sha512-Ej1vvnhfEfegd2WAeQ1dWJ/NkS3Cb84zRPeMMCFDcOSvAJFAmhm/sAr2oLpK/KQITlnHk0g6+zBokGvLe9+NaQ==}
-
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
 
@@ -1841,6 +1859,9 @@ packages:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
 
+  moo@0.5.3:
+    resolution: {integrity: sha512-m2fmM2dDm7GZQsY7KK2cme8agi+AAljILjQnof7p1ZMDe6dQ4bdnSMx0cPppudoeNv5hEFQirN6u+O4fDE0IWA==}
+
   mrmime@2.0.1:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
     engines: {node: '>=10'}
@@ -2141,6 +2162,10 @@ packages:
     resolution: {integrity: sha512-bkxnTg1kSU0guhIBmibA6UUhrQmPVA1XsQLN+ylCd+UWzbnLkySOcXpyk1mrl05f+pcaCx2eHb+sp6BgMZWX+Q==}
     engines: {node: '>=16'}
     hasBin: true
+
+  sync-fetch-undici@0.7.1:
+    resolution: {integrity: sha512-t/rJBTRr3/WCs/04MnLStgGGFac1Ge6WDugNxO+KoMqtfmWENMPJbtAmGqIWnwsXi+B7Uh0P0ea2QRkKIZTIPg==}
+    engines: {node: '>=22.12.0'}
 
   temml@0.14.0:
     resolution: {integrity: sha512-tz1LW/5IZpThK8c7ZpdTSH/n56eAj+ThirLieErtKxYC3EKCIiB4sKdRUehAgH+fQmvIKqMfP3gqTLBdLpy9zw==}
@@ -2494,6 +2519,10 @@ packages:
   web-namespaces@2.0.1:
     resolution: {integrity: sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==}
 
+  whatwg-mimetype@5.0.0:
+    resolution: {integrity: sha512-sXcNcHOC51uPGF0P/D4NVtrkjSU2fNsm9iog4ZvZJsL3rjoDAzXZhkm2MWt1y+PUdggKAYVoMAIYcs78wJ51Cw==}
+    engines: {node: '>=20'}
+
   wrap-ansi@9.0.2:
     resolution: {integrity: sha512-42AtmgqjV+X1VpdOfyTGOYRi0/zsoLqtXQckTmqTeybT+BDIbM/Guxo7x3pE2vtpr1ok6xRqM9OpBe+Jyoqyww==}
     engines: {node: '>=18'}
@@ -2741,6 +2770,23 @@ snapshots:
   '@capsizecss/unpack@4.0.1':
     dependencies:
       fontkitten: 1.0.3
+
+  '@citation-js/core@0.9.0':
+    dependencies:
+      '@citation-js/date': 0.5.1
+      '@citation-js/name': 0.4.2
+      sync-fetch-undici: 0.7.1
+
+  '@citation-js/date@0.5.1': {}
+
+  '@citation-js/name@0.4.2': {}
+
+  '@citation-js/plugin-bibtex@0.9.0(@citation-js/core@0.9.0)':
+    dependencies:
+      '@citation-js/core': 0.9.0
+      '@citation-js/date': 0.5.1
+      '@citation-js/name': 0.4.2
+      moo: 0.5.3
 
   '@clack/core@1.5.1':
     dependencies:
@@ -3646,8 +3692,6 @@ snapshots:
 
   bcp-47-match@2.0.3: {}
 
-  bibtex-parse@2.1.0: {}
-
   boolbase@1.0.0: {}
 
   braces@3.0.3:
@@ -4192,6 +4236,8 @@ snapshots:
       braces: 3.0.3
       picomatch: 2.3.2
 
+  moo@0.5.3: {}
+
   mrmime@2.0.1: {}
 
   muggle-string@0.4.1: {}
@@ -4572,6 +4618,10 @@ snapshots:
       picocolors: 1.1.1
       sax: 1.6.1
 
+  sync-fetch-undici@0.7.1:
+    dependencies:
+      whatwg-mimetype: 5.0.0
+
   temml@0.14.0: {}
 
   terser@5.49.2:
@@ -4846,6 +4896,8 @@ snapshots:
       argparse: 2.0.1
 
   web-namespaces@2.0.1: {}
+
+  whatwg-mimetype@5.0.0: {}
 
   wrap-ansi@9.0.2:
     dependencies:

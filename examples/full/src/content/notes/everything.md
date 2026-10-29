@@ -2,70 +2,68 @@
 title: 'Everything at Once'
 date: 2025-02-03
 description: 'Inline code, an external SVG, tables, maths, callouts, footnotes and citations in one note.'
-tags: ['lorem', 'code']
+tags: ['code', 'features']
 bib: example
 ---
 
 THIS CONTENT IS ENTIRELY LLM WRITTEN
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Inline code such as `const lorem = 'ipsum'` stays in the line, a variable like `dolor_sit` keeps its underscores, and a long command such as `pnpm exec astro build --root examples/full` wraps with the text around it.[^inline]
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-
-Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.
-
-Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.
+This note uses every kind of content the theme sets, so that one page can show how they sit together. It is a short working document: a few paragraphs of prose with `inline code` in the line, a command such as `pnpm exec astro build --root examples/full` that has to wrap with the text around it, and a few notes in the margin.[^inline]
 
 ## An external SVG
 
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. The diagram below is a separate file served from the site, not inline markup, so it is cached on its own and scales with the column.
+The diagram below is a separate file served from the site, not inline markup. That keeps it cacheable on its own, and it scales with the column whatever the width of the screen.
 
-![Three boxes labelled lorem, ipsum and dolor joined by arrows](/diagram.svg)
+![Three boxes labelled tell, listen and retell joined by arrows](/diagram.svg)
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.[^svg]
+A caption is not needed when the surrounding sentence says what the picture shows, and the alternative text carries the same description for readers who cannot see it.[^svg]
 
 ## Code, tables and maths
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+Code blocks are highlighted at build time, so no script runs in the reader's browser, and the block keeps its own title and copy button:
 
-```ts title="lorem.ts"
-export function ipsum(dolor: number, sit = 2): number {
-  return dolor ** sit + Math.sqrt(dolor)
+```ts title="count.ts"
+export function words(text: string): number {
+  return text.split(/\s+/).filter(Boolean).length
 }
 ```
 
-| Lorem | Ipsum | Dolor |
-| --- | ---: | ---: |
-| `alpha` | 1.5 | 20 |
-| `beta` | 22.25 | 3 |
-| `gamma` | 333 | 0.5 |
+Tables line their numbers up on the right and keep the same rhythm as the text above them:
 
-Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Inline maths such as $e^{i\pi} + 1 = 0$ sits in the line, and display maths takes its own:
+| Story | Words | Year |
+| --- | ---: | ---: |
+| `The Selfish Giant` | 1,652 | 1888 |
+| `The Frog-Prince` | 1,192 | 1812 |
+| `The Elves and the Shoemaker` | 743 | 1812 |
+
+Inline maths such as $e^{i\pi} + 1 = 0$ sits in the line, and display maths takes a line of its own:
 
 $$
 \sum_{k=1}^{n} k = \frac{n(n+1)}{2}
 $$
 
-## Callouts, quotes and citations
+## Callouts, quotations and citations
 
-:::note[Lorem]
-Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, with `inline code` inside a callout.
+:::note[Callouts]
+A callout can hold `inline code`, a [link](https://pagefind.app) and more than one paragraph of text.
 :::
 
-> Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.
+:::tip[Quotations]
+A block quotation keeps the body typeface and is set apart by its rule, as in this sentence from Wilde:
+:::
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident [@cicero1914; see @knuth1984]. Et harum quidem rerum facilis est et expedita distinctio, nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.[^long]
+> It was a large lovely garden, with soft green grass.
 
-- Temporibus autem quibusdam et aut officiis debitis
-- Itaque earum rerum hic tenetur a sapiente delectus
-- Ut aut reiciendis voluptatibus maiores alias consequatur
+Citations are numbered in the order they first appear and link to the reference list at the foot of the page, as with the story quoted above [@wilde1888]. A group takes one set of brackets [see @knuth1984; @knuth1981], and a locator can follow the key.[^citation]
 
-Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae, itaque earum rerum hic tenetur a sapiente delectus.
+- Lists keep the same measure and spacing as paragraphs.
+- Nested lists indent by a fixed step.
+- Task lists and ordered lists look the same way.
 
-[^inline]: A short note with `inline code` and a [link to the Pagefind site](https://pagefind.app).
+Every one of these features can be switched off in `theme.json`, and the build then leaves no trace of it in the output. The second example site does exactly that, so it makes a useful comparison with this page: it has no margin notes, no maths and no citations, and its pages are correspondingly lighter.
 
-[^svg]: A note beside the diagram, long enough to wrap onto several lines in the margin so that its line breaks, its width and its alignment with the paragraph can be checked by eye.
+[^inline]: A note with `inline code` and a [link to the Pagefind site](https://pagefind.app), set in the margin beside the line that mentions it.
 
-[^long]: Another note, with a long unbroken address that has to wrap instead of running out of the margin: https://example.com/lorem/ipsum/dolor/sit/amet/consectetur/adipiscing/elit.
+[^svg]: A longer note, beside the diagram, long enough to wrap onto several lines in the margin so that its line breaks, its width and its alignment with the paragraph can be checked by eye.
+
+[^citation]: A note with a long unbroken address that has to wrap instead of running out of the margin: https://example.com/stories/the-selfish-giant/chapter-one/paragraph-two/sentence-three.

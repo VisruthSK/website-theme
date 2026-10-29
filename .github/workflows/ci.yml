@@ -97,7 +97,7 @@ jobs:
           urls: |
             http://127.0.0.1:4173/
             http://127.0.0.1:4173/journal/
-            http://127.0.0.1:4173/journal/coastal-path/
+            http://127.0.0.1:4173/journal/the-masque-of-the-red-death/
           configPath: .github/lighthouserc.json
           runs: 1
           uploadArtifacts: false

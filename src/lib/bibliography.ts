@@ -1,4 +1,5 @@
-import { parse as parseBibtex } from 'bibtex-parse'
+import { Cite } from '@citation-js/core'
+import '@citation-js/plugin-bibtex'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -14,69 +15,48 @@ export interface BibliographyEntry {
   pages?: string
   volume?: string
   issue?: string
-  booktitle?: string
-  organization?: string
 }
 
 export type Bibliography = Record<string, BibliographyEntry>
 
-type BibtexEntry = {
-  key?: string
-  id?: string
-  fields?: { name: string; value: string }[]
+interface CslName {
+  family?: string
+  given?: string
+  literal?: string
+}
+
+interface CslItem {
+  id: string
+  author?: CslName[]
+  title?: string
+  issued?: { 'date-parts'?: number[][] }
+  'container-title'?: string
+  publisher?: string
+  DOI?: string
+  URL?: string
+  page?: string
+  volume?: string
+  issue?: string
 }
 
 const cache = new Map<string, Bibliography>()
 
-const collapse = (value: string) => value.replace(/\s+/g, ' ').trim()
+const name = ({ family, given, literal }: CslName) =>
+  literal ?? [family, given].filter(Boolean).join(', ')
 
-const typeset = (value: string) =>
-  value.replace(/[{}]/g, '').replace(/---/g, '—').replace(/--/g, '–')
-
-function splitAuthors(value: string): string[] {
-  const authors: string[] = []
-  let depth = 0
-  let start = 0
-  for (let index = 0; index < value.length; index += 1) {
-    if (value[index] === '{') depth += 1
-    else if (value[index] === '}') depth -= 1
-    else if (depth === 0) {
-      const separator = /^\s+and\s+/i.exec(value.slice(index))
-      if (separator) {
-        authors.push(value.slice(start, index))
-        index += separator[0].length - 1
-        start = index + 1
-      }
-    }
-  }
-  authors.push(value.slice(start))
-  return authors.map((author) => typeset(author.trim())).filter(Boolean)
-}
-
-function toEntry(raw: unknown): BibliographyEntry {
-  const { key, id, fields: list = [] } = raw as BibtexEntry
-  const fields = Object.fromEntries(
-    list.map(({ name, value }) => [name, collapse(value)]),
-  )
-  const field = (name: string) => fields[name] ?? ''
-  const text = (name: string) => typeset(field(name))
-
-  return {
-    key: key || id || '',
-    author: splitAuthors(field('author')),
-    title: text('title'),
-    year: parseInt(field('year')) || new Date().getFullYear(),
-    journal: text('journal'),
-    publisher: text('publisher'),
-    doi: field('doi'),
-    pages: text('pages'),
-    volume: text('volume'),
-    issue: typeset(field('number') || field('issue')),
-    url: field('url'),
-    booktitle: text('booktitle'),
-    organization: text('organization'),
-  }
-}
+const toEntry = (item: CslItem): BibliographyEntry => ({
+  key: item.id,
+  author: (item.author ?? []).map(name),
+  title: item.title ?? '',
+  year: item.issued?.['date-parts']?.[0]?.[0] ?? new Date().getFullYear(),
+  journal: item['container-title'],
+  publisher: item.publisher,
+  doi: item.DOI,
+  pages: item.page?.replace('-', '–'),
+  volume: item.volume,
+  issue: item.issue,
+  url: item.URL,
+})
 
 export function readBibliography(
   directory: string,
@@ -87,11 +67,10 @@ export function readBibliography(
   if (cached) return cached
 
   try {
-    const source = readFileSync(path, 'utf-8')
     const bibliography: Bibliography = {}
-    for (const raw of parseBibtex(source)) {
-      const entry = toEntry(raw)
-      if (entry.key) bibliography[entry.key] = entry
+    for (const item of new Cite(readFileSync(path, 'utf-8'))
+      .data as CslItem[]) {
+      bibliography[item.id] = toEntry(item)
     }
     cache.set(path, bibliography)
     return bibliography
