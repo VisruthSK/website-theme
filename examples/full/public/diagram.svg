@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160" role="img" aria-labelledby="t d">
-  <title id="t">Lorem ipsum diagram</title>
-  <desc id="d">Three boxes labelled lorem, ipsum and dolor joined by arrows.</desc>
+  <title id="t">Story diagram</title>
+  <desc id="d">Three boxes labelled tell, listen and retell joined by arrows.</desc>
   <g fill="none" stroke="#646464" stroke-width="2">
     <rect x="20" y="50" width="110" height="60" rx="8"/>
     <rect x="185" y="50" width="110" height="60" rx="8"/>
@@ -8,8 +8,8 @@
     <path d="M130 80h55M295 80h55M175 72l10 8-10 8M340 72l10 8-10 8"/>
   </g>
   <g fill="#444" font-family="sans-serif" font-size="18" text-anchor="middle">
-    <text x="75" y="86">lorem</text>
-    <text x="240" y="86">ipsum</text>
-    <text x="405" y="86">dolor</text>
+    <text x="75" y="86">tell</text>
+    <text x="240" y="86">listen</text>
+    <text x="405" y="86">retell</text>
   </g>
 </svg>
