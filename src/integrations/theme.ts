@@ -2,7 +2,7 @@ import { satteri } from '@astrojs/markdown-satteri'
 import sitemap from '@astrojs/sitemap'
 import type { AstroIntegration, AstroUserConfig } from 'astro'
 import { mergeConfig } from 'astro/config'
-import { existsSync } from 'node:fs'
+import { existsSync, rmSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { satteriValidateLinks } from 'satteri-validate-links'
 
@@ -59,6 +59,8 @@ const ROUTES: [
   ['/site.webmanifest', 'site.webmanifest.ts'],
 ]
 
+const RESOURCE_PAGE = fileURLToPath(new URL('resource.astro', THEME_PAGES))
+
 const isAbsoluteOrExternal = (url: string) =>
   /^(\/|[a-z][a-z0-9+.-]*:)/i.test(url)
 
@@ -74,6 +76,25 @@ function routes(theme: Theme): AstroIntegration {
             pattern,
             entrypoint: fileURLToPath(new URL(file, THEME_PAGES)),
           })
+        }
+        for (const { slug } of theme.resources) {
+          if (existsSync(new URL(`pages/${slug}.astro`, config.srcDir)))
+            continue
+          injectRoute({ pattern: `/${slug}`, entrypoint: RESOURCE_PAGE })
+        }
+      },
+    },
+  }
+}
+
+function freshContentCache(root: URL): AstroIntegration {
+  return {
+    name: 'theme-fresh-content-cache',
+    hooks: {
+      'astro:config:setup': ({ command }) => {
+        if (command !== 'build') return
+        for (const directory of ['node_modules/.astro', '.astro']) {
+          rmSync(new URL(directory, root), { recursive: true, force: true })
         }
       },
     },
@@ -164,6 +185,7 @@ export async function themeConfig(
       inlineStylesheets: 'never',
     },
     integrations: [
+      freshContentCache(root),
       routes(theme),
       generatedAssets(theme),
       inlineStyles(theme.prebuilt, base),

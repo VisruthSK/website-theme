@@ -257,6 +257,16 @@ export const themeSchema = z
         }),
       )
       .min(1),
+    resources: z
+      .array(
+        z.strictObject({
+          slug,
+          label: nonEmpty,
+          description: nonEmpty,
+          empty: nonEmpty,
+        }),
+      )
+      .default([]),
     navigation: z.array(z.union([z.strictObject({ section: slug }), link])),
     socials: z.array(link.extend({ icon: slug })).default([]),
     brand,
@@ -298,6 +308,10 @@ export const themeSchema = z
         issue(['sections', index, 'collection'], 'duplicate collection')
       if (collections[index] === 'pages')
         issue(['sections', index, 'collection'], '"pages" is reserved')
+    })
+    theme.resources.forEach(({ slug }, index) => {
+      if (slugs.includes(slug))
+        issue(['resources', index, 'slug'], `duplicate section ${slug}`)
     })
     theme.navigation.forEach((item, index) => {
       if ('section' in item && !slugs.includes(item.section))

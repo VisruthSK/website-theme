@@ -1,0 +1,42 @@
+---
+import MetaPage from '@/components/MetaPage.astro'
+import Layout from '@/layouts/Layout.astro'
+import { getPublicAssets } from '@/lib/public-assets'
+import { extname } from 'node:path'
+import theme from 'virtual:erudite/config'
+
+const resource = theme.resources.find(
+  ({ slug }) => `/${slug}` === Astro.routePattern,
+)!
+const items = await getPublicAssets(resource.slug)
+---
+
+<Layout crumbs={[{ label: resource.label, href: `/${resource.slug}` }]}>
+  <MetaPage
+    slot="head"
+    title={resource.label}
+    description={resource.description}
+  />
+  <page-heading>
+    <h1>{resource.label}</h1>
+  </page-heading>
+  {items.length === 0 ? (
+    <p class="meta-row">{resource.empty}</p>
+  ) : (
+    <ul data-entries>
+      {items.map((item) => (
+        <li class="interactive-card">
+          <a
+            href={item.href}
+            class="card-overlay"
+            aria-label={`Open ${item.displayName}`}
+          />
+          <div class="card-body">
+            <h2 class="card-title">{item.displayName}</h2>
+            <span class="chip">{extname(item.name).slice(1)}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</Layout>

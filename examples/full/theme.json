@@ -29,12 +29,24 @@
       "collection": "notes"
     }
   ],
+  "resources": [
+    {
+      "slug": "figures",
+      "label": "Figures",
+      "description": "Figures served from the public folder.",
+      "empty": "No figures have been published yet."
+    }
+  ],
   "navigation": [
     {
       "section": "essays"
     },
     {
       "section": "notes"
+    },
+    {
+      "href": "/figures",
+      "label": "Figures"
     },
     {
       "href": "/tags",

@@ -4,7 +4,14 @@ import EntryCard from '@/components/EntryCard.astro'
 import MetaPage from '@/components/MetaPage.astro'
 import { FEATURED_POST_IDS, SITE } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
+import { assertNoBrokenLinks } from '@/lib/links'
 import { getSectionPosts, getSectionPostsChrono } from '@/lib/section-posts'
+
+import { getEntry, render } from 'astro:content'
+
+const home = await getEntry('pages', 'home')
+const intro = home ? await render(home) : undefined
+if (home) assertNoBrokenLinks(home.id, intro!.remarkPluginFrontmatter)
 
 const allSectionPosts = await getSectionPosts()
 
@@ -22,10 +29,16 @@ const recentPosts = (await getSectionPostsChrono())
 <Layout>
   <MetaPage slot="head" title="Home" />
 
-  <header>
-    <h1>{SITE.title}</h1>
-    <p>{SITE.description}</p>
-  </header>
+  {intro ? (
+    <hero-card>
+      <intro.Content />
+    </hero-card>
+  ) : (
+    <header>
+      <h1>{SITE.title}</h1>
+      <p>{SITE.description}</p>
+    </header>
+  )}
 
   {featuredPosts.length > 0 && (
     <entry-group>
@@ -64,6 +77,62 @@ const recentPosts = (await getSectionPostsChrono())
     p {
       margin-block-start: var(--space-3xs);
       color: var(--muted-foreground);
+    }
+  }
+
+  entry-group + entry-group {
+    margin-block-start: 2rem;
+  }
+</style>
+
+<style is:global>
+  hero-card {
+    display: block;
+    margin-block-end: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+
+    > :not(hr, hr ~ *),
+    > hr ~ * {
+      padding-inline: 1.5rem;
+    }
+
+    > :first-child {
+      padding-block-start: 1.5rem;
+    }
+
+    > :not(hr, hr ~ *) + :not(hr) {
+      margin-block-start: 0.375rem;
+    }
+
+    > hr {
+      display: block;
+      block-size: 1.5rem;
+      border: 0;
+    }
+
+    > hr ~ * + * {
+      margin-block-start: 0.5rem;
+    }
+
+    > hr ~ :last-child {
+      padding-block-end: 1.5rem;
+    }
+
+    > h1 {
+      font-family: var(--font-serif);
+      font-size: 1.875rem;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--foreground);
+    }
+
+    > hr ~ * a {
+      color: var(--foreground);
+      --underline: var(--muted-foreground);
     }
   }
 </style>

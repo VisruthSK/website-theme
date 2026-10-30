@@ -7,7 +7,9 @@ export async function getStaticPaths() {
   const entries = await getCollection('pages')
   const includeDrafts = import.meta.env.DEV
   return entries
-    .filter((entry) => includeDrafts || !entry.data.draft)
+    .filter(
+      (entry) => entry.id !== 'home' && (includeDrafts || !entry.data.draft),
+    )
     .map((entry) => ({
       params: { page: entry.id },
       props: { entry },
