@@ -153,6 +153,10 @@ The base path comes from `site.href`: `https://user.github.io/blog/` makes Astro
 
 Both examples are complete sites. `public/_headers` in each carries the strict Content Security Policy the site is tested under, for hosts that read that file.
 
+### Build caches
+
+The slowest build steps (the optical-margin tables, the line-break plans and the font subsets) are cached in `node_modules/.astro/website-theme`, keyed by the font bytes and the source that produces them, so a build with unchanged fonts and text is several times faster. Cloudflare Pages keeps `node_modules/.astro` between builds.
+
 ### GitHub Pages
 
 `.github/workflows/pages.yml` builds `examples/full` and publishes it. Set _Settings → Pages → Source_ to _GitHub Actions_ and run the workflow.
