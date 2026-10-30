@@ -10,7 +10,7 @@ const hash = (text: string) =>
 
 export function bundleCss(base: string): AstroIntegration {
   const stylesheet = new RegExp(
-    `<link rel="stylesheet" href="(${base}/_astro/[^"]+\\.css)">`,
+    `<link rel="stylesheet" href="(${RegExp.escape(base)}/_astro/[^"]+\\.css)">`,
     'g',
   )
   return {

@@ -27,6 +27,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: pnpm
+      - run: git merge-base --is-ancestor "$GITHUB_SHA" origin/main
       - run: pnpm install --frozen-lockfile
       - run: node scripts/flatten.mjs "$RUNNER_TEMP/release" --check
       - name: Commit the flat tree to the release branch
