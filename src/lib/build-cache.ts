@@ -1,5 +1,8 @@
 import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const KEY_LENGTH = 20
 
@@ -26,4 +29,21 @@ export function buildCache(root: URL, kind: string) {
       await writeFile(file(key), data)
     },
   }
+}
+
+export function libraryVersions(...names: string[]) {
+  return names.map((name) => {
+    let directory = dirname(fileURLToPath(import.meta.resolve(name)))
+    for (;;) {
+      try {
+        const manifest = JSON.parse(
+          readFileSync(join(directory, 'package.json'), 'utf8'),
+        )
+        if (manifest.name === name) return `${name}@${manifest.version}`
+      } catch {}
+      const parent = dirname(directory)
+      if (parent === directory) throw new Error(`No package.json for ${name}`)
+      directory = parent
+    }
+  })
 }

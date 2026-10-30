@@ -5,7 +5,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Theme } from '../../config/theme'
-import { buildCache, digest } from '../lib/build-cache'
+import { buildCache, digest, libraryVersions } from '../lib/build-cache'
 import { posix } from './html-pages'
 
 const BUNDLE_REFERENCE = '_astro/'
@@ -116,6 +116,7 @@ export function fontSubset(theme: Theme, root: URL): AstroIntegration {
               fontText,
               KEPT_LAYOUT_FEATURES,
               String(theme.fonts.stripHinting),
+              ...libraryVersions('@web-alchemy/fonttools'),
             )
             const cache = buildCache(root, `subset-${fontStem}`)
             const stored = await cache.read(key)
