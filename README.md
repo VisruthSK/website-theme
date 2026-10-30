@@ -33,7 +33,12 @@ packages:
 allowBuilds:
   esbuild: true
   sharp: true
+
+overrides:
+  expressive-code: 0.44.3
 ```
+
+The override keeps `satteri-expressive-code`, which asks for an older release, on the same Expressive Code as the theme's plugins, so only one copy of its core is installed.
 
 ```json
 // package.json
