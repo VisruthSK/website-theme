@@ -38,6 +38,12 @@ for (const entry of ['src', 'config', 'README.md', 'LICENSE', 'LICENSES']) {
   })
 }
 
+const BUNDLED_ASSETS = ['assets/fonts/STIXTwoMath-Regular.woff2']
+for (const asset of BUNDLED_ASSETS) {
+  mkdirSync(dirname(join(out, 'src', asset)), { recursive: true })
+  cpSync(join(astroErudite, asset), join(out, 'src', asset))
+}
+
 const files = (directory) =>
   readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = join(directory, entry.name)
@@ -234,7 +240,16 @@ if (process.argv.includes('--check')) {
     ['exec', 'astro', 'check'],
     ['exec', 'astro', 'build'],
   ].find((args) => run(...args) !== 0)
+  const built = join(site, 'dist', '_astro')
+  const mathFont =
+    !failed &&
+    existsSync(built) &&
+    readdirSync(built).some((name) => /^STIXTwoMath.*.woff2$/.test(name))
   rmSync(site, { recursive: true, force: true })
+  if (!failed && !mathFont) {
+    console.error('The built example does not ship the bundled math font.')
+    process.exit(1)
+  }
   if (failed) {
     console.error(`pnpm ${failed.join(' ')} failed in the flattened site.`)
     process.exit(1)
