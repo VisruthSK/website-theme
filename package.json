@@ -24,6 +24,8 @@
     "@expressive-code/plugin-line-numbers": "^0.44.3",
     "@kitlangton/justice": "^0.4.0",
     "@playform/compress": "0.2.5",
+    "@types/hast": "^3.0.5",
+    "@types/mdast": "^4.0.4",
     "@web-alchemy/fonttools": "^1.4.0",
     "astro": "^7.4.1",
     "entities": "^8.1.0",
@@ -46,8 +48,6 @@
     "@astrojs/check": "^0.9.11",
     "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
-    "@types/hast": "^3.0.5",
-    "@types/mdast": "^4.0.4",
     "knip": "^6.42.0",
     "prettier": "^3.9.10",
     "typescript": "^6.0.3"

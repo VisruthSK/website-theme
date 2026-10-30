@@ -7,9 +7,9 @@ import {
   readdirSync,
   rmSync,
   statSync,
-  symlinkSync,
   writeFileSync,
 } from 'node:fs'
+import { builtinModules } from 'node:module'
 import { tmpdir } from 'node:os'
 import { dirname, join, relative, resolve } from 'node:path'
 
@@ -139,20 +139,57 @@ console.log(
   `Flattened ${copied.size} astro-erudite files into ${relative(theme, out) || out}`,
 )
 
+const BARE = /(?:from\s+|import\s*\(\s*|import\s+)['"]([^'"]+)['"]/g
+const IGNORED = /^(?:\.|@\/|node:|virtual:|astro:|astro\/)/
+
+function sources(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(directory, entry.name)
+    if (entry.isDirectory()) return sources(path)
+    return /\.(?:ts|js|mjs|astro)$/.test(entry.name) ? [path] : []
+  })
+}
+
+function undeclared(directory, declared) {
+  const missing = new Set()
+  for (const file of sources(directory)) {
+    for (const [, specifier] of readFileSync(file, 'utf8').matchAll(BARE)) {
+      if (IGNORED.test(specifier) || builtinModules.includes(specifier))
+        continue
+      const [first, second] = specifier.split('/')
+      const name = first.startsWith('@') ? `${first}/${second}` : first
+      if (!declared.has(name) && !declared.has(`@types/${name}`)) {
+        missing.add(`${name} (${relative(out, file)})`)
+      }
+    }
+  }
+  return [...missing]
+}
+
+const declared = new Set([
+  ...Object.keys(dependencies),
+  ...Object.keys({ astro }),
+])
+const missing = [
+  ...undeclared(join(out, 'src'), declared),
+  ...undeclared(join(out, 'config'), declared),
+]
+if (missing.length) {
+  console.error(
+    `The release imports packages its package.json does not list:\n${missing.join('\n')}`,
+  )
+  process.exit(1)
+}
+
 if (process.argv.includes('--check')) {
   const site = join(tmpdir(), `theme-release-check-${process.pid}`)
   rmSync(site, { recursive: true, force: true })
   cpSync(join(theme, 'examples', 'full'), site, {
     recursive: true,
     filter: (path) =>
-      !/[\\/](?:dist|node_modules|\.astro|generated|pagefind)$/.test(path),
+      !/[\/](?:dist|node_modules|\.astro|generated|pagefind)$/.test(path),
   })
   cpSync(out, join(site, 'theme'), { recursive: true })
-  symlinkSync(
-    join(theme, 'node_modules'),
-    join(site, 'node_modules'),
-    'junction',
-  )
   writeFileSync(
     join(site, 'astro.config.ts'),
     readFileSync(
@@ -165,19 +202,42 @@ if (process.argv.includes('--check')) {
     JSON.stringify({
       extends: 'astro/tsconfigs/strict',
       compilerOptions: { paths: { '@/*': ['./src/*', './theme/src/*'] } },
-      exclude: ['dist'],
+      exclude: ['dist', 'src/generated'],
     }),
   )
-  const { status } = spawnSync(
-    'pnpm',
-    ['exec', 'astro', 'build', '--root', site],
-    {
-      cwd: theme,
+  writeFileSync(
+    join(site, 'package.json'),
+    JSON.stringify({
+      private: true,
+      type: 'module',
+      dependencies: {
+        astro: dependencies.astro,
+        'website-theme': 'workspace:*',
+      },
+    }),
+  )
+  writeFileSync(
+    join(site, 'pnpm-workspace.yaml'),
+    readFileSync(join(theme, 'pnpm-workspace.yaml'), 'utf8').replace(
+      /^/,
+      'packages:\n  - theme\n\n',
+    ),
+  )
+  const run = (...args) =>
+    spawnSync('pnpm', args, {
+      cwd: site,
       stdio: 'inherit',
       shell: process.platform === 'win32',
-    },
-  )
+    }).status
+  const failed = [
+    ['install'],
+    ['exec', 'astro', 'check'],
+    ['exec', 'astro', 'build'],
+  ].find((args) => run(...args) !== 0)
   rmSync(site, { recursive: true, force: true })
-  if (status !== 0) process.exit(status ?? 1)
-  console.log('The example builds from the flattened tree.')
+  if (failed) {
+    console.error(`pnpm ${failed.join(' ')} failed in the flattened site.`)
+    process.exit(1)
+  }
+  console.log('The example installs, type-checks and builds as a consumer.')
 }
