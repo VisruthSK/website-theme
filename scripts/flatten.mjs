@@ -120,8 +120,7 @@ writeFileSync(
   join(out, 'NOTICE'),
   `${readFileSync(join(theme, 'NOTICE'), 'utf8').trimEnd()}\n\nThis release includes files from astro-erudite at commit ${commit}.\n`,
 )
-writeFileSync(join(out, '.gitignore'), 'node_modules/
-')
+writeFileSync(join(out, '.gitignore'), 'node_modules/\n')
 const { name, description, license, type, dependencies } = JSON.parse(
   readFileSync(join(theme, 'package.json'), 'utf8'),
 )
