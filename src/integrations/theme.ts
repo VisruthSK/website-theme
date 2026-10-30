@@ -173,7 +173,7 @@ export async function themeConfig(
       linkCheck(theme.prebuilt, base),
       earlyHints(theme, base),
       ...(features.typeset ? [typeset(theme, root)] : []),
-      fontSubset(theme),
+      fontSubset(theme, root),
       compress({
         CSS: false,
         HTML: false,
