@@ -36,9 +36,10 @@ allowBuilds:
 
 overrides:
   expressive-code: 0.44.3
+  satteri: 0.11.6
 ```
 
-The override keeps `satteri-expressive-code`, which asks for an older release, on the same Expressive Code as the theme's plugins, so only one copy of its core is installed.
+The overrides keep `@astrojs/markdown-satteri` and `satteri-expressive-code`, which ask for older releases, on the same Satteri and Expressive Code as the rest of the theme, so only one copy of each is installed.
 
 ```json
 // package.json
