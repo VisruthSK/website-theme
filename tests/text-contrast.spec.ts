@@ -14,7 +14,12 @@ for (const mode of ['light', 'dark'] as Mode[]) {
   test(`all text and list numbers meet contrast (${mode})`, async ({
     page,
     site,
+    browserName,
   }) => {
+    test.skip(
+      browserName !== 'chromium',
+      'computed colours do not vary by browser',
+    )
     test.setTimeout(300_000)
     const sitemap = readFileSync(
       join(process.cwd(), site.dir, 'dist', 'sitemap-0.xml'),
