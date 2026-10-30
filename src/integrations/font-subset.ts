@@ -5,6 +5,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Theme } from '../../config/theme'
+import { buildCache, digest } from '../lib/build-cache'
 
 const BUNDLE_REFERENCE = '_astro/'
 
@@ -49,7 +50,7 @@ function textInTags(html: string, tags: string) {
   ).join('')
 }
 
-export function fontSubset(theme: Theme): AstroIntegration {
+export function fontSubset(theme: Theme, root: URL): AstroIntegration {
   const { body, heading, mono, dropCap } = theme.fonts
   const shared = new Set(
     [
@@ -98,31 +99,46 @@ export function fontSubset(theme: Theme): AstroIntegration {
         })
 
         const text = Array.from(chars).join('')
-        let before = 0
-        let after = 0
-        let count = 0
-
+        const fonts: string[] = []
         await walk(bundledFonts, async (path) => {
-          if (!path.endsWith('.woff2')) return
-          const original = await readFile(path)
-          const fontStem = builtStem(path)
-          const fontText = boldStems.includes(fontStem)
-            ? Array.from(boldChars).join('')
-            : italicStems.includes(fontStem)
-              ? Array.from(italicChars).join('')
-              : text
-          const result = await subset(original, {
-            text: fontText,
-            flavor: 'woff2',
-            ...(theme.fonts.stripHinting ? { 'no-hinting': true } : {}),
-            'layout-features+': KEPT_LAYOUT_FEATURES,
-          })
-          if (result.length >= original.length) return
-          await writeFile(path, result)
-          before += original.length
-          after += result.length
-          count += 1
+          if (path.endsWith('.woff2')) fonts.push(path)
         })
+
+        const results = await Promise.all(
+          fonts.map(async (path) => {
+            const original = await readFile(path)
+            const fontStem = builtStem(path)
+            const fontText = boldStems.includes(fontStem)
+              ? Array.from(boldChars).join('')
+              : italicStems.includes(fontStem)
+                ? Array.from(italicChars).join('')
+                : text
+            const key = digest(
+              original,
+              fontText,
+              KEPT_LAYOUT_FEATURES,
+              String(theme.fonts.stripHinting),
+            )
+            const cache = buildCache(root, `subset-${fontStem}`)
+            const stored = await cache.read(key)
+            const result =
+              stored ??
+              (await subset(original, {
+                text: fontText,
+                flavor: 'woff2',
+                ...(theme.fonts.stripHinting ? { 'no-hinting': true } : {}),
+                'layout-features+': KEPT_LAYOUT_FEATURES,
+              }))
+            if (!stored) await cache.write(key, result)
+            if (result.length >= original.length) return undefined
+            await writeFile(path, result)
+            return { before: original.length, after: result.length }
+          }),
+        )
+        const done = results.filter((entry) => entry !== undefined)
+        const before = done.reduce((sum, entry) => sum + entry.before, 0)
+        const after = done.reduce((sum, entry) => sum + entry.after, 0)
+        const count = done.length
 
         const saved = Math.round(((before - after) / before) * 100)
         logger.info(

@@ -2,10 +2,11 @@ import type { AstroIntegration } from 'astro'
 import { build } from 'esbuild'
 import type { Element, Root } from 'hast'
 import { fromHtml } from 'hast-util-from-html'
-import { glob, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { glob, mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Theme } from '../../config/theme.ts'
+import { buildCache, digest } from '../lib/build-cache.ts'
 import { typesetConstants } from '../lib/typeset/constants.ts'
 import { encodePlan } from '../lib/typeset/encode.ts'
 import { loadFaces, typefaceFiles } from '../lib/typeset/fonts.ts'
@@ -49,6 +50,23 @@ function proseParagraphs(tree: Root): Found[] {
   return found
 }
 
+const TYPESET_LIBRARY = new URL('../lib/typeset/', import.meta.url)
+
+async function typesetSources() {
+  const names = (await readdir(TYPESET_LIBRARY)).sort()
+  return Promise.all(
+    names.map((name) => readFile(new URL(name, TYPESET_LIBRARY))),
+  )
+}
+
+async function fontBytes(theme: Theme, root: URL) {
+  const directory = new URL(`${theme.fonts.directory}/`, root)
+  const files = Object.values(typefaceFiles(theme.fonts))
+    .filter((name): name is string => name !== undefined)
+    .sort()
+  return Promise.all(files.map((name) => readFile(new URL(name, directory))))
+}
+
 async function load(theme: Theme, root: URL) {
   const { constants, source } = typesetConstants(
     theme.prose,
@@ -59,6 +77,11 @@ async function load(theme: Theme, root: URL) {
     typefaceFiles(theme.fonts),
   )
   const roman = faces('roman', [])
+  const key = digest(
+    source,
+    ...(await typesetSources()),
+    ...(await fontBytes(theme, root)),
+  )
   if (
     theme.features.dropCap &&
     theme.fonts.body.smallCaps &&
@@ -68,7 +91,13 @@ async function load(theme: Theme, root: URL) {
       'fonts.body.smallCaps is true but the body font has no small capitals; set it to false.',
     )
   }
-  return { faces, edges: edgeTables(faces), constants, source }
+  const cache = buildCache(root, 'edges')
+  const stored = await cache.read(key)
+  const edges: ReturnType<typeof edgeTables> = stored
+    ? JSON.parse(stored.toString())
+    : edgeTables(faces)
+  if (!stored) await cache.write(key, JSON.stringify(edges))
+  return { faces, edges, constants, source, key }
 }
 
 type Assets = Awaited<ReturnType<typeof load>>
@@ -108,9 +137,19 @@ export const EDGES = ${JSON.stringify(edges, rounded)}
   await writeFile(new URL('typeset.js', directory), outputFiles[0].text)
 }
 
-function planner({ faces, edges, constants }: Assets, capSize: number) {
-  const cache = new Map<string, string | null>()
-  return ({ paragraph, previous }: Found): string | null => {
+async function planner(
+  { faces, edges, constants, key: sourcesKey }: Assets,
+  capSize: number,
+  root: URL,
+) {
+  const store = buildCache(root, 'plans')
+  const storeKey = digest(sourcesKey, String(capSize))
+  const stored = await store.read(storeKey)
+  const cache = new Map<string, string | null>(
+    stored ? JSON.parse(stored.toString()) : [],
+  )
+  const known = cache.size
+  const planFor = ({ paragraph, previous }: Found): string | null => {
     const source = readParagraph(paragraph)
     const cap = source.cap ? capWidth(source.cap, faces, constants, capSize) : 0
     const indented =
@@ -122,7 +161,7 @@ function planner({ faces, edges, constants }: Assets, capSize: number) {
       )
     const indent = indented ? constants.INDENT : 0
 
-    const key = JSON.stringify([source, indent, cap])
+    const key = digest(JSON.stringify([source, indent, cap]))
     if (!cache.has(key)) {
       const prepared = prepareSource(source, faces, edges)
       const bands = planParagraph(prepared, { indent, cap }, constants)
@@ -140,6 +179,11 @@ function planner({ faces, edges, constants }: Assets, capSize: number) {
     }
     return cache.get(key) ?? null
   }
+  const save = () =>
+    cache.size > known
+      ? store.write(storeKey, JSON.stringify([...cache]))
+      : undefined
+  return { planFor, save }
 }
 
 export function typeset(theme: Theme, root: URL): AstroIntegration {
@@ -152,9 +196,10 @@ export function typeset(theme: Theme, root: URL): AstroIntegration {
         writeRenderer(await assets(), new URL('generated/', config.srcDir)),
       'astro:build:done': async ({ dir, logger }) => {
         const outputPath = fileURLToPath(dir)
-        const planFor = planner(
+        const { planFor, save } = await planner(
           await assets(),
           parseFloat(theme.fonts.dropCap?.size ?? '0rem'),
+          root,
         )
         const skipped = new Map<string, number>()
         let planned = 0
@@ -191,6 +236,7 @@ export function typeset(theme: Theme, root: URL): AstroIntegration {
           await writeFile(path, output)
         }
 
+        await save()
         const reasons = [...skipped].map(
           ([reason, count]) => `${count} ${reason}`,
         )
