@@ -10,7 +10,7 @@ export const digest = (...parts: (string | Uint8Array)[]) => {
 }
 
 export function buildCache(root: URL, kind: string) {
-  const directory = new URL('node_modules/.cache/website-theme/', root)
+  const directory = new URL('node_modules/.astro/website-theme/', root)
   const file = (key: string) => new URL(`${kind}-${key}`, directory)
   return {
     read: (key: string) => readFile(file(key)).catch(() => undefined),
