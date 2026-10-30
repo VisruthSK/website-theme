@@ -15,7 +15,7 @@
     "flatten": "node scripts/flatten.mjs"
   },
   "dependencies": {
-    "@astrojs/markdown-satteri": "0.4.5",
+    "@astrojs/markdown-satteri": "0.4.6",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@citation-js/core": "^0.9.0",
@@ -27,8 +27,8 @@
     "@types/hast": "^3.0.5",
     "@types/mdast": "^4.0.4",
     "@web-alchemy/fonttools": "^1.4.0",
-    "astro": "^7.4.1",
-    "entities": "^8.1.0",
+    "astro": "^7.4.4",
+    "entities": "^9.0.0",
     "esbuild": "0.28.2",
     "github-slugger": "^2.0.0",
     "harfbuzzjs": "^1.6.3",
@@ -38,8 +38,8 @@
     "hastscript": "^9.0.1",
     "mdast-util-to-hast": "^13.2.1",
     "pagefind": "^1.5.2",
-    "satteri": "^0.10.5",
-    "satteri-expressive-code": "^0.1.24",
+    "satteri": "^0.11.6",
+    "satteri-expressive-code": "^0.1.31",
     "satteri-validate-links": "^0.3.0",
     "temml": "^0.14.0",
     "wawoff2": "^2.0.1"

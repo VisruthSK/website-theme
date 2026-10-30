@@ -25,7 +25,7 @@ jobs:
           submodules: recursive
       - uses: pnpm/action-setup@v6
         with:
-          version: 10
+          version: 11
       - uses: actions/setup-node@v7
         with:
           node-version-file: .node-version
@@ -49,7 +49,7 @@ jobs:
           submodules: recursive
       - uses: pnpm/action-setup@v6
         with:
-          version: 10
+          version: 11
       - uses: actions/setup-node@v7
         with:
           node-version-file: .node-version
@@ -83,7 +83,7 @@ jobs:
           submodules: recursive
       - uses: pnpm/action-setup@v6
         with:
-          version: 10
+          version: 11
       - uses: actions/setup-node@v7
         with:
           node-version-file: .node-version
