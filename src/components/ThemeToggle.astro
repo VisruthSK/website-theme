@@ -1,0 +1,79 @@
+---
+import MoonIcon from '@/icons/moon.svg'
+import SunIcon from '@/icons/sun.svg'
+import themeToggleUrl from '@/scripts/theme-toggle.js?url&no-inline'
+---
+
+<label data-theme-toggle data-icon-button>
+  <input type="checkbox" class="theme-flip sr-only" />
+  <light-icon>
+    <SunIcon aria-hidden="true" />
+  </light-icon>
+  <dark-icon>
+    <MoonIcon aria-hidden="true" />
+  </dark-icon>
+  <span class="sr-only">Dark mode</span>
+</label>
+
+<style>
+  label:has(:focus-visible) {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+</style>
+
+<style is:global>
+  :root[data-theme='light'] {
+    color-scheme: light;
+  }
+
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+  }
+
+  dark-icon {
+    display: none;
+  }
+
+  :root[data-theme='dark'] {
+    light-icon {
+      display: none;
+    }
+
+    dark-icon {
+      display: inline;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]):has(.theme-flip:checked) {
+      color-scheme: light;
+    }
+
+    :root:not([data-theme]):not(:has(.theme-flip:checked)) {
+      light-icon {
+        display: none;
+      }
+
+      dark-icon {
+        display: inline;
+      }
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]):has(.theme-flip:checked) {
+      color-scheme: dark;
+
+      light-icon {
+        display: none;
+      }
+
+      dark-icon {
+        display: inline;
+      }
+    }
+  }
+</style>
+
+<script is:inline type="module" src={themeToggleUrl}></script>

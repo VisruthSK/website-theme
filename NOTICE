@@ -1,0 +1,20 @@
+website-theme is built on astro-erudite (https://github.com/jktrn/astro-erudite),
+Copyright (c) 2026 enscribe, used under the MIT License in LICENSES/astro-erudite-MIT.
+It uses astro-erudite as a git submodule and is not affiliated with or endorsed
+by the author of astro-erudite.
+
+src/lib/typeset/optical.ts ports the optical margin measurement of Justif
+(https://github.com/lyallcooper/justif), Copyright (c) 2026 Lyall Cooper, MIT
+License. The notice is kept in that file.
+
+The icons in src/icons are from Lucide (LICENSES/lucide-ISC), except github.svg,
+which is from Simple Icons (CC0 1.0).
+
+
+The fonts in examples/ are under the SIL Open Font License 1.1. Each licence
+sits next to its font files.
+
+The math font STIX Two Math, bundled from astro-erudite and used unless a site
+sets fonts.math, is under the SIL Open Font License 1.1 (LICENSES/OFL-STIXTwoMath).
+
+This release includes files from astro-erudite at commit 1926b88c549e8505bbe03b9e8585b0e247aaa0c1.

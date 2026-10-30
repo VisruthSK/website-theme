@@ -1,0 +1,88 @@
+---
+import RSS from '@/icons/rss.svg'
+import EntryCard from '@/components/EntryCard.astro'
+import MetaPage from '@/components/MetaPage.astro'
+import Pagination from '@/components/Pagination.astro'
+import { SECTIONS, SECTION_SLUGS, SITE, type SectionSlug } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+import {
+  getAllPostsAndSubpostsChrono,
+  groupPostsByYear,
+  type PostEntry,
+} from '@/lib/data-utils'
+import { canonicalizePath, canonicalizePathSegments } from '@/lib/site-utils'
+import type { Page, PaginateFunction } from 'astro'
+
+interface Props {
+  page: Page<PostEntry>
+}
+
+export async function getStaticPaths({
+  paginate,
+}: {
+  paginate: PaginateFunction
+}) {
+  const paths: ReturnType<PaginateFunction> = []
+
+  for (const slug of SECTION_SLUGS) {
+    const posts = await getAllPostsAndSubpostsChrono(SECTIONS[slug].collection)
+    paths.push(
+      ...paginate(posts, {
+        pageSize: SITE.postsPerPage,
+        params: { collection: slug },
+      }),
+    )
+  }
+
+  return paths
+}
+
+const { page } = Astro.props
+const section = SECTIONS[Astro.params.collection as SectionSlug]
+if (!section) throw new Error(`Unknown section: ${Astro.params.collection}`)
+
+const basePath = section.href
+const postsByYear = groupPostsByYear(page.data)
+const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a))
+const feedHref = canonicalizePathSegments(basePath, 'rss.xml')
+const feedLabel = `${section.label} RSS feed`
+const title =
+  page.currentPage === 1
+    ? section.label
+    : `${section.label} · Page ${page.currentPage}`
+const pageHref = (number: number) =>
+  number <= 1
+    ? canonicalizePath(basePath)
+    : canonicalizePathSegments(basePath, String(number))
+---
+
+<Layout>
+  <MetaPage slot="head" title={title} />
+  <link
+    slot="head"
+    rel="alternate"
+    type="application/rss+xml"
+    title={feedLabel}
+    href={new URL(feedHref, SITE.href).href}
+  />
+
+  <page-heading>
+    <h1>{title}</h1>
+    <a href={feedHref} data-icon-button aria-label={feedLabel}>
+      <RSS />
+    </a>
+  </page-heading>
+
+  {years.map((year) => (
+    <entry-group>
+      <h2 data-year>{year}</h2>
+      <ul data-entries>
+        {postsByYear[year].map((post) => (
+          <EntryCard entry={post} />
+        ))}
+      </ul>
+    </entry-group>
+  ))}
+
+  <Pagination current={page.currentPage} last={page.lastPage} href={pageHref} />
+</Layout>

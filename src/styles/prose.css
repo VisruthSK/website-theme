@@ -1,0 +1,161 @@
+prose-content {
+  --prose-marker: var(--flourish);
+
+  font-size: var(--prose-font-size);
+  line-height: var(--prose-line-height);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+
+  :where(code, kbd) {
+    font-variant-numeric: normal;
+  }
+
+  p {
+    margin-block: 0;
+    text-align: justify;
+    hyphens: none;
+    overflow-wrap: normal;
+    word-break: normal;
+    hanging-punctuation: first allow-end;
+
+    @media (width < 37.5rem) {
+      text-align: left;
+    }
+
+    + p:not(:has(.drop-cap)) {
+      margin-block-start: 0.2em;
+      text-indent: var(--prose-indent);
+    }
+
+    &.preamble + p.preamble {
+      text-indent: 0;
+    }
+  }
+
+  &[data-compact] p {
+    text-align: left;
+    text-indent: 0;
+
+    + p {
+      margin-block-start: 0.65em;
+      text-indent: 0;
+    }
+  }
+
+  @feature dropCap {
+    > p .drop-cap {
+      float: left;
+      block-size: 5.25rem;
+      margin-inline-end: 1rem;
+      color: var(--flourish);
+      font-family: var(--font-sans);
+      font-size: var(--drop-cap-size);
+      font-weight: 900;
+      line-height: 0.89;
+      text-transform: uppercase;
+    }
+
+    @supports (initial-letter: 3 3) {
+      > p .drop-cap {
+        float: none;
+        block-size: auto;
+        margin-inline-end: 0;
+        color: inherit;
+        font: inherit;
+        line-height: inherit;
+        text-transform: none;
+      }
+
+      > p:has(.drop-cap)::first-letter {
+        initial-letter: 3 3;
+        margin-inline-end: 1rem;
+        color: var(--flourish);
+        font-family: var(--font-sans);
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+    }
+
+    > p .opening-words {
+      color: var(--flourish);
+      font-variant-caps: var(--opening-caps);
+      letter-spacing: 0.03em;
+    }
+  }
+
+  @feature typeset {
+    p.j {
+      white-space: nowrap;
+      text-wrap-style: auto;
+      hanging-punctuation: none;
+      font-variant-ligatures: none;
+
+      .jb {
+        white-space: normal;
+      }
+
+      .jh {
+        display: inline-block;
+        text-indent: 0;
+        text-decoration: inherit;
+        text-underline-offset: inherit;
+      }
+    }
+  }
+
+  @feature externalLinkIcons {
+    .external-link-icon-wrap {
+      white-space: nowrap;
+    }
+  }
+
+  @feature citations {
+    .citation-missing {
+      color: var(--danger);
+    }
+  }
+}
+
+prose-content {
+  :where(code) {
+    font-size: 0.84375rem;
+    font-weight: 500;
+  }
+
+  .expressive-code {
+    --ec-codeFontSize: 0.75rem;
+  }
+}
+
+@feature callouts {
+  prose-content [data-callout='note'] {
+    --accent: var(--info);
+  }
+
+  prose-content [data-callout='tip'] {
+    --accent: var(--success);
+  }
+
+  prose-content [data-callout='warning'] {
+    --accent: var(--warning);
+  }
+
+  prose-content [data-callout='caution'] {
+    --accent: var(--danger);
+  }
+
+  prose-content [data-callout='important'] {
+    --accent: var(--primary);
+  }
+
+  prose-content [data-callout] > summary > span > span {
+    opacity: 1;
+  }
+}
+
+prose-content .expressive-code pre {
+  max-block-size: none;
+}
+
+prose-content .expressive-code {
+  content-visibility: visible;
+}

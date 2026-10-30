@@ -1,0 +1,27 @@
+---
+import { FEATURES } from '@/consts'
+import {
+  EXTERNAL_LINK_ICON_SYMBOL_ID,
+  NEW_TAB_DESCRIPTION_ID,
+  NEW_TAB_LABEL,
+} from '@/lib/external-link-utils'
+---
+
+<span id={NEW_TAB_DESCRIPTION_ID} hidden>
+  {NEW_TAB_LABEL}
+</span>
+{FEATURES.externalLinkIcons && (
+  <svg
+    class="external-link-sprite"
+    width="0"
+    height="0"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <symbol id={EXTERNAL_LINK_ICON_SYMBOL_ID} viewBox="0 0 24 24">
+      <path d="M15 3h6v6"></path>
+      <path d="M10 14 21 3"></path>
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+    </symbol>
+  </svg>
+)}

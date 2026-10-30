@@ -1,0 +1,26 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+import { FEATURES, SITE } from '@/consts'
+import {
+  EXTERNAL_LINK_ICON_HTML,
+  externalTo,
+  NEW_TAB_DESCRIPTION_ID,
+} from '@/lib/external-link-utils'
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
+  href: string
+}
+
+const { href, ...rest } = Astro.props
+const external = externalTo(SITE.href)(href)
+const icon = FEATURES.externalLinkIcons ? EXTERNAL_LINK_ICON_HTML : ''
+---
+
+<a
+  {...rest}
+  href={href}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  aria-describedby={external ? NEW_TAB_DESCRIPTION_ID : undefined}
+  data-external={external ? '' : undefined}><slot /><Fragment set:html={external ? icon : ''} /></a>

@@ -1,0 +1,20 @@
+---
+import MarkdownPage from '@/components/MarkdownPage.astro'
+import type { CollectionEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
+
+export async function getStaticPaths() {
+  const entries = await getCollection('pages')
+  const includeDrafts = import.meta.env.DEV
+  return entries
+    .filter((entry) => includeDrafts || !entry.data.draft)
+    .map((entry) => ({
+      params: { page: entry.id },
+      props: { entry },
+    }))
+}
+
+const entry = Astro.props.entry as CollectionEntry<'pages'>
+---
+
+<MarkdownPage entry={entry} />

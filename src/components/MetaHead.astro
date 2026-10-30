@@ -1,0 +1,60 @@
+---
+import { withBase } from '@/lib/base'
+import theme from '@/scripts/theme.js?url&no-inline'
+import { SITE } from '@/consts'
+import { fonts } from 'virtual:erudite/assets'
+---
+
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=yes"
+  />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="generator" content={Astro.generator} />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content={SITE.title} />
+  <meta
+    name="format-detection"
+    content="telephone=no,date=no,address=no,email=no,url=no"
+  />
+
+  <meta
+    name="theme-color"
+    content={SITE.themeColor.dark}
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta
+    name="theme-color"
+    content={SITE.themeColor.light}
+    media="(prefers-color-scheme: light)"
+  />
+
+  <link rel="icon" href="data:;base64,=" />
+  <link rel="manifest" href={withBase('/site.webmanifest')} />
+
+  <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={SITE.title}
+    href={new URL(withBase('/rss.xml'), Astro.site)}
+  />
+
+  <link
+    rel="preload"
+    href={fonts.heading}
+    as="font"
+    type="font/woff2"
+    crossorigin
+  />
+  <link rel="preload" href={fonts.body} as="font" type="font/woff2" crossorigin />
+
+  <script is:inline src={theme}></script>
+  <slot />
+</head>
