@@ -4,7 +4,11 @@ import { readdir } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { buildCache, digest } from '../../src/lib/build-cache.ts'
+import {
+  buildCache,
+  digest,
+  libraryVersions,
+} from '../../src/lib/build-cache.ts'
 
 const root = () =>
   pathToFileURL(`${mkdtempSync(join(tmpdir(), 'build-cache-'))}/`)
@@ -39,4 +43,13 @@ test('the key changes with any input and is stable for the same input', () => {
     digest(new Uint8Array([1, 3])),
   )
   expect(digest('x')).toHaveLength(20)
+})
+
+test('library versions come from the installed packages', () => {
+  const [harfbuzz] = libraryVersions('harfbuzzjs')
+  expect(harfbuzz).toMatch(/^harfbuzzjs@\d+\.\d+\.\d+/)
+  expect(libraryVersions('@kitlangton/justice')[0]).toMatch(
+    /^@kitlangton\/justice@\d+\.\d+\.\d+/,
+  )
+  expect(() => libraryVersions('not-an-installed-package')).toThrow()
 })
