@@ -8,6 +8,23 @@ import { siteHtmlPages } from './html-pages'
 const INTERNAL_REFERENCE =
   /\s(?:href|src)="(?!\/\/|[a-z][a-z0-9+.-]*:|#)([^"#?]+)/gi
 
+const decode = (value: string) => {
+  try {
+    return decodeURI(value)
+  } catch {
+    return value
+  }
+}
+
+export const redirectSources = (text: string) =>
+  new Set(
+    text
+      .split('\n')
+      .map((line) => line.trim().split(/\s+/)[0])
+      .filter((source) => source && !source.startsWith('#'))
+      .map(decode),
+  )
+
 export function linkCheck(prebuilt: string[], base: string): AstroIntegration {
   return {
     name: 'link-check',
@@ -15,12 +32,8 @@ export function linkCheck(prebuilt: string[], base: string): AstroIntegration {
       'astro:build:done': async ({ dir }) => {
         const root = fileURLToPath(dir)
         const redirectsFile = join(root, '_redirects')
-        const redirects = new Set(
-          existsSync(redirectsFile)
-            ? readFileSync(redirectsFile, 'utf8')
-                .split('\n')
-                .map((line) => line.split(/\s+/)[0])
-            : [],
+        const redirects = redirectSources(
+          existsSync(redirectsFile) ? readFileSync(redirectsFile, 'utf8') : '',
         )
         const exists = (path: string) =>
           [path, `${path}.html`, join(path, 'index.html')].some(existsSync)
@@ -31,14 +44,14 @@ export function linkCheck(prebuilt: string[], base: string): AstroIntegration {
           for (const [, link] of readFileSync(page, 'utf8').matchAll(
             INTERNAL_REFERENCE,
           )) {
-            const path = decodeURI(link)
+            const path = decode(link)
             const inside = !base || path === base || path.startsWith(`${base}/`)
             const target = path.startsWith('/')
               ? join(root, path.slice(base.length))
               : resolve(dirname(page), path)
             const found =
               path.startsWith('/') && !inside ? false : exists(target)
-            if (!found && !redirects.has(link)) broken.push(`${file}: ${link}`)
+            if (!found && !redirects.has(path)) broken.push(`${file}: ${link}`)
           }
         }
 

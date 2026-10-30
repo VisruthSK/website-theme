@@ -92,11 +92,10 @@ export class Typeface {
   }
 
   missing(text: string): string[] {
-    const buffer = this.#shape(text)
-    return buffer
+    return this.#shape(text)
       .getGlyphInfos()
       .filter((info) => info.codepoint === 0)
-      .map((info) => text[info.cluster])
+      .map((info) => String.fromCodePoint(text.codePointAt(info.cluster)!))
   }
 }
 

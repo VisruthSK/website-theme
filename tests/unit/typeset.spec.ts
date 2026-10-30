@@ -76,3 +76,14 @@ for (const site of Object.values(SITES)) {
     }
   })
 }
+
+test('a missing glyph is named as a whole character, even outside the BMP', async () => {
+  const { theme, dir } = SITES.example
+  const faces = await loadFaces(
+    `${dir}/${theme.fonts.directory}`,
+    typefaceFiles(theme.fonts),
+  )
+  expect(faces('roman', []).missing('é漢')).toEqual(['漢'])
+  expect(faces('roman', []).missing('😀漢')).toEqual(['😀', '漢'])
+  expect(faces('roman', []).missing('plain')).toEqual([])
+})

@@ -74,8 +74,11 @@ test.describe('citations', () => {
   })
 })
 
-test('double hyphens become em dashes', () => {
-  expect(render('one--two', { mdastPlugins: [dashes] })).toContain('one—two')
+test('two or three hyphens become one em dash and one hyphen stays', () => {
+  const dashed = (text: string) => render(text, { mdastPlugins: [dashes] })
+  expect(dashed('one--two')).toContain('one—two')
+  expect(dashed('one---two')).toContain('one—two')
+  expect(dashed('one-two')).toContain('one-two')
 })
 
 test.describe('base links', () => {

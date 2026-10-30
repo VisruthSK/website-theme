@@ -94,7 +94,7 @@ function renderLink(
     return `<span class="citation-missing" title="Citation key not found: ${safeKey}">${safeKey}?</span>`
   }
   const label = escapeHtml(
-    `${number}. ${entry.author.join(', ')}, ${entry.year}. ${entry.title}`,
+    `${number}. ${entry.author.join(', ')}, ${entry.year ?? 'n.d.'}. ${entry.title}`,
   )
   const preview = escapeHtml(formatReference(entry))
   return `<a href="#ref-${safeKey}" class="citation-link" aria-label="${label}" data-citation-preview="${preview}">${number}</a>`

@@ -7,7 +7,7 @@ export interface BibliographyEntry {
   key: string
   author: string[]
   title: string
-  year: number
+  year?: number
   url?: string
   journal?: string
   publisher?: string
@@ -48,7 +48,7 @@ const toEntry = (item: CslItem): BibliographyEntry => ({
   key: item.id,
   author: (item.author ?? []).map(name),
   title: item.title ?? '',
-  year: item.issued?.['date-parts']?.[0]?.[0] ?? new Date().getFullYear(),
+  year: item.issued?.['date-parts']?.[0]?.[0],
   journal: item['container-title'],
   publisher: item.publisher,
   doi: item.DOI,
@@ -103,7 +103,7 @@ export function formatReference(entry: BibliographyEntry): string {
         .join(', ')
     : entry.publisher
   return [
-    `${formatAuthors(entry.author)} (${entry.year}).`,
+    `${formatAuthors(entry.author)} (${entry.year ?? 'n.d.'}).`,
     `${entry.title}.`,
     venue && `${venue}.`,
   ]
