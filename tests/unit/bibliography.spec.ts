@@ -2,7 +2,10 @@ import { expect, test } from '@playwright/test'
 import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { readBibliography } from '../../src/lib/bibliography.ts'
+import {
+  formatReference,
+  readBibliography,
+} from '../../src/lib/bibliography.ts'
 
 const directory = mkdtempSync(join(tmpdir(), 'bibliography-'))
 writeFileSync(
@@ -36,4 +39,14 @@ test('page ranges use an en dash', () => {
 test('identifiers and addresses are left exactly as written', () => {
   expect(entry.doi).toBe('10.1000/a--b')
   expect(entry.url).toBe('https://example.org/a--b')
+})
+
+test('an entry without a year has none and is formatted as undated', () => {
+  writeFileSync(
+    join(directory, 'undated.bib'),
+    '@book{x, author = {Someone, A.}, title = {Untitled}}',
+  )
+  const undated = readBibliography(directory, 'undated')!.x
+  expect(undated.year).toBeUndefined()
+  expect(formatReference(undated)).toContain('(n.d.)')
 })

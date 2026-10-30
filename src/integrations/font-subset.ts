@@ -2,10 +2,11 @@ import type { AstroIntegration } from 'astro'
 import { subset } from '@web-alchemy/fonttools'
 import { decodeHTML } from 'entities'
 import { readdir, readFile, writeFile } from 'node:fs/promises'
-import { basename, join, relative, sep } from 'node:path'
+import { basename, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Theme } from '../../config/theme'
 import { buildCache, digest } from '../lib/build-cache'
+import { posix } from './html-pages'
 
 const BUNDLE_REFERENCE = '_astro/'
 
@@ -66,10 +67,7 @@ export function fontSubset(theme: Theme, root: URL): AstroIntegration {
       .filter((name) => !shared.has(name))
   const boldStems = only(({ weight }) => weight >= 600)
   const italicStems = only(({ style }) => style === 'italic')
-  const prebuilt = theme.prebuilt.flatMap((directory) => [
-    `${directory}/`,
-    `${directory}${sep}`,
-  ])
+  const prebuilt = theme.prebuilt.map((directory) => `${directory}/`)
 
   return {
     name: 'font-subset',
@@ -82,7 +80,7 @@ export function fontSubset(theme: Theme, root: URL): AstroIntegration {
         const italicChars = new Set<string>()
 
         await walk(outputPath, async (path) => {
-          const file = relative(outputPath, path)
+          const file = posix(relative(outputPath, path))
           if (prebuilt.some((prefix) => file.startsWith(prefix))) return
           if (path.endsWith('.html')) {
             const html = await readFile(path, 'utf8')
@@ -140,9 +138,10 @@ export function fontSubset(theme: Theme, root: URL): AstroIntegration {
         const after = done.reduce((sum, entry) => sum + entry.after, 0)
         const count = done.length
 
-        const saved = Math.round(((before - after) / before) * 100)
         logger.info(
-          `Subset ${count} fonts to ${chars.size} glyphs: ${Math.round(before / 1024)}K to ${Math.round(after / 1024)}K (${saved}% smaller).`,
+          count
+            ? `Subset ${count} fonts to ${chars.size} glyphs: ${Math.round(before / 1024)}K to ${Math.round(after / 1024)}K (${Math.round(((before - after) / before) * 100)}% smaller).`
+            : 'No font became smaller by subsetting.',
         )
       },
     },

@@ -211,11 +211,13 @@ function measureProtrusion(face: Typeface): Record<string, [number, number]> {
     const population = known(POPULATION[side])
     const centre = mean(population)
     const noise =
-      NOISE *
-      Math.sqrt(
-        population.reduce((sum, value) => sum + (value - centre) ** 2, 0) /
-          (population.length - 1),
-      )
+      population.length > 1
+        ? NOISE *
+          Math.sqrt(
+            population.reduce((sum, value) => sum + (value - centre) ** 2, 0) /
+              (population.length - 1),
+          )
+        : 0
 
     const bearingOf = (char: string): number => {
       const [{ glyph }] = face.placed(char)

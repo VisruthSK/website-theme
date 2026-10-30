@@ -34,7 +34,7 @@ const warning = !bibliography
           <span class="bibliography-authors">
             {formatAuthors(entry.author, 100)}
           </span>{' '}
-          <span class="bibliography-year">({entry.year}).</span>{' '}
+          <span class="bibliography-year">({entry.year ?? "n.d."}).</span>{' '}
           <span class="bibliography-title">{entry.title}.</span>
           {entry.journal && (
             <>
