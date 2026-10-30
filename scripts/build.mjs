@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process'
 const roots = process.argv.slice(2)
 
 for (const root of roots) {
-  for (const cache of ['node_modules/.astro', '.astro']) {
+  for (const cache of ['node_modules/.astro/data-store.json', '.astro']) {
     rmSync(`${root}/${cache}`, { recursive: true, force: true })
   }
   const { status } = spawnSync(
