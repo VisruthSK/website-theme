@@ -6,7 +6,7 @@ import { glob, mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Theme } from '../../config/theme.ts'
-import { buildCache, digest } from '../lib/build-cache.ts'
+import { buildCache, digest, libraryVersions } from '../lib/build-cache.ts'
 import { typesetConstants } from '../lib/typeset/constants.ts'
 import { encodePlan } from '../lib/typeset/encode.ts'
 import { loadFaces, typefaceFiles } from '../lib/typeset/fonts.ts'
@@ -79,6 +79,7 @@ async function load(theme: Theme, root: URL) {
   const roman = faces('roman', [])
   const key = digest(
     source,
+    ...libraryVersions('@kitlangton/justice', 'harfbuzzjs', 'wawoff2'),
     ...(await typesetSources()),
     ...(await fontBytes(theme, root)),
   )
