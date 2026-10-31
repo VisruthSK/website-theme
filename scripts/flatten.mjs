@@ -31,7 +31,14 @@ const SPECIFIER =
 
 rmSync(out, { recursive: true, force: true })
 mkdirSync(out, { recursive: true })
-for (const entry of ["src", "config", "README.md", "LICENSE", "LICENSES"]) {
+for (const entry of [
+  "src",
+  "config",
+  "tools",
+  "README.md",
+  "LICENSE",
+  "LICENSES",
+]) {
   cpSync(join(theme, entry), join(out, entry), {
     recursive: true,
     filter: (path) => !/[\\/]generated(?:[\\/]|$)/.test(path),

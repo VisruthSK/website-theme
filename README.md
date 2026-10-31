@@ -244,7 +244,7 @@ pnpm dev
 
 `pnpm dev` serves `examples/full`. `pnpm check`, `pnpm knip` and `pnpm format` lint; `pnpm test` builds both examples and runs the suite in Chromium, Firefox and WebKit, and `pnpm exec playwright test --project=unit` runs only the unit tests.
 
-- Code uses double quotes. `pnpm format` runs prettier and `config/format-astro.mjs`, which keeps `.astro` files on double quotes with formatted frontmatter and changes no whitespace in the markup; `pnpm format:write` fixes both. The Astro prettier plugin is not used because it pads inline elements and SVG text, which changes what the page renders. A site can run the same tool with `node theme/config/format-astro.mjs`.
+- Code uses double quotes. `pnpm format` runs prettier and `tools/format-astro.mjs`, which keeps `.astro` files on double quotes with formatted frontmatter and changes no whitespace in the markup; `pnpm format:write` fixes both. The Astro prettier plugin is not used because it pads inline elements and SVG text, which changes what the page renders. A site can run the same tool with `node theme/tools/format-astro.mjs`.
 - Nothing inside `astro-erudite/` is edited. To change what it provides, add a file at the same path under `src/`.
 - Anything that varies between sites belongs in `theme.json` and `config/theme.ts`, and a feature that is switched off leaves nothing in the build.
 - Visual snapshots are generated on Linux. Run the _Update visual snapshots_ workflow from the Actions tab, or label a pull request `update-snapshots`.

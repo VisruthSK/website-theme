@@ -9,8 +9,8 @@
     "build": "node scripts/build.mjs examples/full examples/minimal",
     "check": "astro check --root examples/full && astro check --root examples/minimal",
     "test": "playwright test",
-    "format": "prettier --check . && node config/format-astro.mjs",
-    "format:write": "prettier --write . && node config/format-astro.mjs --write",
+    "format": "prettier --check . && node tools/format-astro.mjs",
+    "format:write": "prettier --write . && node tools/format-astro.mjs --write",
     "knip": "knip",
     "schema": "node scripts/schema.mjs",
     "flatten": "node scripts/flatten.mjs"
