@@ -7,6 +7,7 @@ import {
   type PostEntry,
 } from '@/lib/data-utils'
 import rss from '@astrojs/rss'
+import type { RSSFeedItem } from '@astrojs/rss'
 import type { APIContext } from 'astro'
 
 type FeedEntry = { entry: PostEntry; href: string }
@@ -17,6 +18,31 @@ interface FeedOptions {
   entries: FeedEntry[]
 }
 
+export function respondWithFeed(
+  context: APIContext,
+  {
+    title,
+    description,
+    items,
+    trailingSlash,
+  }: {
+    title: string
+    description: string
+    items: RSSFeedItem[]
+    trailingSlash?: boolean
+  },
+) {
+  return rss({
+    title,
+    description,
+    site: new URL(withBase('/'), resolveSiteUrl(context, SITE.href)).href,
+    items: items.toSorted(
+      (a, b) => (b.pubDate?.valueOf() ?? 0) - (a.pubDate?.valueOf() ?? 0),
+    ),
+    trailingSlash,
+  })
+}
+
 export async function renderFeed(
   context: APIContext,
   { title, description, entries }: FeedOptions,
@@ -25,17 +51,7 @@ export async function renderFeed(
   const items = await Promise.all(
     entries.map(({ entry, href }) => buildFeedItem(entry, baseUrl, href)),
   )
-
-  items.sort(
-    (a, b) => (b.pubDate?.valueOf() ?? 0) - (a.pubDate?.valueOf() ?? 0),
-  )
-
-  return rss({
-    title,
-    description,
-    site: new URL(withBase('/'), baseUrl).href,
-    items,
-  })
+  return respondWithFeed(context, { title, description, items })
 }
 
 export async function buildSectionFeed(context: APIContext, slug: SectionSlug) {

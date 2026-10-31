@@ -46,6 +46,7 @@ export const defineLedger = (path: string, link: string) =>
       ended: z.coerce.date().optional(),
       added: z.coerce.date().optional(),
       note: z.string().optional(),
+      feed: z.url().optional(),
       url: z.union([z.url(), z.string().startsWith('/')]).optional(),
       link: reference(link).optional(),
     }),

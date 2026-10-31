@@ -42,16 +42,14 @@ import searchScriptUrl from '@/scripts/search.js?url&no-inline'
 </Layout>
 
 <template id="search-result-template">
-  <li>
-    <div class="interactive-card search-result__card">
-      <a class="card-overlay" data-link aria-label=""></a>
-      <div class="search-result__body">
+  <li class="interactive-card search-result">
+    <a class="card-overlay" data-link aria-label=""></a>
+    <div class="card-body">
         <div class="card-eyebrow" data-section></div>
         <h3 class="card-title" data-title></h3>
         <div class="meta-row" data-meta></div>
         <div class="chip-list" data-tags></div>
         <p class="card-excerpt" data-snippet></p>
-      </div>
     </div>
   </li>
 </template>

@@ -229,6 +229,20 @@ test.describe('list page', () => {
     for (const id of ids) expect(xml).toContain(`/reading/#${id}`)
     expect(xml.match(/<item>/g)).toHaveLength(ids.length)
   })
+
+  test('the library lists the newest added entries first', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path.replace('reading', 'library'))
+    const titles = await page
+      .locator('.interactive-card .card-title')
+      .allTextContents()
+    expect(titles).toEqual(['The Three Little Pigs', 'The Ugly Duckling'])
+    await expect(
+      page.locator('.interactive-card a.card-overlay').first(),
+    ).toHaveAttribute('href', /\/reading\/?#the-three-little-pigs-01$/)
+  })
 })
 
 test('collections and Recent group entries under year headings, unpaginated', async ({

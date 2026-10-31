@@ -11,7 +11,7 @@ async function search(page: Page, query: string) {
   await expect(page.locator('[data-search-status]')).toContainText('Showing', {
     timeout: 15_000,
   })
-  await expect(page.locator('.search-result__card').first()).toBeVisible()
+  await expect(page.locator('.search-result').first()).toBeVisible()
 }
 
 async function open(page: Page, site: Site) {
@@ -44,7 +44,7 @@ test.describe('search', () => {
     )
 
     await search(page, 'story')
-    const rows = await page.locator('.search-result__card').count()
+    const rows = await page.locator('.search-result').count()
     expect(rows).toBeGreaterThan(1)
     await expect(page.locator('[data-search-status]')).toHaveText(
       `Showing ${rows} matches.`,
@@ -62,7 +62,7 @@ test.describe('search', () => {
     await open(page, site)
     await search(page, ledger!.query)
     const links = await page
-      .locator('.search-result__card a.card-overlay')
+      .locator('.search-result a.card-overlay')
       .evaluateAll((anchors) => anchors.map((a) => a.getAttribute('href')))
     const entries = links.filter((href) => href?.includes(`${ledger!.path}#`))
     expect(entries).toHaveLength(ledger!.permalinks.length)
@@ -77,7 +77,7 @@ test.describe('search', () => {
   }) => {
     await open(page, site)
     await search(page, 'theme tests run against this site')
-    const about = page.locator('.search-result__card').filter({
+    const about = page.locator('.search-result').filter({
       has: page.locator('[data-title]', { hasText: 'About' }),
     })
     await expect(about).toHaveCount(1)

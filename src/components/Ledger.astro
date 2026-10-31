@@ -1,4 +1,7 @@
 ---
+import Card from '@/components/Card.astro'
+import EntryGroup from '@/components/EntryGroup.astro'
+import FeedLink from '@/components/FeedLink.astro'
 import Link from '@/components/Link.astro'
 import MetaPage from '@/components/MetaPage.astro'
 import PageHeading from '@/components/PageHeading.astro'
@@ -52,43 +55,31 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
 <Layout crumbs={[{ label: title, href }]}>
   <MetaPage slot="head" title={title} description={description} />
   <PagefindMeta slot="head" sectionLabel={title} entries />
-  {
-    feed && (
-      <link
-        slot="head"
-        rel="alternate"
-        type="application/rss+xml"
-        title={feed.label}
-        href={new URL(withBase(feed.href), Astro.site ?? Astro.url.origin).href}
-      />
-    )
-  }
+  {feed && <FeedLink slot="head" href={feed.href} title={feed.label} />}
 
   <div data-pagefind-body>
     <PageHeading title={title} feed={feed} />
-    {description && <PageIntro>{description}</PageIntro>}
+    {(description || Astro.slots.has('intro')) && (
+      <PageIntro>
+        {description}
+        <slot name="intro" />
+      </PageIntro>
+    )}
     {ratings && <RatingSpread entries={entries} />}
 
     {
       groups.map(({ heading, entries: group }) => (
-        <entry-group>
-          {heading && <h2 data-year>{heading}</h2>}
-          <ul data-entries>
+        <EntryGroup heading={heading} year>
             {group.map(({ id, data }) => {
               const permalink = permalinks.get(id)!
               const { dates, open } = dated ? dateRange(data.started, data.ended) : { dates: [], open: false }
               const hasDetails = Boolean(data.note || data.link)
               return (
-                <li
-                  class="interactive-card"
+                <Card
+                  href={`#${permalink}`}
+                  label={`${data.title}, permalink`}
                   data-favorite={data.favorite || undefined}
                 >
-                  <a
-                    class="card-overlay"
-                    href={`#${permalink}`}
-                    aria-label={`${data.title}, permalink`}
-                  />
-                  <div class="card-body">
                     <div class="head">
                       <div>
                         <h3 class="card-title" id={permalink} data-prose>
@@ -156,12 +147,10 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                         {data.favorite && <span class="chip" data-pagefind-ignore>Favorite</span>}
                       </div>
                     )}
-                  </div>
-                </li>
+                </Card>
               )
             })}
-          </ul>
-        </entry-group>
+        </EntryGroup>
       ))
     }
   </div>
@@ -170,10 +159,6 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
 <style>
   .card-title {
     scroll-margin-block-start: calc(var(--space-s) + 1rem);
-  }
-
-  li:has(:target) {
-    border-color: var(--flourish);
   }
 
   .head {
@@ -207,7 +192,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     font-weight: 900;
   }
 
-  [data-favorite] .score {
+  :global([data-favorite]) .score {
     color: var(--flourish);
   }
 

@@ -1,4 +1,5 @@
 ---
+import Card from '@/components/Card.astro'
 import { withBase } from '@/lib/base'
 import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
 import {
@@ -37,9 +38,7 @@ const showCombined =
   stats.combinedWordCount !== stats.wordCount
 ---
 
-<li class="interactive-card">
-  <a href={href} aria-label={entry.data.title} class="card-overlay"></a>
-  <div class="card-body">
+<Card href={href} label={entry.data.title}>
     {showSectionLabel && <div class="card-eyebrow">{section.label}</div>}
     <Heading
       class="card-title"
@@ -86,5 +85,4 @@ const showCombined =
         ))}
       </div>
     )}
-  </div>
-</li>
+</Card>

@@ -1,10 +1,10 @@
-import rss from '@astrojs/rss'
 import type { APIContext } from 'astro'
 import { getCollection } from 'astro:content'
 
 import { SITE } from '@/consts'
 import { withBase } from '@/lib/base'
 import { resolveSiteUrl } from '@/lib/content-render'
+import { respondWithFeed } from '@/lib/feed'
 import { ledgerPermalinks, type LedgerEntry } from '@/lib/ledger'
 import { renderLedgerNote } from '@/lib/ledger-note'
 
@@ -67,14 +67,11 @@ export async function renderLedgerFeed(
         })
       }),
     )
-  )
-    .flat()
-    .sort((a, b) => (b.pubDate?.valueOf() ?? 0) - (a.pubDate?.valueOf() ?? 0))
+  ).flat()
 
-  return rss({
+  return respondWithFeed(context, {
     title,
     description,
-    site: new URL(withBase('/'), site).href,
     items,
     trailingSlash: false,
   })

@@ -184,6 +184,10 @@ Only `title` is required. `creator` is optional and the byline is left out witho
 
 To give ledgers a feed, add an endpoint that returns `renderLedgerFeed(context, sources, { title, description })`, where each source is `{ collection, href, noun }` for a ledger and the page it is shown on. Items are dated by `ended`, then `added`, and link to the entry's card. Pass `feed={{ href, label }}`, with `href` a path on the site, to `Ledger` to show the RSS button and advertise the feed in the page head.
 
+A ledger entry may also carry `feed`, the URL of the site's own RSS or Atom feed, for lists such as a blogroll that you export as OPML.
+
+`RecentlyAdded` lists the newest entries by `added` across one or more ledgers: `<RecentlyAdded sources={[{ collection, href, noun }]} limit={5} />`.
+
 Pass `ratings` to `Ledger` to show a bar chart of how many entries have each rating, with favorites highlighted, between the description and the list. It is inline SVG drawn at build time in the theme colours.
 
 ## Overlay and shadowing

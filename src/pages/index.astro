@@ -1,6 +1,7 @@
 ---
 import { withBase } from '@/lib/base'
 import EntryCard from '@/components/EntryCard.astro'
+import EntryGroup from '@/components/EntryGroup.astro'
 import MetaPage from '@/components/MetaPage.astro'
 import { FEATURED_POST_IDS, SITE } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
@@ -28,27 +29,21 @@ const recentPosts = (await getSectionPostsChrono())
   </header>
 
   {featuredPosts.length > 0 && (
-    <entry-group>
-      <h2>Featured Posts</h2>
-      <ul data-entries>
-        {featuredPosts.map((entry) => (
-          <EntryCard entry={entry} />
-        ))}
-      </ul>
-    </entry-group>
-  )}
-
-  <entry-group>
-    <h2>Recent Posts</h2>
-    <ul data-entries>
-      {recentPosts.map((entry) => (
+    <EntryGroup heading="Featured Posts">
+      {featuredPosts.map((entry) => (
         <EntryCard entry={entry} />
       ))}
-    </ul>
-    <p>
+    </EntryGroup>
+  )}
+
+  <EntryGroup heading="Recent Posts">
+    {recentPosts.map((entry) => (
+      <EntryCard entry={entry} />
+    ))}
+    <p slot="after">
       <a href={withBase('/recent')}>View all posts →</a>
     </p>
-  </entry-group>
+  </EntryGroup>
 </Layout>
 
 <style>
