@@ -182,6 +182,8 @@ Only `title` is required. `creator` is optional and the byline is left out witho
 
 To give ledgers a feed, add an endpoint that returns `renderLedgerFeed(context, sources, { title, description })`, where each source is `{ collection, href, noun }` for a ledger and the page it is shown on. Items are dated by `ended`, then `added`, and link to the entry's card. Pass `feed={{ href, label }}` to `Ledger` to show the RSS button and advertise the feed in the page head.
 
+Pass `ratings` to `Ledger` to show a bar chart of how many entries have each rating, with favorites highlighted, between the description and the list. It is inline SVG drawn at build time in the theme colours.
+
 ## Overlay and shadowing
 
 `@/*` resolves through an ordered list of directories, and the first file found wins:
