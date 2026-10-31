@@ -22,6 +22,9 @@ const UNDATED = Number.MAX_SAFE_INTEGER
 const ledgerDate = ({ data }: LedgerEntry) =>
   data.ended ?? (data.rating === "DNF" ? data.started : undefined) ?? data.added
 
+export const addedDate = (entry: LedgerEntry) =>
+  entry.data.added ?? ledgerDate(entry)
+
 const endedTime = (entry: LedgerEntry) =>
   ledgerDate(entry)?.valueOf() ?? UNDATED
 

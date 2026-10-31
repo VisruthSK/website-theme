@@ -230,7 +230,7 @@ test.describe("list page", () => {
     expect(xml.match(/<item>/g)).toHaveLength(ids.length)
   })
 
-  test("the library lists the newest added entries first", async ({
+  test("the library lists the newest entries first, dating a finished one by when it ended", async ({
     page,
     site,
   }) => {
@@ -238,7 +238,13 @@ test.describe("list page", () => {
     const titles = await page
       .locator(".interactive-card .card-title")
       .allTextContents()
-    expect(titles).toEqual(["The Three Little Pigs", "The Ugly Duckling"])
+    expect(titles).toEqual([
+      "The Three Little Pigs",
+      "The Ugly Duckling",
+      "The Gift of the Magi",
+      "The Selfish Giant",
+      "Moby-Dick",
+    ])
     await expect(
       page.locator(".interactive-card a.card-overlay").first(),
     ).toHaveAttribute("href", /\/reading\/?#the-three-little-pigs-01$/)

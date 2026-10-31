@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test"
 import {
+  addedDate,
   dateRange,
   ledgerGroups,
   ledgerPermalinks,
@@ -18,6 +19,14 @@ const entry = (id: string, title: string, ended?: string): LedgerEntry => ({
 })
 
 const day = (iso: string) => new Date(iso)
+
+test("an entry is added when it says so, otherwise when it ended", () => {
+  const read = entry("a", "A", "2025-05-31")
+  expect(addedDate(read)).toEqual(day("2025-05-31"))
+  read.data.added = day("2025-06-15")
+  expect(addedDate(read)).toEqual(day("2025-06-15"))
+  expect(addedDate(entry("b", "B"))).toBeUndefined()
+})
 
 test("titles become plain slugs", () => {
   expect(slugify("The Remains of the Day")).toBe("the-remains-of-the-day")

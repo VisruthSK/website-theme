@@ -182,7 +182,7 @@ To give ledgers a feed, add an endpoint that returns `renderLedgerFeed(context, 
 
 A ledger entry may also carry `feed`, the URL of the site's own RSS or Atom feed, for lists such as a blogroll that you export as OPML.
 
-`RecentlyAdded` lists the newest entries by `added` across one or more ledgers: `<RecentlyAdded sources={[{ collection, href, noun }]} limit={5} />`.
+`RecentlyAdded` lists the newest entries across one or more ledgers: `<RecentlyAdded sources={[{ collection, href, noun }]} limit={5} />`. An entry counts from its `added` date, or from its `ended` date (the `started` date of a DNF) when it has no `added`, so a book you finished needs only `ended`.
 
 Pass `ratings` to `Ledger` to show a bar chart of how many entries have each rating, with favorites highlighted, between the description and the list. It is inline SVG drawn at build time in the theme colours.
 
