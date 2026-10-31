@@ -1,13 +1,8 @@
-<p class="intro"><slot /></p>
+<prose-content class="intro" data-compact><p><slot /></p></prose-content>
 
 <style>
   .intro {
     margin-block-end: var(--space-m);
     color: var(--ink-muted);
-  }
-
-  .intro :global(a) {
-    --underline: var(--muted-foreground);
-    color: var(--foreground);
   }
 </style>

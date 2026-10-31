@@ -69,6 +69,12 @@
 .card-body {
   position: relative;
   pointer-events: none;
+
+  a {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+  }
 }
 
 .card-eyebrow {
@@ -237,12 +243,13 @@ page-heading {
   justify-content: space-between;
   gap: 1rem;
   margin-block-end: 1.5rem;
+}
 
-  h1 {
-    font-size: var(--step-3);
-    font-weight: var(--font-weight-medium);
-    line-height: calc(var(--leading-offset) + 1em);
-  }
+page-heading h1,
+h1[data-page-title] {
+  font-size: var(--step-3);
+  font-weight: var(--font-weight-medium);
+  line-height: calc(var(--leading-offset) + 1em);
 }
 
 page-toc toc-title[aria-hidden] {
