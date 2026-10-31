@@ -1,0 +1,35 @@
+---
+import EntryGroup from "@/components/EntryGroup.astro"
+import PostCard from "@/components/PostCard.astro"
+import { FEATURED_POST_IDS, SITE } from "@/consts"
+import { withBase } from "@/lib/base"
+import { getSectionPosts, getSectionPostsChrono } from "@/lib/section-posts"
+
+const allPosts = await getSectionPosts()
+const featured = FEATURED_POST_IDS.map((id) =>
+  allPosts.find((entry) => entry.id === id),
+).filter((entry) => entry !== undefined)
+const featuredIds = new Set(featured.map((entry) => entry.id))
+const recent = (await getSectionPostsChrono())
+  .filter((entry) => !featuredIds.has(entry.id) && entry.data.rss !== false)
+  .slice(0, SITE.featuredPostCount)
+---
+
+{
+  featured.length > 0 && (
+    <EntryGroup heading="Featured Posts">
+      {featured.map((entry) => (
+        <PostCard entry={entry} />
+      ))}
+    </EntryGroup>
+  )
+}
+
+<EntryGroup heading="Recent Posts">
+  {recent.map((entry) => (
+    <PostCard entry={entry} />
+  ))}
+  <p slot="after">
+    <a href={withBase("/recent")}>View all posts →</a>
+  </p>
+</EntryGroup>

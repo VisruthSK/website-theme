@@ -1,5 +1,5 @@
-import type { APIRoute } from 'astro'
-import { withBase } from '@/lib/base'
+import type { APIRoute } from "astro"
+import { withBase } from "@/lib/base"
 
 const getRobotsTxt = (sitemapURL: URL) => `
 User-agent: *
@@ -9,6 +9,6 @@ Sitemap: ${sitemapURL.href}
 `
 
 export const GET: APIRoute = ({ site }) => {
-  const sitemapURL = new URL(withBase('/sitemap-index.xml'), site)
+  const sitemapURL = new URL(withBase("/sitemap-index.xml"), site)
   return new Response(getRobotsTxt(sitemapURL))
 }

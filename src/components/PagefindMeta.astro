@@ -1,5 +1,5 @@
 ---
-import { FEATURES } from '@/consts'
+import { FEATURES } from "@/consts"
 
 interface Props {
   description?: string
@@ -23,86 +23,28 @@ const {
   wordCount,
 } = Astro.props
 
-const tagsValue = JSON.stringify(tags.filter(Boolean))
+const fields = (
+  [
+    ["section_label", sectionLabel],
+    ["entries", entries && "true"],
+    ["description", description],
+    ["published_at", publishedAt],
+    ["word_count", typeof wordCount === "number" && String(wordCount)],
+    ["tags", JSON.stringify(tags.filter(Boolean))],
+    ["parent_title", parentTitle],
+    ["parent_url", parentUrl],
+  ] as [string, string | false | undefined][]
+).filter((field): field is [string, string] => Boolean(field[1]))
 ---
 
 {
-  FEATURES.search && (
-    <meta
-      name="pagefind:section_label"
-      data-pagefind-meta="section_label[content]"
-      content={sectionLabel}
-    />
-  )
-}
-
-{
-  FEATURES.search && entries && (
-    <meta
-      name="pagefind:entries"
-      data-pagefind-meta="entries[content]"
-      content="true"
-    />
-  )
-}
-
-{
-  FEATURES.search && description && (
-    <meta
-      name="pagefind:description"
-      data-pagefind-meta="description[content]"
-      content={description}
-    />
-  )
-}
-
-{
-  FEATURES.search && publishedAt && (
-    <meta
-      name="pagefind:published_at"
-      data-pagefind-meta="published_at[content]"
-      data-pagefind-sort="published_at[content]"
-      content={publishedAt}
-    />
-  )
-}
-
-{
-  FEATURES.search && typeof wordCount === 'number' && (
-    <meta
-      name="pagefind:word_count"
-      data-pagefind-meta="word_count[content]"
-      content={String(wordCount)}
-    />
-  )
-}
-
-{
-  FEATURES.search && tagsValue && (
-    <meta
-      name="pagefind:tags"
-      data-pagefind-meta="tags[content]"
-      content={tagsValue}
-    />
-  )
-}
-
-{
-  FEATURES.search && parentTitle && (
-    <meta
-      name="pagefind:parent_title"
-      data-pagefind-meta="parent_title[content]"
-      content={parentTitle}
-    />
-  )
-}
-
-{
-  FEATURES.search && parentUrl && (
-    <meta
-      name="pagefind:parent_url"
-      data-pagefind-meta="parent_url[content]"
-      content={parentUrl}
-    />
-  )
+  FEATURES.search &&
+    fields.map(([name, content]) => (
+      <meta
+        name={`pagefind:${name}`}
+        data-pagefind-meta={`${name}[content]`}
+        data-pagefind-sort={name === "published_at" ? `${name}[content]` : undefined}
+        content={content}
+      />
+    ))
 }

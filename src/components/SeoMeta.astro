@@ -1,0 +1,35 @@
+---
+import { SITE } from "@/consts"
+
+type Props = {
+  title: string
+  fullTitle: string
+  description: string
+  canonical: URL
+  url: URL
+  type: "website" | "article"
+  image?: URL
+}
+
+const { title, fullTitle, description, canonical, url, type, image } =
+  Astro.props
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description}>
+<link rel="canonical" href={canonical}>
+
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:type" content={type}>
+<meta property="og:url" content={url}>
+<meta property="og:site_name" content={SITE.title}>
+<meta property="og:locale" content={SITE.locale.replace("-", "_")}>
+{image && <meta property="og:image" content={image}>}
+{image && <meta property="og:image:alt" content={title}>}
+
+<meta name="twitter:card" content={image ? "summary_large_image" : "summary"}>
+<meta name="twitter:title" content={title}>
+<meta name="twitter:description" content={description}>
+{image && <meta name="twitter:image" content={image}>}
+{image && <meta name="twitter:image:alt" content={title}>}

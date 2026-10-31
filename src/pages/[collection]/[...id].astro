@@ -1,18 +1,24 @@
 ---
-import { withBase } from '@/lib/base'
-import Bibliography from '@/components/Bibliography.astro'
-import PostMeta from '@/components/PostMeta.astro'
-import PagefindMeta from '@/components/PagefindMeta.astro'
-import TableOfContents from '@/components/TableOfContents.astro'
-import { FEATURES, SECTIONS, SECTION_SLUGS, SITE, type SectionSlug } from '@/consts'
-import { fonts } from 'virtual:theme/assets'
-import TypesetScript from '@/components/TypesetScript.astro'
-import codeScript from '@/generated/code.js?url&no-inline'
-import codeStyles from '@/generated/code.css?url&no-inline'
-import Layout from '@/layouts/Layout.astro'
-import { assertNoBrokenLinks } from '@/lib/links'
+import Bibliography from "@/components/Bibliography.astro"
+import FontPreload from "@/components/FontPreload.astro"
+import MetaPost from "@/components/MetaPost.astro"
+import MetaRow from "@/components/MetaRow.astro"
+import PagefindMeta from "@/components/PagefindMeta.astro"
+import TableOfContents from "@/components/TableOfContents.astro"
+import TagChip from "@/components/TagChip.astro"
+import TypesetScript from "@/components/TypesetScript.astro"
 import {
-  withReferencesHeading,
+  FEATURES,
+  SECTIONS,
+  SECTION_SLUGS,
+  SITE,
+  type SectionSlug,
+} from "@/consts"
+import codeStyles from "@/generated/code.css?url&no-inline"
+import codeScript from "@/generated/code.js?url&no-inline"
+import Layout from "@/layouts/Layout.astro"
+import { buildBacklinks } from "@/lib/backlinks"
+import {
   getAllPostsAndSubposts,
   getParentId,
   getParentPost,
@@ -20,14 +26,17 @@ import {
   getPostStats,
   getSubpostsForParent,
   isSubpost,
+  postStatItems,
+  postTags,
+  withReferencesHeading,
   type PostEntry,
-} from '@/lib/data-utils'
-import { extractCitedKeys } from '@/lib/markdown/cite'
-import { formatDate } from '@/lib/dates'
-import { canonicalizePathSegments, plainTitle } from '@/lib/site-utils'
-import { formatCount, formatTitleAsHtml } from '@/lib/text'
-import { render } from 'astro:content'
-import { buildBacklinks } from '@/lib/backlinks'
+} from "@/lib/data-utils"
+import { assertNoBrokenLinks } from "@/lib/links"
+import { extractCitedKeys } from "@/lib/markdown/cite"
+import { canonicalizePathSegments, plainTitle } from "@/lib/site-utils"
+import { formatTitleAsHtml } from "@/lib/text"
+import { render } from "astro:content"
+import { fonts } from "virtual:theme/assets"
 
 export async function getStaticPaths() {
   const paths = []
@@ -52,7 +61,7 @@ const basePath = section.href
 
 const { Content, headings, remarkPluginFrontmatter } = await render(post)
 assertNoBrokenLinks(post.id, remarkPluginFrontmatter)
-const body = post.body ?? ''
+const body = post.body ?? ""
 const { bib } = post.data
 const hasBibliography = Boolean(bib)
 const hasCode = /^\s*(```|~~~)/m.test(body)
@@ -74,8 +83,7 @@ const chapters = await getSubpostsForParent(seriesId, collection)
 const seriesParent = parent ?? post
 
 const stats = await getPostStats(post)
-const tags = post.data.tags ?? []
-const displayTags = post.data.draft ? ['draft', ...tags] : tags
+const displayTags = postTags(post)
 const parentHref = parent && canonicalizePathSegments(basePath, parent.id)
 const crumbs = [
   ...(parent && parentHref
@@ -86,44 +94,20 @@ const crumbs = [
     href: canonicalizePathSegments(basePath, post.id),
   },
 ]
-const showCombined =
-  stats.combinedWordCount !== null &&
-  stats.combinedWordCount !== stats.wordCount
 ---
 
 <Layout crumbs={crumbs}>
-  <PostMeta slot="head" post={post} canonical={parentHref ?? undefined} />
+  <MetaPost slot="head" post={post} canonical={parentHref ?? undefined} />
   <TypesetScript slot="head" />
-  {fonts.bodyItalic && (
-    <link
-      slot="head"
-      rel="preload"
-      href={fonts.bodyItalic}
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-  )}
-  {usesMono && fonts.mono && (
-    <link
-      slot="head"
-      rel="preload"
-      href={fonts.mono}
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-  )}
-  {remarkPluginFrontmatter.dropCap && fonts.dropCap && (
-    <link
-      slot="head"
-      rel="preload"
-      href={fonts.dropCap}
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-  )}
+  <Fragment slot="head">
+    {fonts.bodyItalic && <FontPreload href={fonts.bodyItalic} />}
+    {usesMono && fonts.mono && <FontPreload href={fonts.mono} />}
+    {
+      remarkPluginFrontmatter.dropCap && fonts.dropCap && (
+        <FontPreload href={fonts.dropCap} />
+      )
+    }
+  </Fragment>
   <PagefindMeta
     slot="head"
     description={post.data.description}
@@ -131,7 +115,7 @@ const showCombined =
     parentUrl={parentHref ?? undefined}
     publishedAt={post.data.date.toISOString()}
     sectionLabel={section.label}
-    tags={tags}
+    tags={post.data.tags}
     wordCount={stats.wordCount}
   />
   {hasCode && (
@@ -156,36 +140,20 @@ const showCombined =
         data-pagefind-weight="10"
         set:html={formatTitleAsHtml(post.data.title)}
       />
-      <post-meta data-pagefind-ignore>
-        <time datetime={post.data.date.toISOString()}>
-          {formatDate(post.data.date)}
-        </time>
-        <span>
-          {formatCount(stats.wordCount)} words
-          {showCombined && ` (${formatCount(stats.combinedWordCount!)} total)`}
-        </span>
-        <span>
-          {stats.readingTime}
-          {showCombined && ` (${stats.combinedReadingTime} total)`}
-        </span>
-        {stats.subpostCount > 0 && (
-          <span>
-            {stats.subpostCount} chapter{stats.subpostCount === 1 ? '' : 's'}
-          </span>
-        )}
-      </post-meta>
-      {displayTags.length > 0 && (
-        <post-tags data-pagefind-ignore>
-          {displayTags.map((tag) => (
-            <a
-              href={canonicalizePathSegments(withBase('/tags'), encodeURIComponent(tag))}
-              class:list={['chip', tag === 'draft' && 'chip-draft']}
-            >
-              #{tag}
-            </a>
-          ))}
-        </post-tags>
-      )}
+      <MetaRow
+        date={post.data.date}
+        items={postStatItems(stats)}
+        data-pagefind-ignore
+      />
+      {
+        displayTags.length > 0 && (
+          <div class="chip-list" data-pagefind-ignore>
+            {displayTags.map((tag) => (
+              <TagChip tag={tag} />
+            ))}
+          </div>
+        )
+      }
     </header>
 
     {chapters.length > 0 && (
@@ -196,7 +164,7 @@ const showCombined =
             <li>
               <a
                 href={getPostHref(chapter)}
-                aria-current={chapter.id === post.id ? 'page' : undefined}
+                aria-current={chapter.id === post.id ? "page" : undefined}
               >
                 {chapter.data.title}
               </a>
@@ -215,45 +183,35 @@ const showCombined =
     {backlinks.length > 0 && (
       <aside class="backlinks" data-pagefind-ignore>
         <h2>Mentioned in</h2>
-        <ul>{backlinks.map((entry) => <li><a href={getPostHref(entry)}>{plainTitle(entry.data.title)}</a></li>)}</ul>
+        <ul>
+          {backlinks.map((entry) => (
+            <li>
+              <a href={getPostHref(entry)}>{plainTitle(entry.data.title)}</a>
+            </li>
+          ))}
+        </ul>
       </aside>
     )}
   </article>
 </Layout>
 
 <style>
-  .backlinks {
-    margin-block-start: var(--space-m);
-    font-size: var(--step--1);
-    color: var(--muted-foreground);
-    h2 { font-size: inherit; }
-    ul { padding-inline-start: 1.25rem; }
-  }
   header {
     margin-block-end: var(--space-m);
   }
 
-  post-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3xs) var(--space-xs);
+  header > :global(.meta-row) {
     margin-block-start: var(--space-3xs);
-    font-size: var(--step--1);
-    color: var(--muted-foreground);
   }
 
-  post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs);
+  header > :global(.chip-list) {
     margin-block-start: var(--space-2xs);
   }
 
-  nav[aria-label='Chapters'] {
+  nav[aria-label="Chapters"] {
     margin-block-end: var(--space-m);
     padding: var(--space-xs);
-    border: 1px solid var(--border-subtle);
+    border: var(--box-border);
     border-radius: var(--radius-xl);
     font-size: var(--step--1);
 
@@ -271,10 +229,24 @@ const showCombined =
       min-block-size: 1.5rem;
       color: var(--muted-foreground);
 
-      &[aria-current='page'],
+      &[aria-current="page"],
       &:hover {
         color: var(--foreground);
       }
+    }
+  }
+
+  .backlinks {
+    margin-block-start: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+
+    h2 {
+      font-size: inherit;
+    }
+
+    ul {
+      padding-inline-start: 1.25rem;
     }
   }
 </style>

@@ -1,90 +1,43 @@
 ---
-import { withBase } from '@/lib/base'
-import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
-import {
-  getParentPost,
-  getPostStats,
-  isSubpost,
-  type PostEntry,
-} from '@/lib/data-utils'
-import { formatDate } from '@/lib/dates'
-import { canonicalizePathSegments } from '@/lib/site-utils'
-import { formatCount, formatTitleAsHtml } from '@/lib/text'
+import Card from "@/components/Card.astro"
+import MetaRow from "@/components/MetaRow.astro"
+import TagChip from "@/components/TagChip.astro"
+import type { CardData } from "@/lib/card"
+import { formatTitleAsHtml } from "@/lib/text"
 
-interface Props {
-  entry: PostEntry
-  showSectionLabel?: boolean
-  heading?: 'h2' | 'h3'
-}
+type Props = CardData & { heading?: "h2" | "h3"; class?: string }
 
-const { entry, showSectionLabel = true, heading: Heading = 'h3' } = Astro.props
-const { collection } = entry
-const section = SECTIONS[COLLECTION_TO_SECTION[collection]]
-const basePath = section.href
-const stats = await getPostStats(entry)
-const parentPost = isSubpost(entry.id)
-  ? await getParentPost(entry.id, collection)
-  : null
-
-const tags = entry.data.tags ?? []
-const displayTags = entry.data.draft ? ['draft', ...tags] : tags
-const href = canonicalizePathSegments(basePath, entry.id)
-const seriesHref = parentPost
-  ? canonicalizePathSegments(basePath, parentPost.id)
-  : undefined
-const showCombined =
-  stats.combinedWordCount !== null &&
-  stats.combinedWordCount !== stats.wordCount
+const {
+  href,
+  title,
+  eyebrow,
+  excerpt,
+  date,
+  stats,
+  series,
+  tags = [],
+  heading: Heading = "h3",
+  class: className,
+} = Astro.props
 ---
 
-<li class="interactive-card">
-  <a href={href} aria-label={entry.data.title} class="card-overlay"></a>
-  <div class="card-body">
-    {showSectionLabel && <div class="card-eyebrow">{section.label}</div>}
-    <Heading
-      class="card-title"
-      set:html={formatTitleAsHtml(entry.data.title)}
-    />
-    <p class="card-excerpt">{entry.data.description}</p>
-    <div class="meta-row">
-      <time datetime={entry.data.date.toISOString()}>
-        {formatDate(entry.data.date)}
-      </time>
-      <span class="meta-divider" aria-hidden="true"></span>
-      <span>
-        {formatCount(stats.wordCount)} words
-        {showCombined && ` (${formatCount(stats.combinedWordCount!)} total)`}
-      </span>
-      <span class="meta-divider" aria-hidden="true"></span>
-      <span>
-        {stats.readingTime}
-        {showCombined && ` (${stats.combinedReadingTime} total)`}
-      </span>
-      {stats.subpostCount > 0 && (
-        <>
-          <span class="meta-divider" aria-hidden="true" />
-          <span>
-            {stats.subpostCount} chapter{stats.subpostCount === 1 ? '' : 's'}
-          </span>
-        </>
-      )}
-    </div>
-    {(seriesHref || displayTags.length > 0) && (
+<Card href={href} label={title} class={className}>
+  {eyebrow && <div class="card-eyebrow">{eyebrow}</div>}
+  <Heading class="card-title" set:html={formatTitleAsHtml(title)} />
+  {excerpt !== undefined && <p class="card-excerpt">{excerpt}</p>}
+  <MetaRow date={date} items={stats} />
+  {
+    (series || tags.length > 0) && (
       <div class="chip-list">
-        {seriesHref && (
-          <a href={seriesHref} class="chip">
-            {parentPost!.data.title}
+        {series && (
+          <a href={series.href} class="chip">
+            {series.title}
           </a>
         )}
-        {displayTags.map((tag) => (
-          <a
-            href={canonicalizePathSegments(withBase('/tags'), encodeURIComponent(tag))}
-            class:list={['chip', tag === 'draft' && 'chip-draft']}
-          >
-            #{tag}
-          </a>
+        {tags.map((tag) => (
+          <TagChip tag={tag} />
         ))}
       </div>
-    )}
-  </div>
-</li>
+    )
+  }
+</Card>

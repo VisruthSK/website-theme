@@ -1,7 +1,7 @@
-import theme, { paths } from 'virtual:theme/config'
-import { icons } from 'virtual:theme/assets'
-import { withBase } from '@/lib/base'
-import type { ContentCollection, SectionMetadata } from '@/types'
+import theme, { paths } from "virtual:theme/config"
+import { icons } from "virtual:theme/assets"
+import { withBase } from "@/lib/base"
+import type { ContentCollection, SectionMetadata } from "@/types"
 
 export const SITE = theme.site
 export const PAGES = theme.pages
@@ -31,7 +31,7 @@ export const COLLECTION_TO_SECTION: Record<string, SectionSlug> =
   )
 
 export const NAVIGATION = theme.navigation.map((item) =>
-  'section' in item
+  "section" in item
     ? { href: SECTIONS[item.section].href, label: SECTIONS[item.section].label }
     : { ...item, href: withBase(item.href) },
 )

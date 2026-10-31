@@ -1,12 +1,11 @@
-import rss from '@astrojs/rss'
-import type { APIContext } from 'astro'
-import { getCollection } from 'astro:content'
+import type { APIContext } from "astro"
 
-import { SITE } from '@/consts'
-import { withBase } from '@/lib/base'
-import { resolveSiteUrl } from '@/lib/content-render'
-import { ledgerPermalinks, type LedgerEntry } from '@/lib/ledger'
-import { renderLedgerNote } from '@/lib/ledger-note'
+import { withBase } from "@/lib/base"
+import { respondWithFeed } from "@/lib/feed"
+import { ledgerPermalinks } from "@/lib/ledger"
+import { getLedger } from "@/lib/ledger-entries"
+import { renderLedgerNote } from "@/lib/ledger-note"
+import { resolveSiteUrl } from "@/lib/site-utils"
 
 interface LedgerSource {
   collection: string
@@ -16,9 +15,9 @@ interface LedgerSource {
 
 const plainText = (markdown: string) =>
   markdown
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .replace(/[_*]/g, '')
-    .replace(/\s+/g, ' ')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[_*]/g, "")
+    .replace(/\s+/g, " ")
     .trim()
 
 export async function renderLedgerFeed(
@@ -26,20 +25,18 @@ export async function renderLedgerFeed(
   sources: LedgerSource[],
   { title, description }: { title: string; description: string },
 ) {
-  const site = resolveSiteUrl(context, SITE.href)
+  const site = resolveSiteUrl(context)
   const absolutize = (html: string) =>
     html.replaceAll('href="/', `href="${site}/`)
 
   const items = (
     await Promise.all(
       sources.map(async ({ collection, href, noun }) => {
-        const entries = (await getCollection(
-          collection as never,
-        )) as LedgerEntry[]
+        const entries = await getLedger(collection)
         const permalinks = ledgerPermalinks(entries)
         return entries.map(({ id, data }) => {
           const rating =
-            data.rating === 'DNF' ? 'DNF' : data.rating && `${data.rating}/10`
+            data.rating === "DNF" ? "DNF" : data.rating && `${data.rating}/10`
           return {
             title: data.title,
             link: `${withBase(href)}#${permalinks.get(id)}`,
@@ -48,33 +45,30 @@ export async function renderLedgerFeed(
             author: data.creator,
             description: [
               rating && `Rating: ${rating}.`,
-              plainText(data.note ?? ''),
+              plainText(data.note ?? ""),
             ]
               .filter(Boolean)
-              .join(' '),
+              .join(" "),
             content: absolutize(
               [
                 data.creator || rating
-                  ? `<p>${[data.creator, rating].filter(Boolean).join(' · ')}</p>`
-                  : '',
+                  ? `<p>${[data.creator, rating].filter(Boolean).join(" · ")}</p>`
+                  : "",
                 data.url
                   ? `<p><a href="${withBase(data.url)}">${data.title}</a></p>`
-                  : '',
-                data.note ? renderLedgerNote(data.note) : '',
-              ].join(''),
+                  : "",
+                data.note ? renderLedgerNote(data.note) : "",
+              ].join(""),
             ),
           }
         })
       }),
     )
-  )
-    .flat()
-    .sort((a, b) => (b.pubDate?.valueOf() ?? 0) - (a.pubDate?.valueOf() ?? 0))
+  ).flat()
 
-  return rss({
+  return respondWithFeed(context, {
     title,
     description,
-    site: new URL(withBase('/'), site).href,
     items,
     trailingSlash: false,
   })

@@ -1,0 +1,179 @@
+---
+import Card from "@/components/Card.astro"
+import Link from "@/components/Link.astro"
+import MetaRow from "@/components/MetaRow.astro"
+import Time from "@/components/Time.astro"
+import { COLLECTION_TO_SECTION, SECTIONS } from "@/consts"
+import { withBase } from "@/lib/base"
+import { formatLooseDate } from "@/lib/dates"
+import { dateRange, type LedgerEntry } from "@/lib/ledger"
+import { renderLedgerNote } from "@/lib/ledger-note"
+
+type Props = {
+  entry: LedgerEntry
+  permalink: string
+  dated: boolean
+  linkLabel: string
+}
+
+const { entry, permalink, dated, linkLabel } = Astro.props
+const { data } = entry
+const { dates, open } = dated
+  ? dateRange(data.started, data.ended)
+  : { dates: [], open: false }
+const hasDetails = Boolean(data.note || data.link)
+const linkHref =
+  data.link &&
+  `${SECTIONS[COLLECTION_TO_SECTION[data.link.collection]].href}/${data.link.id}/`
+---
+
+<Card
+  href={`#${permalink}`}
+  label={`${data.title}, permalink`}
+  data-favorite={data.favorite || undefined}
+>
+  <div class="head">
+    <div>
+      <h3 class="card-title" id={permalink} data-prose>
+        {data.url ? <Link href={withBase(data.url)}>{data.title}</Link> : data.title}
+      </h3>
+      <MetaRow
+        class="byline"
+        items={[data.creator, data.published ? formatLooseDate(data.published) : undefined]}
+      />
+      {
+        dated && dates.length === 0 && data.added && (
+          <div class="meta-row" data-pagefind-ignore>
+            <span>Added <Time date={data.added} /></span>
+          </div>
+        )
+      }
+      {
+        dates.length > 0 && (
+          <div class="meta-row" data-pagefind-ignore>
+            <span>
+              {dates.map((date, index) => (
+                <>
+                  {index > 0 && " – "}
+                  <Time {date} />
+                </>
+              ))}
+              {open && " –"}
+            </span>
+          </div>
+        )
+      }
+    </div>
+    {
+      (data.rating !== undefined || (data.favorite && !hasDetails)) && (
+        <div class="side" data-pagefind-ignore>
+          {data.rating === "DNF" ? (
+            <span class="dnf">DNF</span>
+          ) : (
+            data.rating !== undefined && (
+              <span class:list={["score", data.favorite && "favorite"]}>{data.rating}</span>
+            )
+          )}
+          {data.favorite && !hasDetails && <span class="chip">Favorite</span>}
+        </div>
+      )
+    }
+  </div>
+  {
+    hasDetails && (
+      <div class:list={["ledger-details", !data.note && "without-note"]}>
+        <div class="details-body">
+          {data.note && (
+            <prose-content class="note card-excerpt" data-compact set:html={renderLedgerNote(data.note)} />
+          )}
+          {linkHref && (
+            <p class="link card-excerpt" data-prose data-pagefind-ignore>
+              <a href={linkHref}>{linkLabel}</a>
+            </p>
+          )}
+        </div>
+        {data.favorite && <span class="chip" data-pagefind-ignore>Favorite</span>}
+      </div>
+    )
+  }
+</Card>
+
+<style>
+  .card-title {
+    scroll-margin-block-start: calc(var(--space-s) + 1rem);
+  }
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-s);
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    font-family: var(--font-sans);
+  }
+
+  .score {
+    font-size: 3rem;
+    line-height: 0.9;
+    font-weight: 900;
+  }
+
+  .score.favorite {
+    color: var(--flourish);
+  }
+
+  .side .chip,
+  .ledger-details .chip {
+    flex-shrink: 0;
+    font-family: var(--font-sans);
+    border-color: color-mix(in oklab, var(--flourish) 30%, transparent);
+    background: color-mix(in oklab, var(--flourish) 8%, transparent);
+    color: var(--flourish);
+    pointer-events: none;
+    transform: none;
+  }
+
+  .dnf {
+    font-size: 2.125rem;
+    line-height: 1;
+    font-weight: 900;
+    color: var(--ink-muted);
+  }
+
+  .ledger-details {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-xs);
+    margin-block-start: var(--space-s);
+  }
+
+  .ledger-details.without-note {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .details-body {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .note,
+  .link {
+    margin: 0;
+  }
+
+  .note + .link {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .link a {
+    display: inline-block;
+    padding-block: 0.125rem;
+  }
+</style>

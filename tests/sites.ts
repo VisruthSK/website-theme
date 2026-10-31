@@ -4,12 +4,12 @@ import {
   type Browser,
   type BrowserContextOptions,
   type Page,
-} from '@playwright/test'
-import { readFileSync } from 'node:fs'
-import { parseTheme, type Theme } from '../config/theme.ts'
-import { headersFor } from '../src/lib/local-headers.ts'
+} from "@playwright/test"
+import { readFileSync } from "node:fs"
+import { parseTheme, type Theme } from "../config/theme.ts"
+import { headersFor } from "../src/lib/local-headers.ts"
 
-export type Mode = 'light' | 'dark'
+export type Mode = "light" | "dark"
 
 export interface Site {
   name: SiteName
@@ -28,70 +28,70 @@ export interface Site {
 }
 
 const load = (dir: string) =>
-  parseTheme(JSON.parse(readFileSync(`${dir}/theme.json`, 'utf8')))
+  parseTheme(JSON.parse(readFileSync(`${dir}/theme.json`, "utf8")))
 
 export const SITES = {
   example: {
-    name: 'example',
-    dir: 'examples/full',
+    name: "example",
+    dir: "examples/full",
     port: 4321,
-    theme: load('examples/full'),
+    theme: load("examples/full"),
     typeset: [
-      '/notes/everything/',
-      '/essays/the-selfish-giant/',
-      '/essays/the-gift-of-the-magi/',
-      '/essays/grimm/',
-      '/essays/grimm/rumpelstiltskin/',
-      '/essays/grimm/shoemaker/',
+      "/notes/everything/",
+      "/essays/the-selfish-giant/",
+      "/essays/the-gift-of-the-magi/",
+      "/essays/grimm/",
+      "/essays/grimm/rumpelstiltskin/",
+      "/essays/grimm/shoemaker/",
     ],
-    footnotes: '/notes/everything/',
-    citations: '/essays/the-gift-of-the-magi/',
-    series: '/essays/grimm/',
-    code: '/notes/everything/',
-    tag: '/tags/story/',
-    unfeeded: '/essays/grimm/',
+    footnotes: "/notes/everything/",
+    citations: "/essays/the-gift-of-the-magi/",
+    series: "/essays/grimm/",
+    code: "/notes/everything/",
+    tag: "/tags/story/",
+    unfeeded: "/essays/grimm/",
     ledger: {
-      path: '/reading/',
-      query: 'Wilde',
-      permalinks: ['the-selfish-giant-01', 'the-selfish-giant-02'],
+      path: "/reading/",
+      query: "Wilde",
+      permalinks: ["the-selfish-giant-01", "the-selfish-giant-02"],
     },
     visual: [
-      '/',
-      '/essays/',
-      '/reading/',
-      '/notes/everything/',
-      '/essays/the-selfish-giant/',
-      '/essays/the-gift-of-the-magi/',
-      '/search/',
-      '/404.html',
+      "/",
+      "/essays/",
+      "/reading/",
+      "/notes/everything/",
+      "/essays/the-selfish-giant/",
+      "/essays/the-gift-of-the-magi/",
+      "/search/",
+      "/404.html",
     ],
   },
   minimal: {
-    name: 'minimal',
-    dir: 'examples/minimal',
+    name: "minimal",
+    dir: "examples/minimal",
     port: 4322,
-    theme: load('examples/minimal'),
+    theme: load("examples/minimal"),
     typeset: [
-      '/journal/about-these-stories/',
-      '/journal/the-masque-of-the-red-death/',
-      '/journal/the-elves-and-the-shoemaker/',
+      "/journal/about-these-stories/",
+      "/journal/the-masque-of-the-red-death/",
+      "/journal/the-elves-and-the-shoemaker/",
     ],
-    footnotes: '/journal/the-masque-of-the-red-death/',
-    tag: '/tags/story/',
-    visual: ['/', '/journal/', '/journal/the-masque-of-the-red-death/'],
+    footnotes: "/journal/the-masque-of-the-red-death/",
+    tag: "/tags/story/",
+    visual: ["/", "/journal/", "/journal/the-masque-of-the-red-death/"],
   },
-} satisfies Record<string, Omit<Site, 'name'> & { name: string }>
+} satisfies Record<string, Omit<Site, "name"> & { name: string }>
 
 export type SiteName = keyof typeof SITES
 
-export const baseOf = (site: Pick<Site, 'theme'>) =>
-  new URL(site.theme.site.href).pathname.replace(/[/]$/, '')
+export const baseOf = (site: Pick<Site, "theme">) =>
+  new URL(site.theme.site.href).pathname.replace(/[/]$/, "")
 
 const prefixed = (page: Page, site: Site) => {
   const goto = page.goto.bind(page)
   page.goto = (url, options) =>
     goto(
-      url.startsWith('/') && !url.startsWith(`${baseOf(site)}/`)
+      url.startsWith("/") && !url.startsWith(`${baseOf(site)}/`)
         ? `${baseOf(site)}${url}`
         : url,
       options,
@@ -127,21 +127,21 @@ export const headers = (site: Site) =>
 
 export async function enforceCsp(page: Page, site: Site) {
   const headersForPath = headers(site)
-  await page.route('**/*', async (route) => {
+  await page.route("**/*", async (route) => {
     const request = route.request()
-    if (request.resourceType() !== 'document') return route.continue()
+    if (request.resourceType() !== "document") return route.continue()
     const policy = headersForPath(
-      new URL(request.url()).pathname.slice(baseOf(site).length) || '/',
-    )['Content-Security-Policy']
+      new URL(request.url()).pathname.slice(baseOf(site).length) || "/",
+    )["Content-Security-Policy"]
     if (!policy) return route.continue()
     const response = await route.fetch()
     await route.fulfill({
       response,
       headers: {
         ...response.headers(),
-        'content-security-policy': policy.replace(
+        "content-security-policy": policy.replace(
           /;\s*upgrade-insecure-requests/,
-          '',
+          "",
         ),
       },
     })
@@ -151,17 +151,17 @@ export async function enforceCsp(page: Page, site: Site) {
 export async function visit(page: Page, site: Site, url: string, mode: Mode) {
   const errors: string[] = []
   await enforceCsp(page, site)
-  page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(message.text())
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text())
   })
-  page.on('pageerror', (error) => errors.push(error.message))
+  page.on("pageerror", (error) => errors.push(error.message))
   await page.addInitScript((value: Mode) => {
-    window.localStorage.setItem('theme', value)
+    window.localStorage.setItem("theme", value)
   }, mode)
 
-  await page.goto(url, { waitUntil: 'domcontentloaded' })
-  await expect(page.locator('main')).toBeVisible()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', mode)
+  await page.goto(url, { waitUntil: "domcontentloaded" })
+  await expect(page.locator("main")).toBeVisible()
+  await expect(page.locator("html")).toHaveAttribute("data-theme", mode)
   await page.evaluate(async () => {
     await document.fonts.ready
     await (window as unknown as { __typesetReady?: Promise<void> })

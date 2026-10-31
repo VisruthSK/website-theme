@@ -1,11 +1,8 @@
 ---
-import { withBase } from '@/lib/base'
-import EntryCard from '@/components/EntryCard.astro'
-import MetaPage from '@/components/MetaPage.astro'
-import { SECTIONS, SECTION_SLUGS, SITE } from '@/consts'
-import RSS from '@/icons/rss.svg'
-import Layout from '@/layouts/Layout.astro'
-import { getAllTags, getPostsByTag } from '@/lib/data-utils'
+import Page from "@/components/Page.astro"
+import PostCard from "@/components/PostCard.astro"
+import { SECTIONS, SECTION_SLUGS } from "@/consts"
+import { getAllTags, getPostsByTag, newestFirst } from "@/lib/data-utils"
 
 export async function getStaticPaths() {
   const collections = SECTION_SLUGS.map((slug) => SECTIONS[slug].collection)
@@ -19,45 +16,31 @@ export async function getStaticPaths() {
         )
       )
         .flat()
-        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+        .sort(newestFirst)
       return { params: { id: tag }, props: { tag, posts } }
     }),
   )
 }
 
 const { tag, posts } = Astro.props
-const feedHref = withBase(`/tags/${encodeURIComponent(tag)}/rss.xml`)
+const feed = {
+  href: `/tags/${encodeURIComponent(tag)}/rss.xml`,
+  label: `RSS feed for #${tag}`,
+}
 ---
 
-<Layout
-  crumbs={[{ label: `#${tag}`, href: `/tags/${encodeURIComponent(tag)}` }]}
+<Page
+  title={`#${tag}`}
+  metaTitle={`Posts tagged with "${tag}"`}
+  description={`A collection of posts tagged with ${tag}.`}
+  noindex
+  crumb={`/tags/${encodeURIComponent(tag)}`}
+  feed={feed}
 >
-  <MetaPage
-    slot="head"
-    title={`Posts tagged with "${tag}"`}
-    description={`A collection of posts tagged with ${tag}.`}
-    noindex
-  />
-  <link
-    slot="head"
-    rel="alternate"
-    type="application/rss+xml"
-    title={`RSS feed for #${tag}`}
-    href={new URL(feedHref, SITE.href).href}
-  />
-
-  <page-heading>
-    <h1>#{tag}</h1>
-    <a href={feedHref} data-icon-button aria-label={`RSS feed for ${tag}`}>
-      <RSS />
-    </a>
-  </page-heading>
   <p class="meta-row">
-    {posts.length} post{posts.length === 1 ? '' : 's'}
+    {posts.length} post{posts.length === 1 ? "" : "s"}
   </p>
   <ul data-entries>
-    {posts.map((post) => (
-      <EntryCard heading="h2" entry={post} />
-    ))}
+    {posts.map((post) => <PostCard heading="h2" entry={post} />)}
   </ul>
-</Layout>
+</Page>

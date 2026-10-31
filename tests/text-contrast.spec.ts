@@ -1,6 +1,6 @@
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
-import { expect, test, visit, type Mode } from './sites.ts'
+import { readFileSync } from "node:fs"
+import { join } from "node:path"
+import { expect, test, visit, type Mode } from "./sites.ts"
 
 interface Offender {
   kind: string
@@ -10,34 +10,34 @@ interface Offender {
   text: string
 }
 
-for (const mode of ['light', 'dark'] as Mode[]) {
+for (const mode of ["light", "dark"] as Mode[]) {
   test(`all text and list numbers meet contrast (${mode})`, async ({
     page,
     site,
     browserName,
   }) => {
     test.skip(
-      browserName !== 'chromium',
-      'computed colours do not vary by browser',
+      browserName !== "chromium",
+      "computed colours do not vary by browser",
     )
     test.setTimeout(300_000)
     const sitemap = readFileSync(
-      join(process.cwd(), site.dir, 'dist', 'sitemap-0.xml'),
-      'utf8',
+      join(process.cwd(), site.dir, "dist", "sitemap-0.xml"),
+      "utf8",
     )
     const paths = [
       ...[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
         ([, loc]) => new URL(loc).pathname,
       ),
-      '/404.html',
+      "/404.html",
     ]
     const failures: string[] = []
     for (const path of paths) {
       await visit(page, site, path, mode)
       const offenders: Offender[] = await page.evaluate(() => {
-        const canvas = document.createElement('canvas')
+        const canvas = document.createElement("canvas")
         canvas.width = canvas.height = 1
-        const ctx = canvas.getContext('2d', { willReadFrequently: true })!
+        const ctx = canvas.getContext("2d", { willReadFrequently: true })!
         const linear = (c: number) =>
           c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
         const luminance = ([r, g, b]: number[]) =>
@@ -53,12 +53,12 @@ for (const mode of ['light', 'dark'] as Mode[]) {
             current = current.parentElement
           ) {
             const color = getComputedStyle(current).backgroundColor
-            if (color !== 'rgba(0, 0, 0, 0)' && color !== 'transparent') {
+            if (color !== "rgba(0, 0, 0, 0)" && color !== "transparent") {
               layers.unshift(color)
             }
           }
           ctx.clearRect(0, 0, 1, 1)
-          ctx.fillStyle = '#fff'
+          ctx.fillStyle = "#fff"
           ctx.fillRect(0, 0, 1, 1)
           for (const color of layers) {
             ctx.fillStyle = color
@@ -81,16 +81,16 @@ for (const mode of ['light', 'dark'] as Mode[]) {
           return (
             box.width > 0 &&
             box.height > 0 &&
-            style.visibility !== 'hidden' &&
-            style.display !== 'none' &&
-            style.opacity !== '0'
+            style.visibility !== "hidden" &&
+            style.display !== "none" &&
+            style.opacity !== "0"
           )
         }
         const label = (element: Element) =>
           element.tagName.toLowerCase() +
-          (typeof element.className === 'string' && element.className
-            ? `.${element.className.trim().split(/\s+/).join('.')}`
-            : '')
+          (typeof element.className === "string" && element.className
+            ? `.${element.className.trim().split(/\s+/).join(".")}`
+            : "")
         const found: Offender[] = []
         const walker = document.createTreeWalker(
           document.body,
@@ -98,11 +98,11 @@ for (const mode of ['light', 'dark'] as Mode[]) {
         )
         for (let node = walker.nextNode(); node; node = walker.nextNode()) {
           const element = node.parentElement
-          const text = (node.textContent ?? '').trim()
+          const text = (node.textContent ?? "").trim()
           if (
             !text ||
             !element ||
-            ['SCRIPT', 'STYLE'].includes(element.tagName) ||
+            ["SCRIPT", "STYLE"].includes(element.tagName) ||
             element.closest('[aria-hidden="true"]') ||
             !shown(element)
           ) {
@@ -116,7 +116,7 @@ for (const mode of ['light', 'dark'] as Mode[]) {
           const ratio = ratioOf(style.color, element)
           if (ratio < need) {
             found.push({
-              kind: 'text',
+              kind: "text",
               selector: label(element),
               ratio: Math.round(ratio * 100) / 100,
               need,
@@ -124,18 +124,18 @@ for (const mode of ['light', 'dark'] as Mode[]) {
             })
           }
         }
-        for (const item of document.querySelectorAll('li')) {
+        for (const item of document.querySelectorAll("li")) {
           if (!shown(item)) continue
-          const ordered = item.parentElement?.tagName === 'OL'
+          const ordered = item.parentElement?.tagName === "OL"
           const need = ordered ? 4.5 : 3
-          const ratio = ratioOf(getComputedStyle(item, '::marker').color, item)
+          const ratio = ratioOf(getComputedStyle(item, "::marker").color, item)
           if (ratio < need) {
             found.push({
-              kind: ordered ? 'ordered marker' : 'bullet',
+              kind: ordered ? "ordered marker" : "bullet",
               selector: label(item.parentElement!),
               ratio: Math.round(ratio * 100) / 100,
               need,
-              text: '',
+              text: "",
             })
           }
         }

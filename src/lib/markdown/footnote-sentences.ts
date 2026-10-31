@@ -1,4 +1,4 @@
-import { defineMdastPlugin } from 'satteri'
+import { defineMdastPlugin } from "satteri"
 
 interface Node {
   type: string
@@ -12,16 +12,16 @@ interface Edits {
   after: Node[]
 }
 
-const OPEN = { type: 'html', value: '<span class="footnote-sentence">' }
-const CLOSE = { type: 'html', value: '</span>' }
+const OPEN = { type: "html", value: '<span class="footnote-sentence">' }
+const CLOSE = { type: "html", value: "</span>" }
 
-const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' })
+const segmenter = new Intl.Segmenter("en", { granularity: "sentence" })
 const TITLE = /\b(?:Dr|Mr|Mrs|Ms|Prof|St|Mt|Jr|Sr)\.\s*$/
 
 const plainText = (node: Node): string =>
-  node.type === 'footnoteReference' || node.type === 'html'
-    ? ''
-    : (node.value ?? node.children?.map(plainText).join('') ?? '')
+  node.type === "footnoteReference" || node.type === "html"
+    ? ""
+    : (node.value ?? node.children?.map(plainText).join("") ?? "")
 
 function sentencesOf(text: string) {
   const sentences: { start: number; end: number }[] = []
@@ -36,37 +36,37 @@ function sentencesOf(text: string) {
   return sentences
 }
 
-function split(value: string, inside: Edits['inside']): Node[] {
+function split(value: string, inside: Edits["inside"]): Node[] {
   const pieces: Node[] = []
   let cursor = 0
   for (const { offset, tag } of inside.toSorted(
     (a, b) => a.offset - b.offset,
   )) {
     if (offset > cursor) {
-      pieces.push({ type: 'text', value: value.slice(cursor, offset) })
+      pieces.push({ type: "text", value: value.slice(cursor, offset) })
     }
     pieces.push(tag)
     cursor = offset
   }
   if (cursor < value.length) {
-    pieces.push({ type: 'text', value: value.slice(cursor) })
+    pieces.push({ type: "text", value: value.slice(cursor) })
   }
   return pieces
 }
 
 export const footnoteSentences = defineMdastPlugin({
-  name: 'footnote-sentences',
+  name: "footnote-sentences",
   paragraph(node, ctx) {
     const children = node.children as unknown as Node[]
     const references = children.flatMap((child, index) =>
-      child.type === 'footnoteReference' ? [index] : [],
+      child.type === "footnoteReference" ? [index] : [],
     )
     if (references.length === 0) return
 
     const texts = children.map(plainText)
-    const text = texts.join('')
+    const text = texts.join("")
     const starts = texts.map(
-      (_, index) => texts.slice(0, index).join('').length,
+      (_, index) => texts.slice(0, index).join("").length,
     )
     const childAt = (position: number) =>
       texts.findIndex((part, index) => starts[index] + part.length > position)
@@ -94,7 +94,7 @@ export const footnoteSentences = defineMdastPlugin({
     for (const [{ start, end }, sentenceReferences] of bySentence) {
       const first = childAt(start)
       const opening = start - starts[first]
-      if (children[first].type === 'text' && opening > 0) {
+      if (children[first].type === "text" && opening > 0) {
         editsFor(first).inside.push({ offset: opening, tag: OPEN })
       } else {
         editsFor(first).before.push(OPEN)
@@ -105,7 +105,7 @@ export const footnoteSentences = defineMdastPlugin({
       const last = Math.max(childAt(finish - 1), lastReference)
       const closing = finish - starts[last]
       if (
-        children[last].type === 'text' &&
+        children[last].type === "text" &&
         last !== lastReference &&
         closing < texts[last].length
       ) {
@@ -118,8 +118,8 @@ export const footnoteSentences = defineMdastPlugin({
     for (const [child, { before, inside, after }] of edits) {
       const original = children[child]
       const middle =
-        original.type === 'text'
-          ? split(original.value ?? '', inside)
+        original.type === "text"
+          ? split(original.value ?? "", inside)
           : [original]
       ctx.replaceNode(
         original as never,

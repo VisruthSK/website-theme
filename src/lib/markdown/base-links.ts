@@ -1,25 +1,25 @@
-import { defineHastPlugin } from 'satteri'
+import { defineHastPlugin } from "satteri"
 
 const PROPERTIES: Record<string, string> = {
-  a: 'href',
-  img: 'src',
-  source: 'src',
-  video: 'src',
-  audio: 'src',
+  a: "href",
+  img: "src",
+  source: "src",
+  video: "src",
+  audio: "src",
 }
 
 export const baseLinks = (base: string) =>
   defineHastPlugin({
-    name: 'base-links',
+    name: "base-links",
     element: {
       filter: Object.keys(PROPERTIES),
       visit(node, ctx) {
         const property = PROPERTIES[node.tagName]
         const value = node.properties[property]
         if (
-          typeof value !== 'string' ||
-          !value.startsWith('/') ||
-          value.startsWith('//') ||
+          typeof value !== "string" ||
+          !value.startsWith("/") ||
+          value.startsWith("//") ||
           value === base ||
           value.startsWith(`${base}/`)
         )

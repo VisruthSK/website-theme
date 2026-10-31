@@ -1,19 +1,21 @@
-import { createHash } from 'node:crypto'
-import { readFileSync } from 'node:fs'
-import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { createHash } from "node:crypto"
+import { readFileSync } from "node:fs"
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises"
+import { dirname, join } from "node:path"
+import { fileURLToPath } from "node:url"
 
 const KEY_LENGTH = 20
 
 export const digest = (...parts: (string | Uint8Array)[]) => {
-  const hash = createHash('sha256')
+  const hash = createHash("sha256")
   for (const part of parts) hash.update(part)
-  return hash.digest('hex').slice(0, KEY_LENGTH)
+  return hash.digest("hex").slice(0, KEY_LENGTH)
 }
 
+export const shortHash = (text: string) => digest(text).slice(0, 8)
+
 export function buildCache(root: URL, kind: string) {
-  const directory = new URL('node_modules/.astro/website-theme/', root)
+  const directory = new URL("node_modules/.astro/website-theme/", root)
   const file = (key: string) => new URL(`${kind}-${key}`, directory)
   return {
     read: (key: string) => readFile(file(key)).catch(() => undefined),
@@ -37,7 +39,7 @@ export function libraryVersions(...names: string[]) {
     for (;;) {
       try {
         const manifest = JSON.parse(
-          readFileSync(join(directory, 'package.json'), 'utf8'),
+          readFileSync(join(directory, "package.json"), "utf8"),
         )
         if (manifest.name === name) return `${name}@${manifest.version}`
       } catch {}

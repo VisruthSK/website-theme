@@ -1,6 +1,6 @@
-const monthNames = new Intl.DateTimeFormat('en-US', {
-  timeZone: 'UTC',
-  month: 'long',
+const monthNames = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  month: "long",
 })
 
 const monthName = (month: number) =>

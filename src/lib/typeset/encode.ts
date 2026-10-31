@@ -1,5 +1,5 @@
-import type { Constants } from './constants.ts'
-import type { Band } from './plan.ts'
+import type { Constants } from "./constants.ts"
+import type { Band } from "./plan.ts"
 
 export interface Header {
   words: number
@@ -20,7 +20,7 @@ export function encodePlan(
   { CAP_SCALE }: Constants,
 ): string {
   const parts = [
-    [radix(words), indent ? 1 : 0, radix(cap * CAP_SCALE)].join('.'),
+    [radix(words), indent ? 1 : 0, radix(cap * CAP_SCALE)].join("."),
   ]
   let previous = 0
   for (const { from, breaks } of bands) {
@@ -28,17 +28,17 @@ export function encodePlan(
     previous = from
     const counts = breaks ? lineWords(breaks) : []
     const encodable = counts.length && counts.every((n) => n <= MAX_LINE_WORDS)
-    parts.push(`${delta}${encodable ? `!${counts.map(radix).join('')}` : '~'}`)
+    parts.push(`${delta}${encodable ? `!${counts.map(radix).join("")}` : "~"}`)
   }
-  return parts.join(';')
+  return parts.join(";")
 }
 
 export function decodePlan(
   data: string,
   { CAP_SCALE, INDENT }: Constants,
 ): { header: Header; bands: Band[] } {
-  const [head, ...rest] = data.split(';')
-  const [words, indent, cap] = head.split('.')
+  const [head, ...rest] = data.split(";")
+  const [words, indent, cap] = head.split(".")
 
   let from = 0
   const bands = rest.map((part): Band => {
@@ -55,7 +55,7 @@ export function decodePlan(
   return {
     header: {
       words: parseInt(words, 36),
-      indent: indent === '1' ? INDENT : 0,
+      indent: indent === "1" ? INDENT : 0,
       cap: parseInt(cap, 36) / CAP_SCALE,
     },
     bands,
