@@ -128,7 +128,7 @@ async function renderUncached(entry: RenderableEntry, baseUrl: string) {
     .join('\n')
 }
 
-function renderEntryContent(entry: RenderableEntry, baseUrl: string) {
+export function renderEntryContent(entry: RenderableEntry, baseUrl: string) {
   const key = `${entry.collection}:${entry.id}:${baseUrl}`
   let content = renderedContent.get(key)
   if (!content) {

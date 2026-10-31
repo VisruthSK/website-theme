@@ -11,6 +11,7 @@ import {
   type LedgerEntry,
 } from '@/lib/ledger'
 import { getCollection } from 'astro:content'
+import { renderLedgerNote } from '@/lib/ledger-note'
 
 type Props = {
   title: string
@@ -108,14 +109,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                       )}
                     </div>
                     {data.note && (
-                      <div class="note">
-                        {data.note
-                          .trim()
-                          .split(/\n{2,}/)
-                          .map((paragraph) => (
-                            <p class="card-excerpt">{paragraph}</p>
-                          ))}
-                      </div>
+                      <div class="note" set:html={renderLedgerNote(data.note)} />
                     )}
                     {data.link && (
                       <p class="link" data-pagefind-ignore>
@@ -206,8 +200,20 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     margin-block-start: var(--space-s);
   }
 
-  .note .card-excerpt:last-child {
+  .note :global(p) {
+    margin-block-end: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    color: var(--ink-subtle);
+  }
+
+  .note :global(p:last-child) {
     margin-block-end: 0;
+  }
+
+  .note :global(a) {
+    position: relative;
+    z-index: 1;
   }
 
   .link {

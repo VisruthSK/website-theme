@@ -148,9 +148,11 @@ pale-fire:
   favorite: true
   started: 2026-08-14
   ended: 2026-09-03
-  note: A book that seems designed to be read twice.
+  note: A book that seems designed to be read *twice*.
   link: 20250809-01
 ```
+
+Notes support Markdown and are rendered at build time.
 
 ```ts
 // src/content.config.ts
