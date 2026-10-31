@@ -1,10 +1,7 @@
 ---
-import EntryCard from '@/components/EntryCard.astro'
-import MetaPage from '@/components/MetaPage.astro'
+import Page from '@/components/Page.astro'
+import PostCard from '@/components/PostCard.astro'
 import { SECTIONS, SECTION_SLUGS } from '@/consts'
-import FeedLink from '@/components/FeedLink.astro'
-import PageHeading from '@/components/PageHeading.astro'
-import Layout from '@/layouts/Layout.astro'
 import { getAllTags, getPostsByTag } from '@/lib/data-utils'
 
 export async function getStaticPaths() {
@@ -32,24 +29,18 @@ const feed = {
 }
 ---
 
-<Layout
-  crumbs={[{ label: `#${tag}`, href: `/tags/${encodeURIComponent(tag)}` }]}
+<Page
+  title={`#${tag}`}
+  metaTitle={`Posts tagged with "${tag}"`}
+  description={`A collection of posts tagged with ${tag}.`}
+  noindex
+  crumb={`/tags/${encodeURIComponent(tag)}`}
+  feed={feed}
 >
-  <MetaPage
-    slot="head"
-    title={`Posts tagged with "${tag}"`}
-    description={`A collection of posts tagged with ${tag}.`}
-    noindex
-  />
-  <FeedLink slot="head" href={feed.href} title={feed.label} />
-
-  <PageHeading title={`#${tag}`} feed={feed} />
   <p class="meta-row">
     {posts.length} post{posts.length === 1 ? '' : 's'}
   </p>
   <ul data-entries>
-    {posts.map((post) => (
-      <EntryCard heading="h2" entry={post} />
-    ))}
+    {posts.map((post) => <PostCard heading="h2" entry={post} />)}
   </ul>
-</Layout>
+</Page>

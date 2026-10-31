@@ -1,3 +1,5 @@
+import { groupByYear } from './group'
+
 export interface LedgerEntry {
   id: string
   data: {
@@ -31,22 +33,8 @@ export const slugify = (text: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
 
-export function ledgerGroups<T extends LedgerEntry>(entries: T[]) {
-  const years = Map.groupBy(
-    entries.filter((entry) => ledgerDate(entry)),
-    (entry) => ledgerDate(entry)!.getUTCFullYear(),
-  )
-  const groups = [...years]
-    .sort(([a], [b]) => b - a)
-    .map(([year, group]) => ({
-      heading: String(year),
-      entries: group.toSorted((a, b) => endedTime(b) - endedTime(a)),
-    }))
-  const undated = entries.filter((entry) => !ledgerDate(entry))
-  return undated.length
-    ? [...groups, { heading: 'Undated', entries: undated }]
-    : groups
-}
+export const ledgerGroups = <T extends LedgerEntry>(entries: T[]) =>
+  groupByYear(entries, ledgerDate, (a, b) => endedTime(b) - endedTime(a))
 
 export function ledgerPermalinks(entries: LedgerEntry[]) {
   const counts = new Map<string, number>()

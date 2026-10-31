@@ -1,6 +1,6 @@
 ---
-import EntryCard from '@/components/EntryCard.astro'
 import EntryGroup from '@/components/EntryGroup.astro'
+import PostCard from '@/components/PostCard.astro'
 import { FEATURED_POST_IDS, SITE } from '@/consts'
 import { withBase } from '@/lib/base'
 import { getSectionPosts, getSectionPostsChrono } from '@/lib/section-posts'
@@ -19,7 +19,7 @@ const recent = (await getSectionPostsChrono())
   featured.length > 0 && (
     <EntryGroup heading="Featured Posts">
       {featured.map((entry) => (
-        <EntryCard entry={entry} />
+        <PostCard entry={entry} />
       ))}
     </EntryGroup>
   )
@@ -27,7 +27,7 @@ const recent = (await getSectionPostsChrono())
 
 <EntryGroup heading="Recent Posts">
   {recent.map((entry) => (
-    <EntryCard entry={entry} />
+    <PostCard entry={entry} />
   ))}
   <p slot="after">
     <a href={withBase('/recent')}>View all posts →</a>

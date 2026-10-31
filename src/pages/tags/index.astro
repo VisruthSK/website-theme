@@ -1,9 +1,7 @@
 ---
-import MetaPage from '@/components/MetaPage.astro'
-import PageHeading from '@/components/PageHeading.astro'
+import Page from '@/components/Page.astro'
 import TagChip from '@/components/TagChip.astro'
 import { SECTIONS, SECTION_SLUGS } from '@/consts'
-import Layout from '@/layouts/Layout.astro'
 import { getSortedTags } from '@/lib/data-utils'
 
 const sortedTags = await getSortedTags(
@@ -11,14 +9,8 @@ const sortedTags = await getSortedTags(
 )
 ---
 
-<Layout crumbs={[{ label: 'Tags', href: '/tags' }]}>
-  <MetaPage slot="head" title="Tags" />
-  <PageHeading title="Tags" />
+<Page title="Tags" crumb="/tags">
   <div class="chip-list">
-    {
-      sortedTags.map(({ tag, count }) => (
-        <TagChip tag={tag} count={count} />
-      ))
-    }
+    {sortedTags.map(({ tag, count }) => <TagChip tag={tag} count={count} />)}
   </div>
-</Layout>
+</Page>
