@@ -4,6 +4,7 @@ import ThemeToggle from '@/components/ThemeToggle.astro'
 import { NAVIGATION, SITE } from '@/consts'
 import MenuIcon from '@/icons/menu.svg'
 import CloseIcon from '@/icons/x.svg'
+import { externalTo } from '@/lib/external-link-utils'
 import { normalizePath } from '@/lib/utils'
 
 type Props = { crumbs?: { label: string; href: string }[] }
@@ -13,7 +14,7 @@ const pathname = normalizePath(Astro.url.pathname) || '/'
 const section = NAVIGATION.find(
   ({ href }) => pathname === href || pathname.startsWith(`${href}/`),
 )
-const isExternal = (href: string) => href.startsWith('http')
+const isExternal = externalTo(SITE.href)
 ---
 
 <aside data-bar>
