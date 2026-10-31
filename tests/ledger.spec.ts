@@ -70,6 +70,23 @@ test.describe('list page', () => {
     ).toBeLessThan(2)
   })
 
+  test('a note and favorite share the bottom row when there is no review', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const card = page.locator('.interactive-card', {
+      hasText: 'The Gift of the Magi',
+    })
+    await card.locator('.link').evaluate((link) => link.remove())
+    const note = await card.locator('.note p').last().boundingBox()
+    const favorite = await card.locator('.chip').boundingBox()
+    expect(note).not.toBeNull()
+    expect(favorite).not.toBeNull()
+    expect(favorite!.y).toBeLessThan(note!.y + note!.height)
+    expect(favorite!.y + favorite!.height).toBeGreaterThan(note!.y)
+  })
+
   test('Markdown note links use normal visible link styling and are clickable', async ({
     page,
     site,
