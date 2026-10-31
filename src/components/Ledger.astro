@@ -7,6 +7,7 @@ import PagefindMeta from '@/components/PagefindMeta.astro'
 import RatingSpread from '@/components/RatingSpread.astro'
 import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
+import { withBase } from '@/lib/base'
 import { formatDate, formatLooseDate } from '@/lib/dates'
 import {
   dateRange,
@@ -58,7 +59,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
         rel="alternate"
         type="application/rss+xml"
         title={feed.label}
-        href={new URL(feed.href, Astro.site ?? Astro.url.origin).href}
+        href={new URL(withBase(feed.href), Astro.site ?? Astro.url.origin).href}
       />
     )
   }
@@ -90,11 +91,11 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                   <div class="card-body">
                     <div class="head">
                       <div>
-                        <h3 class="card-title" id={permalink}>
-                          {data.url ? <Link class="title-link" href={data.url}>{data.title}</Link> : data.title}
+                        <h3 class="card-title" id={permalink} data-prose>
+                          {data.url ? <Link href={data.url}>{data.title}</Link> : data.title}
                         </h3>
                         {(data.creator || data.published) && (
-                          <p class="byline">
+                          <p class="meta-row byline">
                             {data.creator && <span>{data.creator}</span>}
                             {data.published && (
                               <>
@@ -144,10 +145,10 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                       <div class:list={['ledger-details', !data.note && 'without-note']}>
                         <div class="details-body">
                           {data.note && (
-                            <prose-content class="note" data-compact set:html={renderLedgerNote(data.note)} />
+                            <prose-content class="note card-excerpt" data-compact set:html={renderLedgerNote(data.note)} />
                           )}
                           {data.link && (
-                            <p class="link" data-pagefind-ignore>
+                            <p class="link card-excerpt" data-prose data-pagefind-ignore>
                               <a href={linkHref(data.link)}>{linkLabel}</a>
                             </p>
                           )}
@@ -167,14 +168,6 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
 </Layout>
 
 <style>
-  .title-link {
-    --underline: var(--muted-foreground);
-    position: relative;
-    z-index: 1;
-    color: inherit;
-    pointer-events: auto;
-  }
-
   .card-title {
     scroll-margin-block-start: calc(var(--space-s) + 1rem);
   }
@@ -190,18 +183,13 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     gap: var(--space-s);
   }
 
-  .byline {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    margin-block-end: 0.25rem;
-    font-size: 0.875rem;
-    color: var(--ink-subtle);
-  }
-
   .meta-row {
     margin-block-end: 0;
+  }
+
+  .byline {
+    margin-block-end: 0.25rem;
+    color: var(--ink-subtle);
   }
 
   .side {
@@ -257,26 +245,9 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     min-inline-size: 0;
   }
 
-  .note :global(p) {
-    margin-block-end: 0.5rem;
-    font-size: 0.875rem;
-    line-height: 1.5rem;
-    color: var(--ink-subtle);
-  }
-
-  .note :global(p:last-child) {
-    margin-block-end: 0;
-  }
-
-  .note :global(a) {
-    pointer-events: auto;
-    position: relative;
-    z-index: 1;
-  }
-
+  .note,
   .link {
     margin: 0;
-    font-size: 0.9375rem;
   }
 
   .note + .link {
@@ -284,12 +255,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
   }
 
   .link a {
-    --underline: var(--muted-foreground);
-    position: relative;
-    z-index: 1;
     display: inline-block;
     padding-block: 0.25rem;
-    color: var(--foreground);
-    pointer-events: auto;
   }
 </style>

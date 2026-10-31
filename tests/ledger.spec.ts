@@ -165,6 +165,44 @@ test.describe('list page', () => {
       .click({ position: { x: 24, y: 24 } })
     await expect(page).toHaveURL(/#moby-dick-01$/)
   })
+
+  test('the ratings chart centres each bar over its label', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const columns = await page.locator('figure svg').evaluate((svg) => {
+      const centre = (element: Element) => {
+        const box = element.getBoundingClientRect()
+        return (box.left + box.right) / 2
+      }
+      return [...svg.querySelectorAll('text.label')].map((label) => ({
+        label: label.textContent,
+        offsets: [...svg.querySelectorAll('rect.bar')]
+          .map((bar) => Math.abs(centre(bar) - centre(label)))
+          .filter((offset) => offset < 20),
+      }))
+    })
+    const drawn = columns.filter(({ offsets }) => offsets.length > 0)
+    expect(drawn.map(({ label }) => label)).toEqual(['DNF', '6', '7', '8', '9'])
+    for (const { offsets } of drawn) expect(offsets[0]).toBeLessThan(0.5)
+  })
+
+  test('the feed lists every entry with a link to its card', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const feed = await page
+      .locator('link[rel="alternate"][title="Reading RSS feed"]')
+      .getAttribute('href')
+    const xml = await (await page.request.get(new URL(feed!).pathname)).text()
+    const ids = await page
+      .locator('.interactive-card .card-title')
+      .evaluateAll((titles) => titles.map((title) => title.id))
+    for (const id of ids) expect(xml).toContain(`/reading/#${id}`)
+    expect(xml.match(/<item>/g)).toHaveLength(ids.length)
+  })
 })
 
 test('collections and Recent group entries under year headings, unpaginated', async ({
