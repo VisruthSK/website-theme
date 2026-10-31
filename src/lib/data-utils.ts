@@ -2,6 +2,7 @@ import { getCollection, type CollectionEntry } from 'astro:content'
 
 import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
 import { calculateWordCountFromHtml, readingTime } from '@/lib/site-utils'
+import { formatCount } from '@/lib/text'
 import type { ContentCollection } from '@/types'
 
 type EntryFor<C extends ContentCollection> = CollectionEntry<C>
@@ -189,6 +190,18 @@ export async function getPostStats(post: PostEntry) {
     combinedReadingTime:
       combinedWordCount === null ? null : readingTime(combinedWordCount),
   }
+}
+
+export function postStatItems(stats: Awaited<ReturnType<typeof getPostStats>>) {
+  const combined =
+    stats.combinedWordCount !== null &&
+    stats.combinedWordCount !== stats.wordCount
+  return [
+    `${formatCount(stats.wordCount)} words${combined ? ` (${formatCount(stats.combinedWordCount!)} total)` : ''}`,
+    `${stats.readingTime}${combined ? ` (${stats.combinedReadingTime} total)` : ''}`,
+    stats.subpostCount > 0 &&
+      `${stats.subpostCount} chapter${stats.subpostCount === 1 ? '' : 's'}`,
+  ]
 }
 
 type RenderedHeading = {

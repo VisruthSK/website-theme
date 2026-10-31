@@ -1,5 +1,6 @@
 ---
 import MetaPage from '@/components/MetaPage.astro'
+import PageHeading from '@/components/PageHeading.astro'
 import PagefindMeta from '@/components/PagefindMeta.astro'
 import Layout from '@/layouts/Layout.astro'
 import { assertNoBrokenLinks } from '@/lib/links'
@@ -27,9 +28,7 @@ const { title, description, date } = entry.data
   />
 
   <article data-pagefind-body>
-    <page-heading>
-      <h1 set:html={formatTitleAsHtml(title)} />
-    </page-heading>
+    <PageHeading title={formatTitleAsHtml(title)} html />
     <prose-content>
       <Content />
     </prose-content>

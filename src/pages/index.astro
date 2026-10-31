@@ -1,23 +1,8 @@
 ---
-import { withBase } from '@/lib/base'
-import EntryCard from '@/components/EntryCard.astro'
-import EntryGroup from '@/components/EntryGroup.astro'
+import HomePosts from '@/components/HomePosts.astro'
 import MetaPage from '@/components/MetaPage.astro'
-import { FEATURED_POST_IDS, SITE } from '@/consts'
+import { SITE } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
-import { getSectionPosts, getSectionPostsChrono } from '@/lib/section-posts'
-
-const allSectionPosts = await getSectionPosts()
-
-const featuredPosts = FEATURED_POST_IDS.map((id) =>
-  allSectionPosts.find((entry) => entry.id === id),
-).filter((entry) => entry !== undefined)
-
-const featuredIds = new Set(featuredPosts.map((entry) => entry.id))
-
-const recentPosts = (await getSectionPostsChrono())
-  .filter((entry) => !featuredIds.has(entry.id) && entry.data.rss !== false)
-  .slice(0, SITE.featuredPostCount)
 ---
 
 <Layout>
@@ -28,22 +13,7 @@ const recentPosts = (await getSectionPostsChrono())
     <p>{SITE.description}</p>
   </header>
 
-  {featuredPosts.length > 0 && (
-    <EntryGroup heading="Featured Posts">
-      {featuredPosts.map((entry) => (
-        <EntryCard entry={entry} />
-      ))}
-    </EntryGroup>
-  )}
-
-  <EntryGroup heading="Recent Posts">
-    {recentPosts.map((entry) => (
-      <EntryCard entry={entry} />
-    ))}
-    <p slot="after">
-      <a href={withBase('/recent')}>View all posts →</a>
-    </p>
-  </EntryGroup>
+  <HomePosts />
 </Layout>
 
 <style>

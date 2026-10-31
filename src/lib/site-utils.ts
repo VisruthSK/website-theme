@@ -8,6 +8,9 @@ export function calculateWordCountFromHtml(
   return textOnly.split(/\s+/).filter(Boolean).length
 }
 
+export const siteOrigin = ({ site, url }: { site?: URL; url: URL }) =>
+  site ?? new URL(url.origin)
+
 export function readingTime(wordCount: number): string {
   const readingTimeMinutes = Math.max(1, Math.round(wordCount / 200))
   return `${readingTimeMinutes} min read`

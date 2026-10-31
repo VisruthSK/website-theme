@@ -1,7 +1,8 @@
 ---
-import { withBase } from '@/lib/base'
 import Bibliography from '@/components/Bibliography.astro'
+import MetaRow from '@/components/MetaRow.astro'
 import PostMeta from '@/components/PostMeta.astro'
+import TagChip from '@/components/TagChip.astro'
 import PagefindMeta from '@/components/PagefindMeta.astro'
 import TableOfContents from '@/components/TableOfContents.astro'
 import { FEATURES, SECTIONS, SECTION_SLUGS, SITE, type SectionSlug } from '@/consts'
@@ -20,12 +21,12 @@ import {
   getPostStats,
   getSubpostsForParent,
   isSubpost,
+  postStatItems,
   type PostEntry,
 } from '@/lib/data-utils'
 import { extractCitedKeys } from '@/lib/markdown/cite'
-import { formatDate } from '@/lib/dates'
 import { canonicalizePathSegments, plainTitle } from '@/lib/site-utils'
-import { formatCount, formatTitleAsHtml } from '@/lib/text'
+import { formatTitleAsHtml } from '@/lib/text'
 import { render } from 'astro:content'
 import { buildBacklinks } from '@/lib/backlinks'
 
@@ -86,9 +87,6 @@ const crumbs = [
     href: canonicalizePathSegments(basePath, post.id),
   },
 ]
-const showCombined =
-  stats.combinedWordCount !== null &&
-  stats.combinedWordCount !== stats.wordCount
 ---
 
 <Layout crumbs={crumbs}>
@@ -156,35 +154,15 @@ const showCombined =
         data-pagefind-weight="10"
         set:html={formatTitleAsHtml(post.data.title)}
       />
-      <post-meta data-pagefind-ignore>
-        <time datetime={post.data.date.toISOString()}>
-          {formatDate(post.data.date)}
-        </time>
-        <span>
-          {formatCount(stats.wordCount)} words
-          {showCombined && ` (${formatCount(stats.combinedWordCount!)} total)`}
-        </span>
-        <span>
-          {stats.readingTime}
-          {showCombined && ` (${stats.combinedReadingTime} total)`}
-        </span>
-        {stats.subpostCount > 0 && (
-          <span>
-            {stats.subpostCount} chapter{stats.subpostCount === 1 ? '' : 's'}
-          </span>
-        )}
-      </post-meta>
+      <MetaRow
+        date={post.data.date}
+        items={postStatItems(stats)}
+        data-pagefind-ignore
+      />
       {displayTags.length > 0 && (
-        <post-tags data-pagefind-ignore>
-          {displayTags.map((tag) => (
-            <a
-              href={canonicalizePathSegments(withBase('/tags'), encodeURIComponent(tag))}
-              class:list={['chip', tag === 'draft' && 'chip-draft']}
-            >
-              #{tag}
-            </a>
-          ))}
-        </post-tags>
+        <div class="chip-list" data-pagefind-ignore>
+          {displayTags.map((tag) => <TagChip tag={tag} />)}
+        </div>
       )}
     </header>
 
@@ -233,20 +211,11 @@ const showCombined =
     margin-block-end: var(--space-m);
   }
 
-  post-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3xs) var(--space-xs);
+  header > :global(.meta-row) {
     margin-block-start: var(--space-3xs);
-    font-size: var(--step--1);
-    color: var(--muted-foreground);
   }
 
-  post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs);
+  header > :global(.chip-list) {
     margin-block-start: var(--space-2xs);
   }
 

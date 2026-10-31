@@ -2,7 +2,7 @@
 import SeoMeta from '@/components/SeoMeta.astro'
 import { SITE } from '@/consts'
 import type { PostEntry } from '@/lib/data-utils'
-import { pageTitle, plainTitle } from '@/lib/site-utils'
+import { pageTitle, plainTitle, siteOrigin } from '@/lib/site-utils'
 
 type Props = {
   post: PostEntry
@@ -13,7 +13,7 @@ const { post, canonical: canonicalPath } = Astro.props
 const { description = SITE.description, date, image, tags } = post.data
 const title = plainTitle(post.data.title)
 
-const base = Astro.site ?? new URL(Astro.url.origin)
+const base = siteOrigin(Astro)
 const url = new URL(Astro.url.pathname, base)
 const canonical = new URL(canonicalPath ?? Astro.url.pathname, base)
 const ogImage = image ? new URL(image.src, base) : undefined
