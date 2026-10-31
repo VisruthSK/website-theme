@@ -1,12 +1,12 @@
 ---
-import EntryGroup from '@/components/EntryGroup.astro'
-import LedgerCard from '@/components/LedgerCard.astro'
-import Page from '@/components/Page.astro'
-import PageIntro from '@/components/PageIntro.astro'
-import PagefindMeta from '@/components/PagefindMeta.astro'
-import RatingSpread from '@/components/RatingSpread.astro'
-import { ledgerGroups, ledgerPermalinks, type LedgerEntry } from '@/lib/ledger'
-import { getCollection } from 'astro:content'
+import EntryGroup from "@/components/EntryGroup.astro"
+import LedgerCard from "@/components/LedgerCard.astro"
+import Page from "@/components/Page.astro"
+import PageIntro from "@/components/PageIntro.astro"
+import PagefindMeta from "@/components/PagefindMeta.astro"
+import RatingSpread from "@/components/RatingSpread.astro"
+import { ledgerGroups, ledgerPermalinks, type LedgerEntry } from "@/lib/ledger"
+import { getCollection } from "astro:content"
 
 type Props = {
   title: string
@@ -22,7 +22,7 @@ type Props = {
 const {
   title,
   description,
-  linkLabel = 'Link',
+  linkLabel = "Link",
   dated = true,
   ratings = false,
   feed,
@@ -33,7 +33,7 @@ const {
   href = `/${name}`,
 } = Astro.props
 
-const groups = dated ? ledgerGroups(entries) : [{ heading: '', entries }]
+const groups = dated ? ledgerGroups(entries) : [{ heading: "", entries }]
 const permalinks = ledgerPermalinks(entries)
 ---
 
@@ -47,7 +47,7 @@ const permalinks = ledgerPermalinks(entries)
   <PagefindMeta slot="head" sectionLabel={title} entries />
   <Fragment slot="intro">
     {
-      (description || Astro.slots.has('intro')) && (
+      (description || Astro.slots.has("intro")) && (
         <PageIntro>
           {description}
           <slot name="intro" />

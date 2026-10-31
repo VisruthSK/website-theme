@@ -1,6 +1,6 @@
 astro-erudite
-pnpm-lock.yaml
 *.astro
+pnpm-lock.yaml
 dist
 .astro
 .release

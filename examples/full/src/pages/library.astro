@@ -1,12 +1,12 @@
 ---
-import MetaPage from '@/components/MetaPage.astro'
-import PageHeading from '@/components/PageHeading.astro'
-import RecentlyAdded from '@/components/RecentlyAdded.astro'
-import Layout from '@/layouts/Layout.astro'
+import MetaPage from "@/components/MetaPage.astro"
+import PageHeading from "@/components/PageHeading.astro"
+import RecentlyAdded from "@/components/RecentlyAdded.astro"
+import Layout from "@/layouts/Layout.astro"
 ---
 
-<Layout crumbs={[{ label: 'Library', href: '/library' }]}>
+<Layout crumbs={[{ label: "Library", href: "/library" }]}>
   <MetaPage slot="head" title="Library" description="Recently added reading." />
   <PageHeading title="Library" />
-  <RecentlyAdded sources={[{ collection: 'reading', href: '/reading', noun: 'Reading' }]} />
+  <RecentlyAdded sources={[{ collection: "reading", href: "/reading", noun: "Reading" }]} />
 </Layout>

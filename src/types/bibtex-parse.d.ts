@@ -1,4 +1,4 @@
-declare module 'bibtex-parse' {
+declare module "bibtex-parse" {
   export interface BibTeXEntry {
     key?: string
     id?: string

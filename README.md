@@ -55,15 +55,15 @@ The overrides keep `@astrojs/markdown-satteri` and `satteri-expressive-code`, wh
 
 ```ts
 // astro.config.ts
-import { defineConfig } from 'astro/config'
-import { themeConfig } from './theme/src/integrations/theme'
+import { defineConfig } from "astro/config"
+import { themeConfig } from "./theme/src/integrations/theme"
 
-export default defineConfig(await themeConfig(new URL('./', import.meta.url)))
+export default defineConfig(await themeConfig(new URL("./", import.meta.url)))
 ```
 
 ```ts
 // src/content.config.ts
-import { defineCollections } from '@/lib/collections'
+import { defineCollections } from "@/lib/collections"
 
 export const collections = defineCollections()
 ```
@@ -158,24 +158,20 @@ Notes support Markdown and are rendered at build time.
 
 ```ts
 // src/content.config.ts
-import { defineCollections, defineLedger } from '@/lib/collections'
+import { defineCollections, defineLedger } from "@/lib/collections"
 
 export const collections = defineCollections({
-  reading: defineLedger('src/data/reading.yaml', 'reviews'),
+  reading: defineLedger("src/data/reading.yaml", "reviews"),
 })
 ```
 
 ```astro
 ---
 // src/pages/reading.astro
-import Ledger from '@/components/Ledger.astro'
+import Ledger from "@/components/Ledger.astro"
 ---
 
-<Ledger
-  title="Reading"
-  description="Books I have read."
-  linkLabel="Review"
-/>
+<Ledger title="Reading" description="Books I have read." linkLabel="Review" />
 ```
 
 The component reads the collection named after the lowercase title and is reached at `/` plus that name; pass `entries` or `href` to change either. The `description` is the page description and the line under the heading.

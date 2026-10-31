@@ -1,8 +1,8 @@
 ---
-import Page from '@/components/Page.astro'
-import PostCard from '@/components/PostCard.astro'
-import { SECTIONS, SECTION_SLUGS } from '@/consts'
-import { getAllTags, getPostsByTag } from '@/lib/data-utils'
+import Page from "@/components/Page.astro"
+import PostCard from "@/components/PostCard.astro"
+import { SECTIONS, SECTION_SLUGS } from "@/consts"
+import { getAllTags, getPostsByTag } from "@/lib/data-utils"
 
 export async function getStaticPaths() {
   const collections = SECTION_SLUGS.map((slug) => SECTIONS[slug].collection)
@@ -38,7 +38,7 @@ const feed = {
   feed={feed}
 >
   <p class="meta-row">
-    {posts.length} post{posts.length === 1 ? '' : 's'}
+    {posts.length} post{posts.length === 1 ? "" : "s"}
   </p>
   <ul data-entries>
     {posts.map((post) => <PostCard heading="h2" entry={post} />)}

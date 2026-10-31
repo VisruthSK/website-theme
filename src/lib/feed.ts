@@ -1,14 +1,14 @@
-import { SECTIONS, SITE, type SectionSlug } from '@/consts'
-import { withBase } from '@/lib/base'
-import { buildFeedItem, resolveSiteUrl } from '@/lib/content-render'
+import { SECTIONS, SITE, type SectionSlug } from "@/consts"
+import { withBase } from "@/lib/base"
+import { buildFeedItem, resolveSiteUrl } from "@/lib/content-render"
 import {
   getAllPostsAndSubposts,
   getPostHref,
   type PostEntry,
-} from '@/lib/data-utils'
-import rss from '@astrojs/rss'
-import type { RSSFeedItem } from '@astrojs/rss'
-import type { APIContext } from 'astro'
+} from "@/lib/data-utils"
+import rss from "@astrojs/rss"
+import type { RSSFeedItem } from "@astrojs/rss"
+import type { APIContext } from "astro"
 
 type FeedEntry = { entry: PostEntry; href: string }
 
@@ -35,7 +35,7 @@ export function respondWithFeed(
   return rss({
     title,
     description,
-    site: new URL(withBase('/'), resolveSiteUrl(context, SITE.href)).href,
+    site: new URL(withBase("/"), resolveSiteUrl(context, SITE.href)).href,
     items: items.toSorted(
       (a, b) => (b.pubDate?.valueOf() ?? 0) - (a.pubDate?.valueOf() ?? 0),
     ),
@@ -67,6 +67,6 @@ export async function buildSectionFeed(context: APIContext, slug: SectionSlug) {
     })
   } catch (error) {
     console.error(`Error generating RSS feed for ${slug}:`, error)
-    return new Response('Error generating RSS feed', { status: 500 })
+    return new Response("Error generating RSS feed", { status: 500 })
   }
 }

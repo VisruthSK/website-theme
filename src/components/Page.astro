@@ -1,8 +1,8 @@
 ---
-import FeedLink from '@/components/FeedLink.astro'
-import MetaPage from '@/components/MetaPage.astro'
-import PageHeading from '@/components/PageHeading.astro'
-import Layout from '@/layouts/Layout.astro'
+import FeedLink from "@/components/FeedLink.astro"
+import MetaPage from "@/components/MetaPage.astro"
+import PageHeading from "@/components/PageHeading.astro"
+import Layout from "@/layouts/Layout.astro"
 
 type Props = {
   title: string
@@ -12,7 +12,7 @@ type Props = {
   noindex?: boolean
   crumb?: string
   feed?: { href: string; label: string }
-  body?: 'div' | 'article'
+  body?: "div" | "article"
 }
 
 const {
@@ -26,7 +26,7 @@ const {
   body,
 } = Astro.props
 const Wrapper = body ?? Fragment
-const wrapperProps = body ? { 'data-pagefind-body': '' } : {}
+const wrapperProps = body ? { "data-pagefind-body": "" } : {}
 ---
 
 <Layout crumbs={crumb ? [{ label: title, href: crumb }] : undefined}>

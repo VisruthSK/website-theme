@@ -11,7 +11,7 @@ import {
   SPACE,
   STRETCH,
   TRACKING,
-} from '@/generated/typeset-constants.js'
+} from "@/generated/typeset-constants.js"
 
 const STEPS = 5
 const STEP = 0.01
@@ -19,8 +19,8 @@ const EPSILON = 0.0005
 const TOLERANCE = 0.5
 
 const decode = (data) => {
-  const [head, ...rest] = data.split(';')
-  const [words, indent, cap] = head.split('.')
+  const [head, ...rest] = data.split(";")
+  const [words, indent, cap] = head.split(".")
 
   let from = 0
   const bands = rest.map((part) => {
@@ -33,13 +33,13 @@ const decode = (data) => {
   })
   return {
     words: parseInt(words, 36),
-    indent: indent === '1' ? INDENT : 0,
+    indent: indent === "1" ? INDENT : 0,
     cap: parseInt(cap, 36) / CAP_SCALE,
     bands,
   }
 }
 
-const WHITESPACE = ' \n\t\r\f'
+const WHITESPACE = " \n\t\r\f"
 
 const rectOf = (node) => {
   const range = document.createRange()
@@ -52,7 +52,7 @@ const inkedOf = (nodes) => nodes.filter((node) => node.data.trim())
 const textNodes = (paragraph) => {
   const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT, {
     acceptNode: (node) =>
-      !node.data || node.parentElement.closest('side-note, svg')
+      !node.data || node.parentElement.closest("side-note, svg")
         ? NodeFilter.FILTER_REJECT
         : NodeFilter.FILTER_ACCEPT,
   })
@@ -64,12 +64,12 @@ const textNodes = (paragraph) => {
 
 const edgeOf = (node, char) => {
   const element = node.parentElement
-  if (element.closest('code')) return undefined
-  const face = element.closest('em, i')
-    ? 'italic'
-    : element.closest('strong, b')
-      ? 'bold'
-      : 'roman'
+  if (element.closest("code")) return undefined
+  const face = element.closest("em, i")
+    ? "italic"
+    : element.closest("strong, b")
+      ? "bold"
+      : "roman"
   return EDGES[face][char] ?? EDGES.roman[char]
 }
 
@@ -89,7 +89,7 @@ const gapsOf = (paragraph) => {
       if (!inWord) {
         if (pending) gaps.push(pending)
         pending = null
-        words.push('')
+        words.push("")
         inWord = true
       }
       words[words.length - 1] += char
@@ -102,8 +102,8 @@ const wrapGap = ([node, offset]) => {
   const range = document.createRange()
   range.setStart(node, offset)
   range.setEnd(node, offset + 1)
-  const marker = document.createElement('span')
-  marker.className = 'jb'
+  const marker = document.createElement("span")
+  marker.className = "jb"
   range.surroundContents(marker)
 }
 
@@ -113,8 +113,8 @@ const offsetOf = ({ indent }, cap, line) =>
 const linesOf = (paragraph) => {
   const lines = [[]]
   for (const node of textNodes(paragraph)) {
-    if (node.parentElement.classList.contains('jb')) lines.push([])
-    else if (!node.parentElement.closest('.drop-cap')) lines.at(-1).push(node)
+    if (node.parentElement.classList.contains("jb")) lines.push([])
+    else if (!node.parentElement.closest(".drop-cap")) lines.at(-1).push(node)
   }
   return lines
 }
@@ -171,10 +171,10 @@ const arrange = (state, naturals) => {
   return { tracks, margins, base, last }
 }
 
-const spacing = (amount) => (amount > 0 ? `-${amount}em` : '0')
+const spacing = (amount) => (amount > 0 ? `-${amount}em` : "0")
 
 const tune = ({ paragraph, base, last, tails }, extra) => {
-  paragraph.style.wordSpacing = base + extra > 0 ? `-${base + extra}em` : ''
+  paragraph.style.wordSpacing = base + extra > 0 ? `-${base + extra}em` : ""
   for (const tail of tails) tail.style.wordSpacing = spacing(last + extra)
 }
 
@@ -182,8 +182,8 @@ const hangLast = (node, hang, advance) => {
   const at = node.data.trimEnd().length - 1
   const glyph = node.splitText(at)
   const after = glyph.data.length > 1 ? glyph.splitText(1) : null
-  const box = document.createElement('span')
-  box.className = 'jh'
+  const box = document.createElement("span")
+  box.className = "jh"
   box.style.width = `${advance - hang}em`
   glyph.replaceWith(box)
   box.append(glyph)
@@ -208,8 +208,8 @@ const dress = (state, tracks, margins) => {
       if (!tracked && !tail && !leading && !trailing) continue
       const extras = trailing ? hangLast(node, hang, advance) : []
       if (!tracked && !tail && !leading) continue
-      const span = document.createElement('span')
-      span.className = 'jl'
+      const span = document.createElement("span")
+      span.className = "jl"
       if (tracked) span.style.letterSpacing = `${track}em`
       if (leading) span.style.marginLeft = `-${open}em`
       node.replaceWith(span)
@@ -221,13 +221,13 @@ const dress = (state, tracks, margins) => {
 
 const release = (state) => {
   const { paragraph } = state
-  if (paragraph.classList.contains('j')) {
-    for (const part of paragraph.querySelectorAll('.jh, .jl, .jb'))
+  if (paragraph.classList.contains("j")) {
+    for (const part of paragraph.querySelectorAll(".jh, .jl, .jb"))
       part.replaceWith(...part.childNodes)
     paragraph.normalize()
-    paragraph.classList.remove('j')
-    paragraph.style.textAlign = ''
-    paragraph.style.wordSpacing = ''
+    paragraph.classList.remove("j")
+    paragraph.style.textAlign = ""
+    paragraph.style.wordSpacing = ""
   }
   state.band = null
   state.tails = []
@@ -235,7 +235,7 @@ const release = (state) => {
 
 const capOffset = (paragraph, left) => {
   const node = textNodes(paragraph).find(
-    (text) => !text.parentElement.closest('.drop-cap') && text.data.trim(),
+    (text) => !text.parentElement.closest(".drop-cap") && text.data.trim(),
   )
   return rectOf(node).left - left
 }
@@ -248,7 +248,7 @@ const measure = ({ paragraph, plan, band }, root) => {
     box.width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
   let usable =
     width > 0 &&
-    (style.textAlign === 'justify' || style.textAlign === 'justify-all') &&
+    (style.textAlign === "justify" || style.textAlign === "justify-all") &&
     Math.abs(size / root - ROOT_RATIO) < 0.01 &&
     Math.abs(parseFloat(style.textIndent) / size - plan.indent) < 0.02 &&
     !parseFloat(style.letterSpacing) &&
@@ -274,11 +274,11 @@ const stage = (state, { size, width, usable, cap, lineHeight }) => {
   const { gaps, words } = gapsOf(paragraph)
   if (words.length !== plan.words) return false
 
-  paragraph.classList.add('j')
+  paragraph.classList.add("j")
   for (const at of [...band.breaks].reverse()) wrapGap(gaps[at - 1])
   Object.assign(state, {
     lines: linesOf(paragraph),
-    markers: [...paragraph.querySelectorAll('.jb')],
+    markers: [...paragraph.querySelectorAll(".jb")],
     band,
     width,
     size,
@@ -290,7 +290,7 @@ const stage = (state, { size, width, usable, cap, lineHeight }) => {
 }
 
 const commit = (state, naturals) => {
-  state.paragraph.style.textAlign = ''
+  state.paragraph.style.textAlign = ""
   const { tracks, margins, base, last } = arrange(state, naturals)
   Object.assign(state, { base, last })
   dress(state, tracks, margins)
@@ -329,7 +329,7 @@ const verify = (list) => {
   }
 }
 
-const states = [...document.querySelectorAll('p[data-j]')].map((paragraph) => ({
+const states = [...document.querySelectorAll("p[data-j]")].map((paragraph) => ({
   paragraph,
   plan: decode(paragraph.dataset.j),
 }))
@@ -351,8 +351,8 @@ const update = (list) => {
   const staged = list.filter((state, at) =>
     guarded(state, false, () => stage(state, readings[at])),
   )
-  if (document.fonts.status !== 'loaded') return false
-  for (const { paragraph } of staged) paragraph.style.textAlign = 'left'
+  if (document.fonts.status !== "loaded") return false
+  for (const { paragraph } of staged) paragraph.style.textAlign = "left"
   const naturals = staged.map((state) =>
     guarded(state, null, () => naturalWidths(state)),
   )
@@ -361,7 +361,7 @@ const update = (list) => {
   })
   verify(list)
   for (const { paragraph, band } of list) {
-    paragraph.dataset.jState = band ? 'set' : 'native'
+    paragraph.dataset.jState = band ? "set" : "native"
   }
   return true
 }
@@ -396,7 +396,7 @@ for (const { paragraph } of states) observer.observe(paragraph)
 let refitting = false
 
 const refit = () => {
-  if (refitting || document.fonts.status !== 'loaded') return
+  if (refitting || document.fonts.status !== "loaded") return
   refitting = true
   queueMicrotask(() => {
     refitting = false
@@ -405,5 +405,5 @@ const refit = () => {
   })
 }
 
-document.fonts.addEventListener('loadingdone', refit)
+document.fonts.addEventListener("loadingdone", refit)
 window.__typesetBusy = () => scheduled

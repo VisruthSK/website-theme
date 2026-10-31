@@ -1,11 +1,11 @@
 ---
-import Card from '@/components/Card.astro'
-import MetaRow from '@/components/MetaRow.astro'
-import TagChip from '@/components/TagChip.astro'
-import type { CardData } from '@/lib/card'
-import { formatTitleAsHtml } from '@/lib/text'
+import Card from "@/components/Card.astro"
+import MetaRow from "@/components/MetaRow.astro"
+import TagChip from "@/components/TagChip.astro"
+import type { CardData } from "@/lib/card"
+import { formatTitleAsHtml } from "@/lib/text"
 
-type Props = CardData & { heading?: 'h2' | 'h3' }
+type Props = CardData & { heading?: "h2" | "h3" }
 
 const {
   href,
@@ -16,7 +16,7 @@ const {
   stats,
   series,
   tags = [],
-  heading: Heading = 'h3',
+  heading: Heading = "h3",
 } = Astro.props
 ---
 

@@ -1,29 +1,29 @@
 ---
-import '@/styles/reset.css'
-import '@/styles/color.css'
-import '@/styles/typography.css'
-import '@/styles/typography-headings.css'
-import '@/styles/typography-inline.css'
-import '@/styles/typography-lists.css'
-import '@/styles/typography-block.css'
-import '@/styles/typography-tables.css'
-import '@/styles/typography-math.css'
-import '@/styles/callout.css'
-import '@/styles/layout.css'
-import '@/styles/icon-button.css'
-import '@/styles/shape.css'
-import '@/generated/theme.css'
-import '@/styles/base.css'
-import '@/styles/prose.css'
-import '@/styles/components.css'
-import '@/styles/print.css'
-import '@/styles/notes.css'
+import "@/styles/reset.css"
+import "@/styles/color.css"
+import "@/styles/typography.css"
+import "@/styles/typography-headings.css"
+import "@/styles/typography-inline.css"
+import "@/styles/typography-lists.css"
+import "@/styles/typography-block.css"
+import "@/styles/typography-tables.css"
+import "@/styles/typography-math.css"
+import "@/styles/callout.css"
+import "@/styles/layout.css"
+import "@/styles/icon-button.css"
+import "@/styles/shape.css"
+import "@/generated/theme.css"
+import "@/styles/base.css"
+import "@/styles/prose.css"
+import "@/styles/components.css"
+import "@/styles/print.css"
+import "@/styles/notes.css"
 
-import ExternalLinkSprite from '@/components/ExternalLinkSprite.astro'
-import Footer from '@/components/Footer.astro'
-import MetaHead from '@/components/MetaHead.astro'
-import Sidebar from '@/components/Sidebar.astro'
-import { SITE } from '@/consts'
+import ExternalLinkSprite from "@/components/ExternalLinkSprite.astro"
+import Footer from "@/components/Footer.astro"
+import MetaHead from "@/components/MetaHead.astro"
+import Sidebar from "@/components/Sidebar.astro"
+import { SITE } from "@/consts"
 
 type Props = { crumbs?: { label: string; href: string }[] }
 
@@ -39,7 +39,7 @@ const { crumbs } = Astro.props
     <page-grid>
       <page-header>
         <Sidebar crumbs={crumbs} />
-        {Astro.slots.has('toc') && (
+        {Astro.slots.has("toc") && (
           <page-toc>
             <slot name="toc" />
           </page-toc>

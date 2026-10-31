@@ -1,10 +1,10 @@
 ---
-import { getCollection } from 'astro:content'
+import { getCollection } from "astro:content"
 
-import EntryCard from '@/components/EntryCard.astro'
-import EntryGroup from '@/components/EntryGroup.astro'
-import { withBase } from '@/lib/base'
-import { ledgerPermalinks, type LedgerEntry } from '@/lib/ledger'
+import EntryCard from "@/components/EntryCard.astro"
+import EntryGroup from "@/components/EntryGroup.astro"
+import { withBase } from "@/lib/base"
+import { ledgerPermalinks, type LedgerEntry } from "@/lib/ledger"
 
 type Props = {
   sources: { collection: string; href: string; noun: string }[]
@@ -12,16 +12,25 @@ type Props = {
   title?: string
 }
 
-const { sources, limit = 5, title = 'Recently added' } = Astro.props
+const { sources, limit = 5, title = "Recently added" } = Astro.props
 
 const items = (
   await Promise.all(
     sources.map(async ({ collection, href, noun }) => {
-      const entries = (await getCollection(collection as never)) as LedgerEntry[]
+      const entries = (await getCollection(
+        collection as never,
+      )) as LedgerEntry[]
       const permalinks = ledgerPermalinks(entries)
       return entries.flatMap(({ id, data }) =>
         data.added
-          ? [{ title: data.title, noun, added: data.added, href: `${withBase(href)}#${permalinks.get(id)}` }]
+          ? [
+              {
+                title: data.title,
+                noun,
+                added: data.added,
+                href: `${withBase(href)}#${permalinks.get(id)}`,
+              },
+            ]
           : [],
       )
     }),

@@ -1,7 +1,7 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types"
 
-type Props = HTMLAttributes<'li'> & { href: string; label: string }
+type Props = HTMLAttributes<"li"> & { href: string; label: string }
 
 const { href, label, ...attributes } = Astro.props
 ---

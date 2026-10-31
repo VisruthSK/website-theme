@@ -1,7 +1,7 @@
-import type { Page } from '@playwright/test'
-import { typesetConstants } from '../src/lib/typeset/constants.ts'
-import { decodePlan } from '../src/lib/typeset/encode.ts'
-import { expect, test, isolatedPage } from './sites.ts'
+import type { Page } from "@playwright/test"
+import { typesetConstants } from "../src/lib/typeset/constants.ts"
+import { decodePlan } from "../src/lib/typeset/encode.ts"
+import { expect, test, isolatedPage } from "./sites.ts"
 
 const TABLET = 600
 const viewports = [
@@ -44,7 +44,7 @@ async function settled(page: Page) {
 
 async function readParagraphs(page: Page): Promise<Reading[]> {
   return page.evaluate(() =>
-    [...document.querySelectorAll<HTMLElement>('p[data-j]')].map(
+    [...document.querySelectorAll<HTMLElement>("p[data-j]")].map(
       (paragraph) => {
         const style = getComputedStyle(paragraph)
         const walker = document.createTreeWalker(
@@ -52,7 +52,7 @@ async function readParagraphs(page: Page): Promise<Reading[]> {
           NodeFilter.SHOW_TEXT,
           {
             acceptNode: (node) =>
-              (node.parentElement as HTMLElement).closest('side-note, svg')
+              (node.parentElement as HTMLElement).closest("side-note, svg")
                 ? NodeFilter.FILTER_REJECT
                 : NodeFilter.FILTER_ACCEPT,
           },
@@ -67,7 +67,7 @@ async function readParagraphs(page: Page): Promise<Reading[]> {
           node = walker.nextNode() as Text | null
         ) {
           const capital = (node.parentElement as HTMLElement).closest(
-            '.drop-cap',
+            ".drop-cap",
           )
           for (let index = 0; index < node.data.length; index += 1) {
             const space = /\s/.test(node.data[index])
@@ -89,11 +89,11 @@ async function readParagraphs(page: Page): Promise<Reading[]> {
         for (let index = 1; index < tops.length; index += 1) {
           if (tops[index] > tops[index - 1] + 10) actual.push(index)
         }
-        const notes = [...paragraph.querySelectorAll<HTMLElement>('side-note')]
-        notes.forEach((note) => (note.style.display = 'none'))
+        const notes = [...paragraph.querySelectorAll<HTMLElement>("side-note")]
+        notes.forEach((note) => (note.style.display = "none"))
         const hung = Math.max(
           0,
-          ...[...paragraph.querySelectorAll<HTMLElement>('.jh')].map((box) => {
+          ...[...paragraph.querySelectorAll<HTMLElement>(".jh")].map((box) => {
             const glyph = document.createRange()
             glyph.selectNodeContents(box)
             return (
@@ -104,10 +104,10 @@ async function readParagraphs(page: Page): Promise<Reading[]> {
         )
         const overflow =
           paragraph.scrollWidth > paragraph.clientWidth + 2.5 + hung
-        notes.forEach((note) => (note.style.display = ''))
+        notes.forEach((note) => (note.style.display = ""))
         return {
           plan: paragraph.dataset.j as string,
-          state: paragraph.dataset.jState ?? 'missing',
+          state: paragraph.dataset.jState ?? "missing",
           size: parseFloat(style.fontSize),
           width: paragraph.getBoundingClientRect().width,
           actual,
@@ -121,7 +121,7 @@ async function readParagraphs(page: Page): Promise<Reading[]> {
   )
 }
 
-test('every route lays out exactly as planned at every width', async ({
+test("every route lays out exactly as planned at every width", async ({
   page,
   site,
 }) => {
@@ -136,18 +136,18 @@ test('every route lays out exactly as planned at every width', async ({
       await settled(page)
       for (const reading of await readParagraphs(page)) {
         if (width < TABLET) {
-          expect(reading.state, `${route} @${width}`).toBe('native')
-          expect(reading.align, `${route} @${width} align`).toBe('left')
+          expect(reading.state, `${route} @${width}`).toBe("native")
+          expect(reading.align, `${route} @${width} align`).toBe("left")
           continue
         }
         const { bands } = decodePlan(reading.plan, constants)
         const virtual = (reading.width / reading.size) * constants.PLAN_SIZE
         const band = bands.findLast((candidate) => candidate.from <= virtual)
         if (!band?.breaks?.length) {
-          expect(reading.state, `${route} @${width}`).toBe('native')
+          expect(reading.state, `${route} @${width}`).toBe("native")
           continue
         }
-        if (reading.state === 'native') {
+        if (reading.state === "native") {
           fallbacks.push(`@${width}`)
           continue
         }
@@ -168,15 +168,15 @@ async function meanGapDeviation(page: Page): Promise<number> {
   const gaps = await page.evaluate(() => {
     const out: number[] = []
     for (const paragraph of document.querySelectorAll<HTMLElement>(
-      'p[data-j]',
+      "p[data-j]",
     )) {
-      if (paragraph.querySelector('.drop-cap')) continue
+      if (paragraph.querySelector(".drop-cap")) continue
       const walker = document.createTreeWalker(
         paragraph,
         NodeFilter.SHOW_TEXT,
         {
           acceptNode: (node) =>
-            (node.parentElement as HTMLElement).closest('side-note, svg')
+            (node.parentElement as HTMLElement).closest("side-note, svg")
               ? NodeFilter.FILTER_REJECT
               : NodeFilter.FILTER_ACCEPT,
         },
@@ -215,10 +215,10 @@ async function meanGapDeviation(page: Page): Promise<number> {
         }
         line.push(placed[at])
       }
-      const space = document.createElement('span')
-      space.textContent = 'x x'
-      space.style.wordSpacing = 'normal'
-      space.style.letterSpacing = 'normal'
+      const space = document.createElement("span")
+      space.textContent = "x x"
+      space.style.wordSpacing = "normal"
+      space.style.letterSpacing = "normal"
       paragraph.append(space)
       const range = document.createRange()
       range.setStart(space.firstChild!, 1)
@@ -239,12 +239,12 @@ async function meanGapDeviation(page: Page): Promise<number> {
   return gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length
 }
 
-test('word spacing is far more even than native justification', async ({
+test("word spacing is far more even than native justification", async ({
   page,
   site,
   browserName,
 }) => {
-  test.skip(browserName !== 'chromium', 'blocking the script needs routing')
+  test.skip(browserName !== "chromium", "blocking the script needs routing")
   test.setTimeout(180_000)
   const result = { typeset: 0, native: 0 }
   let samples = 0
@@ -253,10 +253,10 @@ test('word spacing is far more even than native justification', async ({
       await page.setViewportSize({ width, height: 900 })
       await open(page, route)
       result.typeset += await meanGapDeviation(page)
-      await page.route('**/typeset.*.js', (request) => request.abort())
+      await page.route("**/typeset.*.js", (request) => request.abort())
       await page.goto(route)
       result.native += await meanGapDeviation(page)
-      await page.unroute('**/typeset.*.js')
+      await page.unroute("**/typeset.*.js")
       samples += 1
     }
   }
@@ -264,7 +264,7 @@ test('word spacing is far more even than native justification', async ({
   expect(result.typeset).toBeLessThan(result.native * 0.6)
 })
 
-test('opening and closing characters protrude by the planned amount', async ({
+test("opening and closing characters protrude by the planned amount", async ({
   page,
   site,
 }) => {
@@ -277,30 +277,30 @@ test('opening and closing characters protrude by the planned amount', async ({
       await settled(page)
       const readings = await page.evaluate(() => {
         const found: { side: string; offset: number; planned: number }[] = []
-        for (const paragraph of document.querySelectorAll<HTMLElement>('p.j')) {
+        for (const paragraph of document.querySelectorAll<HTMLElement>("p.j")) {
           const box = paragraph.getBoundingClientRect()
           const style = getComputedStyle(paragraph)
           const left = box.left + parseFloat(style.paddingLeft)
           const right = box.right - parseFloat(style.paddingRight)
-          for (const hang of paragraph.querySelectorAll<HTMLElement>('.jh')) {
+          for (const hang of paragraph.querySelectorAll<HTMLElement>(".jh")) {
             const rect = hang.getBoundingClientRect()
             if (rect.top >= box.bottom - 30) continue
             const glyph = document.createRange()
             glyph.selectNodeContents(hang)
             const ink = glyph.getBoundingClientRect()
             found.push({
-              side: 'trailing',
+              side: "trailing",
               offset: ink.right - right,
               planned: ink.width - rect.width,
             })
           }
-          for (const span of paragraph.querySelectorAll<HTMLElement>('.jl')) {
+          for (const span of paragraph.querySelectorAll<HTMLElement>(".jl")) {
             const rect = span.getBoundingClientRect()
             const size = parseFloat(getComputedStyle(span).fontSize)
-            const clear = paragraph.querySelector('.drop-cap') ? 100 : 40
+            const clear = paragraph.querySelector(".drop-cap") ? 100 : 40
             if (span.style.marginLeft && rect.top > box.top + clear) {
               found.push({
-                side: 'leading',
+                side: "leading",
                 offset: left - rect.left,
                 planned: -parseFloat(span.style.marginLeft) * size,
               })
@@ -317,14 +317,14 @@ test('opening and closing characters protrude by the planned amount', async ({
 
   const percentile = (values: number[], share: number) =>
     [...values].sort((x, y) => x - y)[Math.floor(values.length * share)]
-  const worst = test.info().project.name.endsWith('webkit') ? 3 : 1
+  const worst = test.info().project.name.endsWith("webkit") ? 3 : 1
   expect(errors.trailing.length).toBeGreaterThan(50)
   expect(percentile(errors.trailing, 0.95)).toBeLessThan(worst)
   expect(errors.leading.length).toBeGreaterThan(5)
   expect(percentile(errors.leading, 0.95)).toBeLessThan(1)
 })
 
-test('typeset paragraphs keep their planned height at fractional scales', async ({
+test("typeset paragraphs keep their planned height at fractional scales", async ({
   browser,
   site,
 }) => {
@@ -338,12 +338,12 @@ test('typeset paragraphs keep their planned height at fractional scales', async 
       await open(page, route)
       await settled(page)
       const taller = await page.evaluate(() =>
-        [...document.querySelectorAll<HTMLElement>('p.j')]
+        [...document.querySelectorAll<HTMLElement>("p.j")]
           .filter((paragraph) => {
             const lineHeight = parseFloat(
               getComputedStyle(paragraph).lineHeight,
             )
-            const lines = paragraph.querySelectorAll('.jb').length + 1
+            const lines = paragraph.querySelectorAll(".jb").length + 1
             return (
               paragraph.getBoundingClientRect().height >
               (lines + 0.5) * lineHeight
@@ -357,7 +357,7 @@ test('typeset paragraphs keep their planned height at fractional scales', async 
   }
 })
 
-test('the stylesheet uses the prose settings the planner assumes', async ({
+test("the stylesheet uses the prose settings the planner assumes", async ({
   page,
   site,
 }) => {
@@ -366,12 +366,12 @@ test('the stylesheet uses the prose settings the planner assumes', async ({
   const measured = await page.evaluate(() => {
     const root = parseFloat(getComputedStyle(document.documentElement).fontSize)
     const indented = [
-      ...document.querySelectorAll<HTMLElement>('prose-content > p'),
+      ...document.querySelectorAll<HTMLElement>("prose-content > p"),
     ].find(
       (paragraph) =>
-        paragraph.previousElementSibling?.tagName === 'P' &&
-        !paragraph.querySelector('.drop-cap') &&
-        !paragraph.classList.contains('preamble'),
+        paragraph.previousElementSibling?.tagName === "P" &&
+        !paragraph.querySelector(".drop-cap") &&
+        !paragraph.classList.contains("preamble"),
     ) as HTMLElement
     const style = getComputedStyle(indented)
     const size = parseFloat(style.fontSize)
@@ -389,22 +389,22 @@ test('the stylesheet uses the prose settings the planner assumes', async ({
   )
 })
 
-test('paragraphs keep native justification under a user spacing override', async ({
+test("paragraphs keep native justification under a user spacing override", async ({
   page,
   site,
 }) => {
   await open(page, site.typeset[0])
   await page.addStyleTag({
     content:
-      'prose-content p { letter-spacing: 0.12em !important; word-spacing: 0.16em !important }',
+      "prose-content p { letter-spacing: 0.12em !important; word-spacing: 0.16em !important }",
   })
   await page.setViewportSize({ width: 1100, height: 900 })
   await settled(page)
   const states = await page.evaluate(() =>
-    [...document.querySelectorAll<HTMLElement>('p[data-j]')].map(
+    [...document.querySelectorAll<HTMLElement>("p[data-j]")].map(
       (paragraph) => paragraph.dataset.jState,
     ),
   )
   expect(states.length).toBeGreaterThan(0)
-  expect(states.filter((state) => state !== 'native')).toEqual([])
+  expect(states.filter((state) => state !== "native")).toEqual([])
 })

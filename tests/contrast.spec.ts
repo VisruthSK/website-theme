@@ -1,26 +1,26 @@
-import { expect, sectionHref, test, visit, type Mode } from './sites.ts'
+import { expect, sectionHref, test, visit, type Mode } from "./sites.ts"
 
 const pairs = [
-  { name: 'body text', fg: '--foreground', bg: '--background', need: 4.5 },
-  { name: 'ink-strong', fg: '--ink-strong', bg: '--background', need: 4.5 },
-  { name: 'ink-soft', fg: '--ink-soft', bg: '--background', need: 4.5 },
-  { name: 'ink-subtle', fg: '--ink-subtle', bg: '--background', need: 4.5 },
-  { name: 'ink-muted', fg: '--ink-muted', bg: '--background', need: 4.5 },
-  { name: 'ink-faint', fg: '--ink-faint', bg: '--background', need: 3 },
-  { name: 'muted', fg: '--muted-foreground', bg: '--background', need: 4.5 },
-  { name: 'flourish', fg: '--flourish', bg: '--background', need: 4.5 },
-  { name: 'focus ring', fg: '--ring', bg: '--background', need: 3 },
-  { name: 'primary', fg: '--primary', bg: '--background', need: 3 },
-  { name: 'success', fg: '--success', bg: '--background', need: 3 },
-  { name: 'info', fg: '--info', bg: '--background', need: 3 },
-  { name: 'danger', fg: '--danger-foreground', bg: '--danger', need: 4.5 },
-  { name: 'accent', fg: '--accent-foreground', bg: '--accent', need: 4.5 },
-  { name: 'hover', fg: '--foreground', bg: '--surface-hover', need: 4.5 },
-  { name: 'highlight', fg: '--foreground', bg: '--highlight', need: 4.5 },
-  { name: 'warning', fg: '--ink-strong', bg: '--surface-warning', need: 4.5 },
+  { name: "body text", fg: "--foreground", bg: "--background", need: 4.5 },
+  { name: "ink-strong", fg: "--ink-strong", bg: "--background", need: 4.5 },
+  { name: "ink-soft", fg: "--ink-soft", bg: "--background", need: 4.5 },
+  { name: "ink-subtle", fg: "--ink-subtle", bg: "--background", need: 4.5 },
+  { name: "ink-muted", fg: "--ink-muted", bg: "--background", need: 4.5 },
+  { name: "ink-faint", fg: "--ink-faint", bg: "--background", need: 3 },
+  { name: "muted", fg: "--muted-foreground", bg: "--background", need: 4.5 },
+  { name: "flourish", fg: "--flourish", bg: "--background", need: 4.5 },
+  { name: "focus ring", fg: "--ring", bg: "--background", need: 3 },
+  { name: "primary", fg: "--primary", bg: "--background", need: 3 },
+  { name: "success", fg: "--success", bg: "--background", need: 3 },
+  { name: "info", fg: "--info", bg: "--background", need: 3 },
+  { name: "danger", fg: "--danger-foreground", bg: "--danger", need: 4.5 },
+  { name: "accent", fg: "--accent-foreground", bg: "--accent", need: 4.5 },
+  { name: "hover", fg: "--foreground", bg: "--surface-hover", need: 4.5 },
+  { name: "highlight", fg: "--foreground", bg: "--highlight", need: 4.5 },
+  { name: "warning", fg: "--ink-strong", bg: "--surface-warning", need: 4.5 },
 ]
 
-for (const mode of ['light', 'dark'] as Mode[]) {
+for (const mode of ["light", "dark"] as Mode[]) {
   test(`the palette meets contrast (${mode})`, async ({ page, site }) => {
     await visit(page, site, sectionHref(site), mode)
     const { results, unresolved } = await page.evaluate((specs) => {
@@ -28,17 +28,17 @@ for (const mode of ['light', 'dark'] as Mode[]) {
       const unresolved = [
         ...new Set(specs.flatMap((spec) => [spec.fg, spec.bg])),
       ].filter((token) => !root.getPropertyValue(token).trim())
-      const probe = document.createElement('span')
+      const probe = document.createElement("span")
       document.body.append(probe)
       const cssColor = (token: string) => {
-        probe.style.color = ''
+        probe.style.color = ""
         probe.style.color = `var(${token})`
         return getComputedStyle(probe).color
       }
-      const pageBg = cssColor('--background')
-      const canvas = document.createElement('canvas')
+      const pageBg = cssColor("--background")
+      const canvas = document.createElement("canvas")
       canvas.width = canvas.height = 1
-      const ctx = canvas.getContext('2d', { willReadFrequently: true })!
+      const ctx = canvas.getContext("2d", { willReadFrequently: true })!
       const composited = (token: string) => {
         ctx.clearRect(0, 0, 1, 1)
         ctx.fillStyle = pageBg
@@ -73,17 +73,17 @@ for (const mode of ['light', 'dark'] as Mode[]) {
   })
 }
 
-for (const mode of ['light', 'dark'] as Mode[]) {
+for (const mode of ["light", "dark"] as Mode[]) {
   test(`list numbers meet text contrast (${mode})`, async ({ page, site }) => {
     await visit(page, site, site.typeset[0], mode)
     const ratio = await page.evaluate(() => {
       const marker = getComputedStyle(
-        document.querySelector('prose-content ol > li')!,
-        '::marker',
+        document.querySelector("prose-content ol > li")!,
+        "::marker",
       ).color
-      const canvas = document.createElement('canvas')
+      const canvas = document.createElement("canvas")
       canvas.width = canvas.height = 1
-      const ctx = canvas.getContext('2d', { willReadFrequently: true })!
+      const ctx = canvas.getContext("2d", { willReadFrequently: true })!
       const composited = (color: string) => {
         ctx.clearRect(0, 0, 1, 1)
         ctx.fillStyle = getComputedStyle(document.body).backgroundColor

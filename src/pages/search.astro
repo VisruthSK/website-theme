@@ -1,11 +1,11 @@
 ---
-import MetaPage from '@/components/MetaPage.astro'
-import { PAGES, SITE } from '@/consts'
-import Layout from '@/layouts/Layout.astro'
-import searchScriptUrl from '@/scripts/search.js?url&no-inline'
+import MetaPage from "@/components/MetaPage.astro"
+import { PAGES, SITE } from "@/consts"
+import Layout from "@/layouts/Layout.astro"
+import searchScriptUrl from "@/scripts/search.js?url&no-inline"
 ---
 
-<Layout crumbs={[{ label: 'Search', href: '/search' }]}>
+<Layout crumbs={[{ label: "Search", href: "/search" }]}>
   <MetaPage
     slot="head"
     title="Search"

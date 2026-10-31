@@ -1,11 +1,11 @@
-import { expect, test } from '@playwright/test'
-import { readFileSync } from 'node:fs'
-import { parseTheme } from '../../config/theme.ts'
-import { themeCss, themeStylesheet } from '../../src/integrations/theme-css.ts'
-import { SITES } from '../sites.ts'
+import { expect, test } from "@playwright/test"
+import { readFileSync } from "node:fs"
+import { parseTheme } from "../../config/theme.ts"
+import { themeCss, themeStylesheet } from "../../src/integrations/theme-css.ts"
+import { SITES } from "../sites.ts"
 
-const example = JSON.parse(readFileSync('examples/full/theme.json', 'utf8'))
-const minimal = JSON.parse(readFileSync('examples/minimal/theme.json', 'utf8'))
+const example = JSON.parse(readFileSync("examples/full/theme.json", "utf8"))
+const minimal = JSON.parse(readFileSync("examples/minimal/theme.json", "utf8"))
 
 const failure = (input: unknown) => {
   try {
@@ -13,138 +13,138 @@ const failure = (input: unknown) => {
   } catch (error) {
     return (error as Error).message
   }
-  throw new Error('expected the theme to be rejected')
+  throw new Error("expected the theme to be rejected")
 }
 
-test.describe('schema', () => {
-  test('both example configurations are valid and filled with defaults', () => {
+test.describe("schema", () => {
+  test("both example configurations are valid and filled with defaults", () => {
     const theme = parseTheme(minimal)
     expect(theme.site.featured).toEqual([])
-    expect(theme.colors['ink-muted']).toEqual({
-      light: 'color-mix(in oklab, var(--foreground) 65%, transparent)',
-      dark: 'color-mix(in oklab, var(--foreground) 75%, transparent)',
+    expect(theme.colors["ink-muted"]).toEqual({
+      light: "color-mix(in oklab, var(--foreground) 65%, transparent)",
+      dark: "color-mix(in oklab, var(--foreground) 75%, transparent)",
     })
-    expect(theme.fonts.directory).toBe('src/assets/fonts')
+    expect(theme.fonts.directory).toBe("src/assets/fonts")
     expect(parseTheme(example).features.typeset).toBe(true)
   })
 
-  test('unknown keys are rejected with their path', () => {
-    expect(failure({ ...example, extra: 1 })).toContain('(root)')
+  test("unknown keys are rejected with their path", () => {
+    expect(failure({ ...example, extra: 1 })).toContain("(root)")
     expect(
-      failure({ ...example, site: { ...example.site, colour: 'red' } }),
+      failure({ ...example, site: { ...example.site, colour: "red" } }),
     ).toMatch(/site: Unrecognized key/)
   })
 
-  test('missing values name the key', () => {
+  test("missing values name the key", () => {
     const { title: _, ...site } = example.site
-    expect(failure({ ...example, site })).toContain('site.title')
+    expect(failure({ ...example, site })).toContain("site.title")
   })
 
-  test('colours default to the astro-erudite palette', () => {
+  test("colours default to the astro-erudite palette", () => {
     const { brand: _, colors: __, ...bare } = example
     const theme = parseTheme(bare)
     expect(theme.colors.background).toEqual({
-      light: '#fcfcfc',
-      dark: '#111111',
+      light: "#fcfcfc",
+      dark: "#111111",
     })
     expect(theme.colors.foreground).toEqual({
-      light: '#202020',
-      dark: '#eeeeee',
+      light: "#202020",
+      dark: "#eeeeee",
     })
   })
 
-  test('brand roles fill the colour tokens they stand for', () => {
+  test("brand roles fill the colour tokens they stand for", () => {
     const theme = parseTheme({
       ...example,
-      colors: { ring: 'red' },
+      colors: { ring: "red" },
       brand: {
-        palette: { paper: '#fafafa', slate: '#555555', mist: '#eeeeee' },
-        background: { light: 'paper', dark: '#000' },
-        secondary: 'slate',
-        tertiary: { light: 'mist', dark: '#111' },
-        info: '#00f',
+        palette: { paper: "#fafafa", slate: "#555555", mist: "#eeeeee" },
+        background: { light: "paper", dark: "#000" },
+        secondary: "slate",
+        tertiary: { light: "mist", dark: "#111" },
+        info: "#00f",
       },
     })
-    expect(theme.colors.background).toEqual({ light: 'paper', dark: '#000' })
-    expect(theme.colors['muted-foreground']).toBe('slate')
-    for (const token of ['secondary', 'muted', 'accent'] as const) {
+    expect(theme.colors.background).toEqual({ light: "paper", dark: "#000" })
+    expect(theme.colors["muted-foreground"]).toBe("slate")
+    for (const token of ["secondary", "muted", "accent"] as const) {
       expect(theme.colors[token], token).toEqual({
-        light: 'mist',
-        dark: '#111',
+        light: "mist",
+        dark: "#111",
       })
     }
-    expect(theme.colors.info).toBe('#00f')
-    expect(theme.colors.ring).toBe('red')
-    expect(theme.colors.success).toEqual({ light: '#218358', dark: '#3dd68c' })
+    expect(theme.colors.info).toBe("#00f")
+    expect(theme.colors.ring).toBe("red")
+    expect(theme.colors.success).toEqual({ light: "#218358", dark: "#3dd68c" })
   })
 
-  test('an explicit colour beats the brand role it would come from', () => {
+  test("an explicit colour beats the brand role it would come from", () => {
     const theme = parseTheme({
       ...example,
-      brand: { background: '#abcdef' },
-      colors: { background: '#123456' },
+      brand: { background: "#abcdef" },
+      colors: { background: "#123456" },
     })
-    expect(theme.colors.background).toBe('#123456')
+    expect(theme.colors.background).toBe("#123456")
   })
 
-  test('navigation must name a configured section', () => {
+  test("navigation must name a configured section", () => {
     expect(
-      failure({ ...example, navigation: [{ section: 'missing' }] }),
-    ).toContain('navigation.0.section: unknown section missing')
+      failure({ ...example, navigation: [{ section: "missing" }] }),
+    ).toContain("navigation.0.section: unknown section missing")
   })
 
-  test('a drop cap needs a face and sections must be distinct', () => {
+  test("a drop cap needs a face and sections must be distinct", () => {
     const { dropCap: _, ...fonts } = example.fonts
-    expect(failure({ ...example, fonts })).toContain('fonts.dropCap')
+    expect(failure({ ...example, fonts })).toContain("fonts.dropCap")
     expect(
       failure({
         ...example,
         sections: [example.sections[0], example.sections[0]],
       }),
-    ).toContain('duplicate section essays')
+    ).toContain("duplicate section essays")
   })
 })
 
-test.describe('generated stylesheet', () => {
-  const root = new URL('../../examples/full/', import.meta.url)
-  const file = new URL('src/generated/theme.css', root)
+test.describe("generated stylesheet", () => {
+  const root = new URL("../../examples/full/", import.meta.url)
+  const file = new URL("src/generated/theme.css", root)
   const css = themeStylesheet(SITES.example.theme, file, root)
 
-  test('brand palette names become --brand custom properties and references', () => {
+  test("brand palette names become --brand custom properties and references", () => {
     const named = themeStylesheet(
       parseTheme({
         ...example,
         brand: {
           palette: {
-            paper: 'oklch(0.985 0.004 250)',
-            'paper-dark': 'oklch(0.17 0.015 255)',
+            paper: "oklch(0.985 0.004 250)",
+            "paper-dark": "oklch(0.17 0.015 255)",
           },
-          background: { light: 'paper', dark: 'paper-dark' },
+          background: { light: "paper", dark: "paper-dark" },
         },
       }),
       file,
       root,
     )
-    expect(named).toContain('--brand-paper: oklch(0.985 0.004 250);')
+    expect(named).toContain("--brand-paper: oklch(0.985 0.004 250);")
     expect(named).toContain(
-      '--background: light-dark(var(--brand-paper), var(--brand-paper-dark));',
+      "--background: light-dark(var(--brand-paper), var(--brand-paper-dark));",
     )
-    expect(named).toContain('--focus-ring: 2px solid var(--ring);')
+    expect(named).toContain("--focus-ring: 2px solid var(--ring);")
   })
 
-  test('font faces point at the configured files', () => {
+  test("font faces point at the configured files", () => {
     expect(css).toContain("font-family: 'IBM Plex Sans';")
     expect(css).toContain(
       "src: url('../assets/fonts/plex-sans-400-italic.woff2') format('woff2');",
     )
     expect(css).toContain("--font-serif: 'IBM Plex Sans', ui-serif,")
     expect(css).toContain("--font-mono: 'IBM Plex Mono', ui-monospace,")
-    expect(css).toContain('STIXTwoMath-Regular.woff2')
+    expect(css).toContain("STIXTwoMath-Regular.woff2")
     expect(css).toContain("--font-math: 'STIX Two Math', math;")
   })
 
-  test('small capitals follow the body font setting', () => {
-    expect(css).toContain('--opening-caps: normal;')
+  test("small capitals follow the body font setting", () => {
+    expect(css).toContain("--opening-caps: normal;")
     const capable = parseTheme({
       ...example,
       fonts: {
@@ -153,62 +153,62 @@ test.describe('generated stylesheet', () => {
       },
     })
     expect(themeStylesheet(capable, file, root)).toContain(
-      '--opening-caps: small-caps;',
+      "--opening-caps: small-caps;",
     )
   })
 
-  test('the math font can be swapped', () => {
+  test("the math font can be swapped", () => {
     const swapped = parseTheme({
       ...example,
       fonts: {
         ...example.fonts,
-        math: { family: 'Latin Modern Math', file: 'latinmodern-math.woff2' },
+        math: { family: "Latin Modern Math", file: "latinmodern-math.woff2" },
       },
     })
     const output = themeStylesheet(swapped, file, root)
     expect(output).toContain("font-family: 'Latin Modern Math';")
-    expect(output).toContain('latinmodern-math.woff2')
+    expect(output).toContain("latinmodern-math.woff2")
     expect(output).toContain("--font-math: 'Latin Modern Math', math;")
-    expect(output).not.toContain('STIXTwoMath')
+    expect(output).not.toContain("STIXTwoMath")
   })
 
-  test('disabled features and missing faces leave no rules behind', () => {
+  test("disabled features and missing faces leave no rules behind", () => {
     const minimalCss = themeStylesheet(SITES.minimal.theme, file, root)
-    expect(minimalCss).not.toContain('STIX')
-    expect(minimalCss).not.toContain('--font-math')
-    expect(minimalCss).toContain('--font-mono: ui-monospace, monospace;')
+    expect(minimalCss).not.toContain("STIX")
+    expect(minimalCss).not.toContain("--font-math")
+    expect(minimalCss).toContain("--font-mono: ui-monospace, monospace;")
     expect(minimalCss).toContain(
       "--font-serif: 'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;",
     )
   })
 })
 
-test.describe('stylesheet transform', () => {
+test.describe("stylesheet transform", () => {
   const css = `p { font-size: var(--prose-font-size); text-indent: var(--prose-indent); @feature dropCap { .drop-cap { float: left; } } } @feature search { .hit { color: red; } }`
 
-  test('prose settings and enabled features are substituted in place', () => {
+  test("prose settings and enabled features are substituted in place", () => {
     const { transform } = themeCss(SITES.example.theme)
-    const output = transform(css, '/x/styles/prose.css') as string
-    expect(output).toContain('font-size: 1.125rem')
-    expect(output).toContain('text-indent: 1.35em')
-    expect(output).toContain('.drop-cap { float: left; }')
-    expect(output).not.toContain('@feature')
+    const output = transform(css, "/x/styles/prose.css") as string
+    expect(output).toContain("font-size: 1.125rem")
+    expect(output).toContain("text-indent: 1.35em")
+    expect(output).toContain(".drop-cap { float: left; }")
+    expect(output).not.toContain("@feature")
   })
 
-  test('disabled features and their stylesheets are removed', () => {
+  test("disabled features and their stylesheets are removed", () => {
     const { transform } = themeCss(SITES.minimal.theme)
-    const output = transform(css, '/x/styles/prose.css') as string
-    expect(output).toContain('font-size: 1.0625rem')
-    expect(output).not.toContain('drop-cap')
-    expect(output).not.toContain('.hit')
-    expect(transform('.c { color: red }', '/u/styles/callout.css')).toBe('')
+    const output = transform(css, "/x/styles/prose.css") as string
+    expect(output).toContain("font-size: 1.0625rem")
+    expect(output).not.toContain("drop-cap")
+    expect(output).not.toContain(".hit")
+    expect(transform(".c { color: red }", "/u/styles/callout.css")).toBe("")
     expect(
       transform(
-        '.b { color: red }',
-        '/t/components/Bibliography.astro?astro&type=style&index=0&lang.css',
+        ".b { color: red }",
+        "/t/components/Bibliography.astro?astro&type=style&index=0&lang.css",
       ),
-    ).toBe('')
-    expect(transform('.c { color: red }', '/u/styles/layout.css')).toBe(
+    ).toBe("")
+    expect(transform(".c { color: red }", "/u/styles/layout.css")).toBe(
       undefined,
     )
   })

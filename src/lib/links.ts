@@ -9,7 +9,7 @@ export function assertNoBrokenLinks(
 
   const message = `Broken links in ${id}:\n${broken
     .map(({ url, reason }) => `  ${url}: ${reason}`)
-    .join('\n')}`
+    .join("\n")}`
   if (import.meta.env.PROD) throw new Error(message)
   console.warn(message)
 }

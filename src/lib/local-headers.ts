@@ -1,11 +1,11 @@
-import { readFileSync } from 'node:fs'
-import type { IncomingMessage, ServerResponse } from 'node:http'
+import { readFileSync } from "node:fs"
+import type { IncomingMessage, ServerResponse } from "node:http"
 
 type Header = readonly [name: string, value: string | null]
 
 function parseHeader(line: string): Header {
-  if (line.startsWith('!')) return [line.slice(1).trim(), null]
-  const separator = line.indexOf(':')
+  if (line.startsWith("!")) return [line.slice(1).trim(), null]
+  const separator = line.indexOf(":")
   if (separator === -1) {
     throw new Error(`Invalid header line in public/_headers: ${line}`)
   }
@@ -13,7 +13,7 @@ function parseHeader(line: string): Header {
 }
 
 const parseRules = (root: URL) =>
-  readFileSync(new URL('public/_headers', root), 'utf8')
+  readFileSync(new URL("public/_headers", root), "utf8")
     .split(/\r?\n\r?\n+/)
     .map((block) =>
       block
@@ -24,7 +24,7 @@ const parseRules = (root: URL) =>
     .filter((lines) => lines.length > 0)
     .map(([pattern, ...lines]) => ({
       matches: new RegExp(
-        `^${pattern.split('*').map(RegExp.escape).join('.*')}$`,
+        `^${pattern.split("*").map(RegExp.escape).join(".*")}$`,
       ),
       headers: lines.map(parseHeader),
     }))
@@ -55,7 +55,7 @@ export function localHeadersPlugin(root: URL) {
   const headersForPath = headersFor(root)
   const useLocalHeaders = (server: Server) =>
     server.middlewares.use((req, res, next) => {
-      const { pathname } = new URL(req.url ?? '/', 'http://localhost')
+      const { pathname } = new URL(req.url ?? "/", "http://localhost")
       for (const [name, value] of Object.entries(headersForPath(pathname))) {
         res.setHeader(name, value)
       }
@@ -63,7 +63,7 @@ export function localHeadersPlugin(root: URL) {
     })
 
   return {
-    name: 'local-headers',
+    name: "local-headers",
     configureServer: useLocalHeaders,
     configurePreviewServer: useLocalHeaders,
   }

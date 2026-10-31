@@ -1,25 +1,25 @@
-import * as hb from 'harfbuzzjs'
-import { readFile } from 'node:fs/promises'
-import { join } from 'node:path'
-import wawoff2 from 'wawoff2'
-import type { Theme } from '../../../config/theme'
-import { Unsupported } from './paragraph.ts'
+import * as hb from "harfbuzzjs"
+import { readFile } from "node:fs/promises"
+import { join } from "node:path"
+import wawoff2 from "wawoff2"
+import type { Theme } from "../../../config/theme"
+import { Unsupported } from "./paragraph.ts"
 
-export type FaceName = 'roman' | 'italic' | 'bold' | 'mono' | 'cap'
+export type FaceName = "roman" | "italic" | "bold" | "mono" | "cap"
 
 export function typefaceFiles({
   body,
   mono,
   dropCap,
-}: Theme['fonts']): Partial<Record<FaceName, string>> {
+}: Theme["fonts"]): Partial<Record<FaceName, string>> {
   const find = (weight: (value: number) => boolean, style: string) =>
     body.faces.find((face) => weight(face.weight) && face.style === style)?.file
-  const roman = find((weight) => weight === 400, 'normal')
+  const roman = find((weight) => weight === 400, "normal")
   return {
     roman,
-    italic: find((weight) => weight === 400, 'italic') ?? roman,
-    bold: find((weight) => weight >= 600, 'normal') ?? roman,
-    mono: mono?.faces.find(({ style }) => style === 'normal')?.file,
+    italic: find((weight) => weight === 400, "italic") ?? roman,
+    bold: find((weight) => weight >= 600, "normal") ?? roman,
+    mono: mono?.faces.find(({ style }) => style === "normal")?.file,
     cap: dropCap?.file,
   }
 }
@@ -101,7 +101,7 @@ export class Typeface {
 
 async function loadFile(path: string): Promise<FontFile> {
   const source = await readFile(path)
-  const data = path.endsWith('.woff2')
+  const data = path.endsWith(".woff2")
     ? await wawoff2.decompress(source)
     : source
   const face = new hb.Face(new hb.Blob(data))
@@ -125,7 +125,7 @@ export async function loadFaces(
   )
 
   return (name: FaceName, features: readonly string[]): Typeface => {
-    const key = `${name}:${features.join(',')}`
+    const key = `${name}:${features.join(",")}`
     const known = typefaces.get(key)
     if (known) return known
     const file = files.get(name)

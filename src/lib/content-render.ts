@@ -1,24 +1,24 @@
-import Bibliography from '@/components/Bibliography.astro'
-import { FEATURES } from '@/consts'
-import type { PostEntry } from '@/lib/data-utils'
-import { extractCitedKeys } from '@/lib/markdown/cite'
-import type { RSSFeedItem } from '@astrojs/rss'
-import type { APIContext } from 'astro'
-import { experimental_AstroContainer as AstroContainer } from 'astro/container'
-import { loadRenderers } from 'astro:container'
-import { render, type CollectionEntry } from 'astro:content'
+import Bibliography from "@/components/Bibliography.astro"
+import { FEATURES } from "@/consts"
+import type { PostEntry } from "@/lib/data-utils"
+import { extractCitedKeys } from "@/lib/markdown/cite"
+import type { RSSFeedItem } from "@astrojs/rss"
+import type { APIContext } from "astro"
+import { experimental_AstroContainer as AstroContainer } from "astro/container"
+import { loadRenderers } from "astro:container"
+import { render, type CollectionEntry } from "astro:content"
 
-type RenderableEntry = PostEntry | CollectionEntry<'pages'>
+type RenderableEntry = PostEntry | CollectionEntry<"pages">
 type Replacement = [RegExp, string | ((...match: string[]) => string)]
 
-const HIDDEN_WARNING = '`markdown.gfm` and `markdown.smartypants`'
+const HIDDEN_WARNING = "`markdown.gfm` and `markdown.smartypants`"
 
 async function createContainer() {
   const renderers = await loadRenderers([])
   const warn = console.warn
   console.warn = (...args) => {
-    const message = String(args[0] ?? '')
-    if (!(message.includes(HIDDEN_WARNING) && message.includes('deprecated'))) {
+    const message = String(args[0] ?? "")
+    if (!(message.includes(HIDDEN_WARNING) && message.includes("deprecated"))) {
       warn(...args)
     }
   }
@@ -38,22 +38,22 @@ const SRCSET_ATTRIBUTE = /(srcset)=(["'])([^"']*)\2/gi
 const ABSOLUTE_URL = /^(#|\/\/|[a-z][a-z0-9+\-.]*:)/i
 
 const CLEANUPS: Replacement[] = [
-  [/<script\b[^>]*>[\s\S]*?<\/script>/gi, ''],
-  [/<style\b[^>]*>[\s\S]*?<\/style>/gi, ''],
-  [/<side-note\b[^>]*>[\s\S]*?<\/side-note>/gi, ''],
-  [/<svg\b[^>]*>[\s\S]*?<\/svg>/gi, ''],
-  [/<hr\b[^>]*>/gi, '<hr />'],
-  [/<!--[\s\S]*?-->/g, ''],
-  [/<span>\s*<\/span>/gi, ''],
-  [/\sdata-astro-[\w-]+(?:="[^"]*")?/gi, ''],
+  [/<script\b[^>]*>[\s\S]*?<\/script>/gi, ""],
+  [/<style\b[^>]*>[\s\S]*?<\/style>/gi, ""],
+  [/<side-note\b[^>]*>[\s\S]*?<\/side-note>/gi, ""],
+  [/<svg\b[^>]*>[\s\S]*?<\/svg>/gi, ""],
+  [/<hr\b[^>]*>/gi, "<hr />"],
+  [/<!--[\s\S]*?-->/g, ""],
+  [/<span>\s*<\/span>/gi, ""],
+  [/\sdata-astro-[\w-]+(?:="[^"]*")?/gi, ""],
   [
     /\b(id=|href=)(["'])(#?)user-content-fn(ref)?-([^"']+)\2/g,
-    (_, attribute, quote, hash, ref = '', name) =>
+    (_, attribute, quote, hash, ref = "", name) =>
       `${attribute}${quote}${hash}fn${ref}:${name}${quote}`,
   ],
   [
     /(<a\b[^>]*data-footnote-backref[^>]*>)<span class="sr-only">[^<]*<\/span>(<\/a>)/g,
-    '$1↩︎$2',
+    "$1↩︎$2",
   ],
   [
     /<a\b(?=[^>]*\bdata-footnote-ref\b)/g,
@@ -64,7 +64,7 @@ const CLEANUPS: Replacement[] = [
   [/<li id="(fn:[^"]+)"/g, '<li id="$1" role="doc-endnote"'],
 ]
 
-const withTrailingSlash = (url: string) => (url.endsWith('/') ? url : `${url}/`)
+const withTrailingSlash = (url: string) => (url.endsWith("/") ? url : `${url}/`)
 
 function absolutizeUrl(value: string, baseUrl: string): string {
   if (!value || ABSOLUTE_URL.test(value)) return value
@@ -77,18 +77,18 @@ function absolutizeUrl(value: string, baseUrl: string): string {
 
 function absolutizeSrcset(value: string, baseUrl: string): string {
   return value
-    .split(',')
+    .split(",")
     .map((candidate) => candidate.trim())
     .filter(Boolean)
     .map((candidate) => {
       const [url, ...descriptor] = candidate.split(/\s+/)
-      return [absolutizeUrl(url, baseUrl), ...descriptor].join(' ')
+      return [absolutizeUrl(url, baseUrl), ...descriptor].join(" ")
     })
-    .join(', ')
+    .join(", ")
 }
 
 function sanitizeHtml(html: string, baseUrl: string): string {
-  const page = html.replace(/^<!DOCTYPE html>/i, '')
+  const page = html.replace(/^<!DOCTYPE html>/i, "")
   const body = page.match(BODY)?.[1] ?? page
   return CLEANUPS.reduce(
     (result, [pattern, replacement]) =>
@@ -112,7 +112,7 @@ async function renderUncached(entry: RenderableEntry, baseUrl: string) {
   const rendering = await (container ??= createContainer())
   const { Content } = await render(entry)
   const bib =
-    FEATURES.citations && 'bib' in entry.data ? entry.data.bib : undefined
+    FEATURES.citations && "bib" in entry.data ? entry.data.bib : undefined
   const citedKeys = bib ? extractCitedKeys(entry.body) : []
   const pages = [await rendering.renderToString(Content, { params: {} })]
   if (bib && citedKeys.length > 0) {
@@ -125,7 +125,7 @@ async function renderUncached(entry: RenderableEntry, baseUrl: string) {
   return pages
     .filter(Boolean)
     .map((html) => sanitizeHtml(html, baseUrl))
-    .join('\n')
+    .join("\n")
 }
 
 export function renderEntryContent(entry: RenderableEntry, baseUrl: string) {
@@ -139,7 +139,7 @@ export function renderEntryContent(entry: RenderableEntry, baseUrl: string) {
 }
 
 export function resolveSiteUrl(context: APIContext, fallback: string): string {
-  return (context.site?.toString() ?? fallback).replace(/\/$/, '')
+  return (context.site?.toString() ?? fallback).replace(/\/$/, "")
 }
 
 export async function buildFeedItem(

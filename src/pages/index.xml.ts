@@ -1,1 +1,1 @@
-export { GET } from './rss.xml.ts'
+export { GET } from "./rss.xml.ts"

@@ -1,13 +1,13 @@
 ---
-import Card from '@/components/Card.astro'
-import Link from '@/components/Link.astro'
-import MetaRow from '@/components/MetaRow.astro'
-import Time from '@/components/Time.astro'
-import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
-import { withBase } from '@/lib/base'
-import { formatLooseDate } from '@/lib/dates'
-import { dateRange, type LedgerEntry } from '@/lib/ledger'
-import { renderLedgerNote } from '@/lib/ledger-note'
+import Card from "@/components/Card.astro"
+import Link from "@/components/Link.astro"
+import MetaRow from "@/components/MetaRow.astro"
+import Time from "@/components/Time.astro"
+import { COLLECTION_TO_SECTION, SECTIONS } from "@/consts"
+import { withBase } from "@/lib/base"
+import { formatLooseDate } from "@/lib/dates"
+import { dateRange, type LedgerEntry } from "@/lib/ledger"
+import { renderLedgerNote } from "@/lib/ledger-note"
 
 type Props = {
   entry: LedgerEntry
@@ -54,11 +54,11 @@ const linkHref =
             <span>
               {dates.map((date, index) => (
                 <>
-                  {index > 0 && ' – '}
+                  {index > 0 && " – "}
                   <Time {date} />
                 </>
               ))}
-              {open && ' –'}
+              {open && " –"}
             </span>
           </div>
         )
@@ -67,11 +67,11 @@ const linkHref =
     {
       (data.rating !== undefined || (data.favorite && !hasDetails)) && (
         <div class="side" data-pagefind-ignore>
-          {data.rating === 'DNF' ? (
+          {data.rating === "DNF" ? (
             <span class="dnf">DNF</span>
           ) : (
             data.rating !== undefined && (
-              <span class:list={['score', data.favorite && 'favorite']}>{data.rating}</span>
+              <span class:list={["score", data.favorite && "favorite"]}>{data.rating}</span>
             )
           )}
           {data.favorite && !hasDetails && <span class="chip">Favorite</span>}
@@ -81,7 +81,7 @@ const linkHref =
   </div>
   {
     hasDetails && (
-      <div class:list={['ledger-details', !data.note && 'without-note']}>
+      <div class:list={["ledger-details", !data.note && "without-note"]}>
         <div class="details-body">
           {data.note && (
             <prose-content class="note card-excerpt" data-compact set:html={renderLedgerNote(data.note)} />

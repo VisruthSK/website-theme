@@ -1,92 +1,92 @@
-import { baseOf, expect, test } from './sites.ts'
+import { baseOf, expect, test } from "./sites.ts"
 
-test.describe('list page', () => {
+test.describe("list page", () => {
   test.beforeEach(({ site }) => {
-    test.skip(!site.ledger, 'the site has no list page')
+    test.skip(!site.ledger, "the site has no list page")
   })
 
-  test('groups entries by year and handles the rare cases', async ({
+  test("groups entries by year and handles the rare cases", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
-    const years = await page.locator('h2[data-year]').allTextContents()
-    expect(years).toEqual(['2026', '2025', 'Undated'])
+    const years = await page.locator("h2[data-year]").allTextContents()
+    expect(years).toEqual(["2026", "2025", "Undated"])
 
     const ids = await page
-      .locator('.interactive-card .card-title')
+      .locator(".interactive-card .card-title")
       .evaluateAll((titles) => titles.map((title) => title.id))
     expect(ids).toEqual([
-      'the-three-little-pigs-01',
-      'the-ugly-duckling-01',
-      'the-gift-of-the-magi-01',
-      'the-selfish-giant-02',
-      'moby-dick-01',
-      'the-selfish-giant-01',
-      'walden-01',
-      'dracula-01',
+      "the-three-little-pigs-01",
+      "the-ugly-duckling-01",
+      "the-gift-of-the-magi-01",
+      "the-selfish-giant-02",
+      "moby-dick-01",
+      "the-selfish-giant-01",
+      "walden-01",
+      "dracula-01",
     ])
 
-    await expect(page.locator('main')).not.toContainText('/10')
-    await expect(page.locator('.dnf')).toHaveText('DNF')
-    await expect(page.locator('.chip')).toHaveCount(1)
-    await expect(page.locator('.score').first()).toHaveText('9')
+    await expect(page.locator("main")).not.toContainText("/10")
+    await expect(page.locator(".dnf")).toHaveText("DNF")
+    await expect(page.locator(".chip")).toHaveCount(1)
+    await expect(page.locator(".score").first()).toHaveText("9")
   })
 
-  test('shows full dates and prints loose dates as written', async ({
+  test("shows full dates and prints loose dates as written", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
     const card = (title: string) =>
-      page.locator('.interactive-card', { hasText: title }).first()
-    await expect(card('The Gift of the Magi')).toContainText(
-      '1 October 2026 – 14 October 2026',
+      page.locator(".interactive-card", { hasText: title }).first()
+    await expect(card("The Gift of the Magi")).toContainText(
+      "1 October 2026 – 14 October 2026",
     )
-    await expect(card('The Gift of the Magi')).toContainText('1905')
-    await expect(card('Moby-Dick')).toContainText('18 October 1851')
-    await expect(card('Walden')).toContainText('2 March 2025 – 20 March 2025')
-    await expect(card('Dracula')).not.toContainText('–')
+    await expect(card("The Gift of the Magi")).toContainText("1905")
+    await expect(card("Moby-Dick")).toContainText("18 October 1851")
+    await expect(card("Walden")).toContainText("2 March 2025 – 20 March 2025")
+    await expect(card("Dracula")).not.toContainText("–")
     await expect(
-      page.locator('.interactive-card', { hasText: 'May 1888' }),
+      page.locator(".interactive-card", { hasText: "May 1888" }),
     ).toHaveCount(2)
   })
 
-  test('shows the added date and links titles to the work', async ({
+  test("shows the added date and links titles to the work", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
-    const duckling = page.locator('.interactive-card', {
-      hasText: 'The Ugly Duckling',
+    const duckling = page.locator(".interactive-card", {
+      hasText: "The Ugly Duckling",
     })
-    await expect(duckling).toContainText('Added 20 October 2026')
-    await expect(duckling.locator('.card-title a')).toHaveAttribute(
-      'href',
-      'https://en.wikisource.org/wiki/The_Ugly_Duckling',
+    await expect(duckling).toContainText("Added 20 October 2026")
+    await expect(duckling.locator(".card-title a")).toHaveAttribute(
+      "href",
+      "https://en.wikisource.org/wiki/The_Ugly_Duckling",
     )
 
-    const pigs = page.locator('.interactive-card', {
-      hasText: 'The Three Little Pigs',
+    const pigs = page.locator(".interactive-card", {
+      hasText: "The Three Little Pigs",
     })
-    await expect(pigs.locator('.byline')).toHaveCount(0)
-    await expect(pigs.locator('.card-title a')).toHaveAttribute(
-      'href',
+    await expect(pigs.locator(".byline")).toHaveCount(0)
+    await expect(pigs.locator(".card-title a")).toHaveAttribute(
+      "href",
       `${baseOf(site)}/essays/the-selfish-giant/`,
     )
   })
 
-  test('the review link and favorite share a row when there is no note', async ({
+  test("the review link and favorite share a row when there is no note", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
-    const card = page.locator('.interactive-card', {
-      hasText: 'The Gift of the Magi',
+    const card = page.locator(".interactive-card", {
+      hasText: "The Gift of the Magi",
     })
-    await card.locator('.note').evaluate((note) => note.remove())
-    const link = await card.getByRole('link', { name: 'Essay' }).boundingBox()
-    const favorite = await card.locator('.chip').boundingBox()
+    await card.locator(".note").evaluate((note) => note.remove())
+    const link = await card.getByRole("link", { name: "Essay" }).boundingBox()
+    const favorite = await card.locator(".chip").boundingBox()
     expect(link).not.toBeNull()
     expect(favorite).not.toBeNull()
     expect(
@@ -96,36 +96,36 @@ test.describe('list page', () => {
     ).toBeLessThan(2)
   })
 
-  test('a note and favorite share the bottom row when there is no review', async ({
+  test("a note and favorite share the bottom row when there is no review", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
-    const card = page.locator('.interactive-card', {
-      hasText: 'The Gift of the Magi',
+    const card = page.locator(".interactive-card", {
+      hasText: "The Gift of the Magi",
     })
-    await card.locator('.link').evaluate((link) => link.remove())
-    const note = await card.locator('.note p').last().boundingBox()
-    const favorite = await card.locator('.chip').boundingBox()
+    await card.locator(".link").evaluate((link) => link.remove())
+    const note = await card.locator(".note p").last().boundingBox()
+    const favorite = await card.locator(".chip").boundingBox()
     expect(note).not.toBeNull()
     expect(favorite).not.toBeNull()
     expect(favorite!.y).toBeLessThan(note!.y + note!.height)
     expect(favorite!.y + favorite!.height).toBeGreaterThan(note!.y)
   })
 
-  test('favorite badges have the same typography in both positions', async ({
+  test("favorite badges have the same typography in both positions", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
-    const card = page.locator('.interactive-card', {
-      hasText: 'The Gift of the Magi',
+    const card = page.locator(".interactive-card", {
+      hasText: "The Gift of the Magi",
     })
-    await card.locator('.side').evaluate((side) => {
-      const badge = side.closest('.interactive-card')!.querySelector('.chip')!
+    await card.locator(".side").evaluate((side) => {
+      const badge = side.closest(".interactive-card")!.querySelector(".chip")!
       side.appendChild(badge.cloneNode(true))
     })
-    const badges = await card.locator('.chip').evaluateAll((elements) =>
+    const badges = await card.locator(".chip").evaluateAll((elements) =>
       elements.map((element) => {
         const style = getComputedStyle(element)
         const rect = element.getBoundingClientRect()
@@ -141,27 +141,27 @@ test.describe('list page', () => {
     expect(badges[0]).toEqual(badges[1])
   })
 
-  test('Markdown note links use normal visible link styling and are clickable', async ({
+  test("Markdown note links use normal visible link styling and are clickable", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
-    const card = page.locator('.interactive-card', {
-      hasText: 'The Gift of the Magi',
+    const card = page.locator(".interactive-card", {
+      hasText: "The Gift of the Magi",
     })
-    await card.locator('.note').evaluate((note) => {
+    await card.locator(".note").evaluate((note) => {
       note.insertAdjacentHTML(
-        'beforeend',
+        "beforeend",
         '<p><a href="https://example.com/">Article</a></p>',
       )
     })
-    const link = card.getByRole('link', { name: 'Article' })
+    const link = card.getByRole("link", { name: "Article" })
     await link.scrollIntoViewIfNeeded()
-    await expect(link).toHaveCSS('text-decoration-line', 'underline')
+    await expect(link).toHaveCSS("text-decoration-line", "underline")
     const color = await link.evaluate(
       (element) => getComputedStyle(element).textDecorationColor,
     )
-    expect(color).not.toBe('rgba(0, 0, 0, 0)')
+    expect(color).not.toBe("rgba(0, 0, 0, 0)")
     expect(
       await link.evaluate((element) => {
         const rect = element.getBoundingClientRect()
@@ -175,83 +175,83 @@ test.describe('list page', () => {
     ).toBe(true)
   })
 
-  test('a link opens in the same tab and a card links to itself', async ({
+  test("a link opens in the same tab and a card links to itself", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
-    const link = page.getByRole('link', { name: 'Essay', exact: true }).first()
-    expect(await link.getAttribute('target')).toBeNull()
-    expect(await link.getAttribute('href')).toBe(
+    const link = page.getByRole("link", { name: "Essay", exact: true }).first()
+    expect(await link.getAttribute("target")).toBeNull()
+    expect(await link.getAttribute("href")).toBe(
       `${baseOf(site)}/essays/the-gift-of-the-magi/`,
     )
 
     await page
-      .locator('.interactive-card', { hasText: 'Moby-Dick' })
+      .locator(".interactive-card", { hasText: "Moby-Dick" })
       .click({ position: { x: 24, y: 24 } })
     await expect(page).toHaveURL(/#moby-dick-01$/)
   })
 
-  test('the ratings chart centres each bar over its label', async ({
+  test("the ratings chart centres each bar over its label", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
-    const columns = await page.locator('figure svg').evaluate((svg) => {
+    const columns = await page.locator("figure svg").evaluate((svg) => {
       const centre = (element: Element) => {
         const box = element.getBoundingClientRect()
         return (box.left + box.right) / 2
       }
-      return [...svg.querySelectorAll('text.label')].map((label) => ({
+      return [...svg.querySelectorAll("text.label")].map((label) => ({
         label: label.textContent,
-        offsets: [...svg.querySelectorAll('rect.bar')]
+        offsets: [...svg.querySelectorAll("rect.bar")]
           .map((bar) => Math.abs(centre(bar) - centre(label)))
           .filter((offset) => offset < 20),
       }))
     })
     const drawn = columns.filter(({ offsets }) => offsets.length > 0)
-    expect(drawn.map(({ label }) => label)).toEqual(['DNF', '6', '7', '8', '9'])
+    expect(drawn.map(({ label }) => label)).toEqual(["DNF", "6", "7", "8", "9"])
     for (const { offsets } of drawn) expect(offsets[0]).toBeLessThan(0.5)
   })
 
-  test('the feed lists every entry with a link to its card', async ({
+  test("the feed lists every entry with a link to its card", async ({
     page,
     site,
   }) => {
     await page.goto(site.ledger!.path)
     const feed = await page
       .locator('link[rel="alternate"][title="Reading RSS feed"]')
-      .getAttribute('href')
+      .getAttribute("href")
     const xml = await (await page.request.get(new URL(feed!).pathname)).text()
     const ids = await page
-      .locator('.interactive-card .card-title')
+      .locator(".interactive-card .card-title")
       .evaluateAll((titles) => titles.map((title) => title.id))
     for (const id of ids) expect(xml).toContain(`/reading/#${id}`)
     expect(xml.match(/<item>/g)).toHaveLength(ids.length)
   })
 
-  test('the library lists the newest added entries first', async ({
+  test("the library lists the newest added entries first", async ({
     page,
     site,
   }) => {
-    await page.goto(site.ledger!.path.replace('reading', 'library'))
+    await page.goto(site.ledger!.path.replace("reading", "library"))
     const titles = await page
-      .locator('.interactive-card .card-title')
+      .locator(".interactive-card .card-title")
       .allTextContents()
-    expect(titles).toEqual(['The Three Little Pigs', 'The Ugly Duckling'])
+    expect(titles).toEqual(["The Three Little Pigs", "The Ugly Duckling"])
     await expect(
-      page.locator('.interactive-card a.card-overlay').first(),
-    ).toHaveAttribute('href', /\/reading\/?#the-three-little-pigs-01$/)
+      page.locator(".interactive-card a.card-overlay").first(),
+    ).toHaveAttribute("href", /\/reading\/?#the-three-little-pigs-01$/)
   })
 })
 
-test('collections and Recent group entries under year headings, unpaginated', async ({
+test("collections and Recent group entries under year headings, unpaginated", async ({
   page,
   site,
 }) => {
-  for (const path of ['/recent/', `/${site.theme.sections[0].slug}/`]) {
+  for (const path of ["/recent/", `/${site.theme.sections[0].slug}/`]) {
     await page.goto(path)
-    expect(await page.locator('h2[data-year]').count(), path).toBeGreaterThan(0)
-    await expect(page.locator('.pagination-nav'), path).toHaveCount(0)
+    expect(await page.locator("h2[data-year]").count(), path).toBeGreaterThan(0)
+    await expect(page.locator(".pagination-nav"), path).toHaveCount(0)
   }
 })
