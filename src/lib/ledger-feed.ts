@@ -1,11 +1,11 @@
 import type { APIContext } from "astro"
-import { getCollection } from "astro:content"
 
 import { SITE } from "@/consts"
 import { withBase } from "@/lib/base"
 import { resolveSiteUrl } from "@/lib/content-render"
 import { respondWithFeed } from "@/lib/feed"
-import { ledgerPermalinks, type LedgerEntry } from "@/lib/ledger"
+import { ledgerPermalinks } from "@/lib/ledger"
+import { getLedger } from "@/lib/ledger-entries"
 import { renderLedgerNote } from "@/lib/ledger-note"
 
 interface LedgerSource {
@@ -33,9 +33,7 @@ export async function renderLedgerFeed(
   const items = (
     await Promise.all(
       sources.map(async ({ collection, href, noun }) => {
-        const entries = (await getCollection(
-          collection as never,
-        )) as LedgerEntry[]
+        const entries = await getLedger(collection)
         const permalinks = ledgerPermalinks(entries)
         return entries.map(({ id, data }) => {
           const rating =

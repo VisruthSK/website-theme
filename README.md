@@ -186,6 +186,12 @@ A ledger entry may also carry `feed`, the URL of the site's own RSS or Atom feed
 
 Pass `ratings` to `Ledger` to show a bar chart of how many entries have each rating, with favorites highlighted, between the description and the list. It is inline SVG drawn at build time in the theme colours.
 
+## Pages and cards
+
+`Page` is the shell for a list or text page: it renders the layout, the page meta, an optional feed link, the heading and the content. It takes `title`, `description`, `crumb` (the page's own path, for the breadcrumb), `feed`, `noindex`, `metaTitle` when the meta title differs from the heading, `headingHtml` for a heading that contains markup, and `body="div" | "article"` to wrap the page in Pagefind's indexed region. Content goes in the default slot, extra head tags in `slot="head"` and a line under the heading in `slot="intro"`.
+
+`EntryCard` renders a `CardData` value (`href`, `title`, and optionally `eyebrow`, `excerpt`, `date`, `stats`, `series` and `tags`), so anything that can describe itself that way gets the same card. `PostCard` adapts a post to it, and `RecentlyAdded` and a site's own index pages pass the fields directly. `Card` is the bare shell for a card with other contents, as `LedgerCard` does. `EntryGroup` wraps a heading and a list of cards, and `groupByYear` splits entries into year groups, newest first, with an Undated group last.
+
 ## Overlay and shadowing
 
 `@/*` resolves through an ordered list of directories, and the first file found wins:

@@ -6,7 +6,7 @@ import PageIntro from "@/components/PageIntro.astro"
 import PagefindMeta from "@/components/PagefindMeta.astro"
 import RatingSpread from "@/components/RatingSpread.astro"
 import { ledgerGroups, ledgerPermalinks, type LedgerEntry } from "@/lib/ledger"
-import { getCollection } from "astro:content"
+import { getLedger } from "@/lib/ledger-entries"
 
 type Props = {
   title: string
@@ -29,7 +29,7 @@ const {
 } = Astro.props
 const name = title.toLowerCase()
 const {
-  entries = (await getCollection(name as never)) as LedgerEntry[],
+  entries = await getLedger(name),
   href = `/${name}`,
 } = Astro.props
 
