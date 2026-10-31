@@ -55,7 +55,7 @@ test.describe('list page', () => {
     site,
   }) => {
     await page.goto(site.ledger!.path)
-    const link = page.getByRole('link', { name: 'Essay' }).first()
+    const link = page.getByRole('link', { name: 'Essay', exact: true }).first()
     expect(await link.getAttribute('target')).toBeNull()
     expect(await link.getAttribute('href')).toBe(
       `${baseOf(site)}/essays/the-gift-of-the-magi/`,
