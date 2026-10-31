@@ -1,5 +1,6 @@
 ---
 import MetaPage from '@/components/MetaPage.astro'
+import PageIntro from '@/components/PageIntro.astro'
 import PagefindMeta from '@/components/PagefindMeta.astro'
 import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
@@ -42,7 +43,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     <page-heading>
       <h1>{title}</h1>
     </page-heading>
-    <p class="intro">{description}</p>
+    <PageIntro>{description}</PageIntro>
 
     {
       groups.map(({ heading, entries: group }) => (
@@ -134,11 +135,6 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
 </Layout>
 
 <style>
-  .intro {
-    margin-block-end: var(--space-m);
-    color: var(--ink-muted);
-  }
-
   .card-title {
     scroll-margin-block-start: calc(var(--space-s) + 1rem);
   }
@@ -190,6 +186,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
   .side .chip,
   .ledger-details .chip {
     flex-shrink: 0;
+    font-family: var(--font-sans);
     border-color: color-mix(in oklab, var(--flourish) 30%, transparent);
     background: color-mix(in oklab, var(--flourish) 8%, transparent);
     color: var(--flourish);

@@ -87,6 +87,34 @@ test.describe('list page', () => {
     expect(favorite!.y + favorite!.height).toBeGreaterThan(note!.y)
   })
 
+  test('favorite badges have the same typography in both positions', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const card = page.locator('.interactive-card', {
+      hasText: 'The Gift of the Magi',
+    })
+    await card.locator('.side').evaluate((side) => {
+      const badge = side.closest('.interactive-card')!.querySelector('.chip')!
+      side.appendChild(badge.cloneNode(true))
+    })
+    const badges = await card.locator('.chip').evaluateAll((elements) =>
+      elements.map((element) => {
+        const style = getComputedStyle(element)
+        const rect = element.getBoundingClientRect()
+        return {
+          family: style.fontFamily,
+          size: style.fontSize,
+          width: rect.width,
+          height: rect.height,
+        }
+      }),
+    )
+    expect(badges).toHaveLength(2)
+    expect(badges[0]).toEqual(badges[1])
+  })
+
   test('Markdown note links use normal visible link styling and are clickable', async ({
     page,
     site,
