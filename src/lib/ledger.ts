@@ -15,7 +15,11 @@ export interface LedgerEntry {
 
 const UNDATED = Number.MAX_SAFE_INTEGER
 
-const endedTime = ({ data }: LedgerEntry) => data.ended?.valueOf() ?? UNDATED
+const ledgerDate = ({ data }: LedgerEntry) =>
+  data.ended ?? (data.rating === 'DNF' ? data.started : undefined)
+
+const endedTime = (entry: LedgerEntry) =>
+  ledgerDate(entry)?.valueOf() ?? UNDATED
 
 export const slugify = (text: string) =>
   text
@@ -27,8 +31,8 @@ export const slugify = (text: string) =>
 
 export function ledgerGroups<T extends LedgerEntry>(entries: T[]) {
   const years = Map.groupBy(
-    entries.filter(({ data }) => data.ended),
-    ({ data }) => data.ended!.getUTCFullYear(),
+    entries.filter((entry) => ledgerDate(entry)),
+    (entry) => ledgerDate(entry)!.getUTCFullYear(),
   )
   const groups = [...years]
     .sort(([a], [b]) => b - a)
@@ -36,7 +40,7 @@ export function ledgerGroups<T extends LedgerEntry>(entries: T[]) {
       heading: String(year),
       entries: group.toSorted((a, b) => endedTime(b) - endedTime(a)),
     }))
-  const undated = entries.filter(({ data }) => !data.ended)
+  const undated = entries.filter((entry) => !ledgerDate(entry))
   return undated.length
     ? [...groups, { heading: 'Undated', entries: undated }]
     : groups

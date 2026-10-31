@@ -50,6 +50,26 @@ test.describe('list page', () => {
     ).toHaveCount(2)
   })
 
+  test('the review link and favorite share a row when there is no note', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const card = page.locator('.interactive-card', {
+      hasText: 'The Gift of the Magi',
+    })
+    await card.locator('.note').evaluate((note) => note.remove())
+    const link = await card.getByRole('link', { name: 'Essay' }).boundingBox()
+    const favorite = await card.locator('.chip').boundingBox()
+    expect(link).not.toBeNull()
+    expect(favorite).not.toBeNull()
+    expect(
+      Math.abs(
+        link!.y + link!.height / 2 - (favorite!.y + favorite!.height / 2),
+      ),
+    ).toBeLessThan(2)
+  })
+
   test('a link opens in the same tab and a card links to itself', async ({
     page,
     site,

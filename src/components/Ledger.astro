@@ -93,7 +93,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                           </p>
                         )}
                       </div>
-                      {(data.rating !== undefined || data.favorite) && (
+                      {data.rating !== undefined && (
                         <div class="side" data-pagefind-ignore>
                           {data.rating === 'DNF' ? (
                             <span class="dnf">DNF</span>
@@ -102,19 +102,21 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                               <span class="score">{data.rating}</span>
                             )
                           )}
-                          {data.favorite && (
-                            <span class="chip">Favorite</span>
-                          )}
                         </div>
                       )}
                     </div>
                     {data.note && (
                       <div class="note" set:html={renderLedgerNote(data.note)} />
                     )}
-                    {data.link && (
-                      <p class="link" data-pagefind-ignore>
-                        <a href={linkHref(data.link)}>{linkLabel}</a>
-                      </p>
+                    {(data.link || data.favorite) && (
+                      <div class="ledger-footer" data-pagefind-ignore>
+                        {data.link && (
+                          <p class="link">
+                            <a href={linkHref(data.link)}>{linkLabel}</a>
+                          </p>
+                        )}
+                        {data.favorite && <span class="chip">Favorite</span>}
+                      </div>
                     )}
                   </div>
                 </li>
@@ -181,7 +183,8 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     color: var(--flourish);
   }
 
-  .side .chip {
+  .ledger-footer .chip {
+    margin-inline-start: auto;
     border-color: color-mix(in oklab, var(--flourish) 30%, transparent);
     background: color-mix(in oklab, var(--flourish) 8%, transparent);
     color: var(--flourish);
@@ -216,8 +219,15 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     z-index: 1;
   }
 
-  .link {
+  .ledger-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
     margin-block-start: var(--space-2xs);
+  }
+
+  .link {
+    margin: 0;
     font-size: 0.9375rem;
   }
 
