@@ -1,5 +1,5 @@
-import theme, { paths } from 'virtual:erudite/config'
-import { icons } from 'virtual:erudite/assets'
+import theme, { paths } from 'virtual:theme/config'
+import { icons } from 'virtual:theme/assets'
 import { withBase } from '@/lib/base'
 import type { ContentCollection, SectionMetadata } from '@/types'
 

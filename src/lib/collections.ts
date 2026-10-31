@@ -1,7 +1,7 @@
 import { glob } from 'astro/loaders'
 import { defineCollection, type SchemaContext } from 'astro:content'
 import { z } from 'astro/zod'
-import theme from 'virtual:erudite/config'
+import theme from 'virtual:theme/config'
 
 const postSchema = ({ image }: SchemaContext) =>
   z.object({

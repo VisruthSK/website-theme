@@ -111,11 +111,11 @@ function virtualModules(theme: Theme, root: URL) {
   )
   const icons = [...new Set(theme.footer.links.map(({ icon }) => icon))]
   const modules: Record<string, string> = {
-    'virtual:erudite/config': [
+    'virtual:theme/config': [
       `export default ${JSON.stringify(theme)}`,
       `export const paths = ${JSON.stringify(paths)}`,
     ].join('\n'),
-    'virtual:erudite/assets': [
+    'virtual:theme/assets': [
       ...present.map(([name, file]) => `import ${name} from ${fontUrl(file)}`),
       ...icons.map(
         (name, index) =>
