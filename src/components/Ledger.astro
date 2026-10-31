@@ -1,6 +1,7 @@
 ---
 import Link from '@/components/Link.astro'
 import MetaPage from '@/components/MetaPage.astro'
+import PageHeading from '@/components/PageHeading.astro'
 import PageIntro from '@/components/PageIntro.astro'
 import PagefindMeta from '@/components/PagefindMeta.astro'
 import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
@@ -17,14 +18,15 @@ import { renderLedgerNote } from '@/lib/ledger-note'
 
 type Props = {
   title: string
-  description: string
+  description?: string
   entries?: LedgerEntry[]
   href?: string
   linkLabel?: string
   dated?: boolean
+  feed?: { href: string; label: string }
 }
 
-const { title, description, linkLabel = 'Link', dated = true } = Astro.props
+const { title, description, linkLabel = 'Link', dated = true, feed } = Astro.props
 const name = title.toLowerCase()
 const {
   entries = (await getCollection(name as never)) as LedgerEntry[],
@@ -40,12 +42,22 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
 <Layout crumbs={[{ label: title, href }]}>
   <MetaPage slot="head" title={title} description={description} />
   <PagefindMeta slot="head" sectionLabel={title} entries />
+  {
+    feed && (
+      <link
+        slot="head"
+        rel="alternate"
+        type="application/rss+xml"
+        title={feed.label}
+        href={new URL(feed.href, Astro.site ?? Astro.url.origin).href}
+      />
+    )
+  }
 
   <div data-pagefind-body>
-    <page-heading>
-      <h1>{title}</h1>
-    </page-heading>
-    <PageIntro>{description}</PageIntro>
+    <PageHeading title={title} feed={feed} />
+    {description && <PageIntro>{description}</PageIntro>}
+    <slot name="stats" />
 
     {
       groups.map(({ heading, entries: group }) => (
@@ -72,15 +84,24 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                         <h3 class="card-title" id={permalink}>
                           {data.url ? <Link class="title-link" href={data.url}>{data.title}</Link> : data.title}
                         </h3>
-                        <p class="byline">
-                          <span>{data.creator}</span>
-                          {data.published && (
-                            <>
-                              <span class="meta-divider" aria-hidden="true" />
-                              <span>{formatLooseDate(data.published)}</span>
-                            </>
-                          )}
-                        </p>
+                        {(data.creator || data.published) && (
+                          <p class="byline">
+                            {data.creator && <span>{data.creator}</span>}
+                            {data.published && (
+                              <>
+                                {data.creator && <span class="meta-divider" aria-hidden="true" />}
+                                <span>{formatLooseDate(data.published)}</span>
+                              </>
+                            )}
+                          </p>
+                        )}
+                        {dated && dates.length === 0 && data.added && (
+                          <p class="meta-row" data-pagefind-ignore>
+                            <span>
+                              Added <time datetime={data.added.toISOString()}>{formatDate(data.added)}</time>
+                            </span>
+                          </p>
+                        )}
                         {dates.length > 0 && (
                           <p class="meta-row" data-pagefind-ignore>
                             <span>

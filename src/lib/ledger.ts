@@ -2,12 +2,13 @@ export interface LedgerEntry {
   id: string
   data: {
     title: string
-    creator: string
+    creator?: string
     published?: Date | string | number
     rating?: number | 'DNF'
     favorite: boolean
     started?: Date
     ended?: Date
+    added?: Date
     note?: string
     url?: string
     link?: { collection: string; id: string }
@@ -17,7 +18,7 @@ export interface LedgerEntry {
 const UNDATED = Number.MAX_SAFE_INTEGER
 
 const ledgerDate = ({ data }: LedgerEntry) =>
-  data.ended ?? (data.rating === 'DNF' ? data.started : undefined)
+  data.ended ?? (data.rating === 'DNF' ? data.started : undefined) ?? data.added
 
 const endedTime = (entry: LedgerEntry) =>
   ledgerDate(entry)?.valueOf() ?? UNDATED

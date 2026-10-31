@@ -38,14 +38,15 @@ export const defineLedger = (path: string, link: string) =>
     loader: file(path),
     schema: z.strictObject({
       title: z.string(),
-      creator: z.string(),
+      creator: z.string().optional(),
       published: z.union([z.number(), z.string(), z.date()]).optional(),
       rating: z.union([z.int().min(1).max(10), z.literal('DNF')]).optional(),
       favorite: z.boolean().default(false),
       started: z.coerce.date().optional(),
       ended: z.coerce.date().optional(),
+      added: z.coerce.date().optional(),
       note: z.string().optional(),
-      url: z.url().optional(),
+      url: z.union([z.url(), z.string().startsWith('/')]).optional(),
       link: reference(link).optional(),
     }),
   })
