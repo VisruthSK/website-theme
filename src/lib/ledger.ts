@@ -9,6 +9,7 @@ export interface LedgerEntry {
     started?: Date
     ended?: Date
     note?: string
+    url?: string
     link?: { collection: string; id: string }
   }
 }
