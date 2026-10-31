@@ -1,6 +1,9 @@
 import type { Page } from "@playwright/test"
 import { enforceCsp, expect, test, type Site } from "./sites.ts"
 
+const results = (page: Page) =>
+  page.getByRole("list", { name: "Search results" }).getByRole("listitem")
+
 async function search(page: Page, query: string) {
   const input = page.getByRole("searchbox", { name: "Search the site" })
   await expect(input).toBeVisible()
@@ -8,10 +11,10 @@ async function search(page: Page, query: string) {
   await expect
     .poll(() => new URL(page.url()).searchParams.get("q"), { timeout: 15_000 })
     .toBe(query)
-  await expect(page.locator("[data-search-status]")).toContainText("Showing", {
+  await expect(page.getByRole("status")).toContainText("Showing", {
     timeout: 15_000,
   })
-  await expect(page.locator(".search-result").first()).toBeVisible()
+  await expect(results(page).first()).toBeVisible()
 }
 
 async function open(page: Page, site: Site) {
@@ -39,14 +42,14 @@ test.describe("search", () => {
     })
     await open(page, site)
     await search(page, "everything")
-    await expect(page.locator("[data-title] mark").first()).toContainText(
-      /everything/i,
-    )
+    await expect(
+      results(page).getByRole("heading").locator("mark").first(),
+    ).toContainText(/everything/i)
 
     await search(page, "story")
-    const rows = await page.locator(".search-result").count()
+    const rows = await results(page).count()
     expect(rows).toBeGreaterThan(1)
-    await expect(page.locator("[data-search-status]")).toHaveText(
+    await expect(page.getByRole("status")).toHaveText(
       `Showing ${rows} matches.`,
     )
     expect(new URL(page.url()).searchParams.has("page")).toBe(false)
@@ -61,8 +64,8 @@ test.describe("search", () => {
     test.skip(!ledger, "the site has no list page")
     await open(page, site)
     await search(page, ledger!.query)
-    const links = await page
-      .locator(".search-result a.card-overlay")
+    const links = await results(page)
+      .locator("a.card-overlay")
       .evaluateAll((anchors) => anchors.map((a) => a.getAttribute("href")))
     const entries = links.filter((href) => href?.includes(`${ledger!.path}#`))
     expect(entries).toHaveLength(ledger!.permalinks.length)
@@ -77,11 +80,11 @@ test.describe("search", () => {
   }) => {
     await open(page, site)
     await search(page, "theme tests run against this site")
-    const about = page.locator(".search-result").filter({
-      has: page.locator("[data-title]", { hasText: "About" }),
+    const about = results(page).filter({
+      has: page.getByRole("heading", { name: "About" }),
     })
     await expect(about).toHaveCount(1)
-    await expect(about.locator("[data-meta]")).toBeHidden()
+    await expect(about.locator(".meta-row")).toBeHidden()
     await Promise.all([
       page.waitForURL(/\/about\/?$/),
       about.click({ position: { x: 24, y: 24 } }),

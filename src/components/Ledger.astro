@@ -11,27 +11,28 @@ import { getLedger } from "@/lib/ledger-entries"
 type Props = {
   title: string
   description?: string
+  collection?: string
   entries?: LedgerEntry[]
   href?: string
   linkLabel?: string
   dated?: boolean
   ratings?: boolean
+  searchable?: boolean
   feed?: { href: string; label: string }
 }
 
 const {
   title,
   description,
+  collection = title.toLowerCase(),
   linkLabel = "Link",
   dated = true,
   ratings = false,
+  searchable = true,
   feed,
 } = Astro.props
-const name = title.toLowerCase()
-const {
-  entries = await getLedger(name),
-  href = `/${name}`,
-} = Astro.props
+const { entries = await getLedger(collection), href = `/${collection}` } =
+  Astro.props
 
 const groups = dated ? ledgerGroups(entries) : [{ heading: "", entries }]
 const permalinks = ledgerPermalinks(entries)
@@ -42,9 +43,11 @@ const permalinks = ledgerPermalinks(entries)
   description={description}
   crumb={href}
   feed={feed}
-  body="div"
+  body={searchable ? "div" : undefined}
 >
-  <PagefindMeta slot="head" sectionLabel={title} entries />
+  <Fragment slot="head">
+    {searchable && <PagefindMeta sectionLabel={title} entries />}
+  </Fragment>
   <Fragment slot="intro">
     {
       (description || Astro.slots.has("intro")) && (

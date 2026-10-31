@@ -8,6 +8,9 @@ import { siteHtmlPages } from "./html-pages"
 const INTERNAL_REFERENCE =
   /\s(?:href|src)="(?!\/\/|[a-z][a-z0-9+.-]*:)([^"#?]*)[^"#]*(?:#([^"]*))?"/gi
 
+export const withoutTemplates = (html: string) =>
+  html.replace(/<template[\s\S]*?<\/template>/g, "")
+
 const decode = (value: string) => {
   try {
     return decodeURI(value)
@@ -57,9 +60,8 @@ export function linkCheck(publicDir: string, base: string): AstroIntegration {
 
         for await (const file of siteHtmlPages(root, publicDir)) {
           const page = join(root, file)
-          for (const [, link, fragment] of readFileSync(page, "utf8").matchAll(
-            INTERNAL_REFERENCE,
-          )) {
+          const html = withoutTemplates(readFileSync(page, "utf8"))
+          for (const [, link, fragment] of html.matchAll(INTERNAL_REFERENCE)) {
             const path = decode(link)
             const inside = !base || path === base || path.startsWith(`${base}/`)
             const target = !path

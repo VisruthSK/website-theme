@@ -1,7 +1,7 @@
 ---
 import Bibliography from "@/components/Bibliography.astro"
 import MetaRow from "@/components/MetaRow.astro"
-import PostMeta from "@/components/PostMeta.astro"
+import MetaPost from "@/components/MetaPost.astro"
 import TagChip from "@/components/TagChip.astro"
 import PagefindMeta from "@/components/PagefindMeta.astro"
 import TableOfContents from "@/components/TableOfContents.astro"
@@ -96,7 +96,7 @@ const crumbs = [
 ---
 
 <Layout crumbs={crumbs}>
-  <PostMeta slot="head" post={post} canonical={parentHref ?? undefined} />
+  <MetaPost slot="head" post={post} canonical={parentHref ?? undefined} />
   <TypesetScript slot="head" />
   {fonts.bodyItalic && (
     <link

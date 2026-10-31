@@ -214,23 +214,23 @@ const tagLinks = (result) =>
 
 const resultNode = (result) => {
   const node = template.content.firstElementChild.cloneNode(true)
-  const part = (name) => node.querySelector(`[data-${name}]`)
+  const part = (selector) => node.querySelector(selector)
 
-  part("link").href = withRoot(result.url)
-  part("link").setAttribute("aria-label", result.title)
-  part("section").textContent = result.sectionLabel
-  part("title").innerHTML = highlight(result.title, result.terms)
+  part(".card-overlay").href = withRoot(result.url)
+  part(".card-overlay").setAttribute("aria-label", result.title)
+  part(".card-eyebrow").textContent = result.sectionLabel
+  part(".card-title").innerHTML = highlight(result.title, result.terms)
 
   const meta = metaItems(result)
-  part("meta").hidden = !meta.length
-  part("meta").replaceChildren(...meta)
+  part(".meta-row").hidden = !meta.length
+  part(".meta-row").replaceChildren(...meta)
 
   const tags = tagLinks(result)
-  part("tags").hidden = !tags.length
-  part("tags").replaceChildren(...tags)
+  part(".chip-list").hidden = !tags.length
+  part(".chip-list").replaceChildren(...tags)
 
-  part("snippet").hidden = !result.snippet
-  part("snippet").innerHTML = highlight(result.snippet, result.terms)
+  part(".card-excerpt").hidden = !result.snippet
+  part(".card-excerpt").innerHTML = highlight(result.snippet, result.terms)
   return node
 }
 

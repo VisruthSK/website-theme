@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { dirname, join } from "node:path"
+import { withoutTemplates } from "../src/integrations/link-check.ts"
 import { PAGE_MARKERS } from "../src/lib/page-styles.ts"
 import { baseOf, expect, test, type Site } from "./sites.ts"
 
@@ -121,7 +122,7 @@ test("every internal link and anchor resolves", ({ site }) => {
     )
   }
   for (const file of pages(site)) {
-    const html = readFileSync(file, "utf8")
+    const html = withoutTemplates(readFileSync(file, "utf8"))
     for (const [, link] of html.matchAll(
       /\s(?:href|src)="(?!\/\/|[a-z][a-z0-9+.-]*:)([^"?]*)"/gi,
     )) {

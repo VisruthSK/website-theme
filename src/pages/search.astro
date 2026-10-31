@@ -1,8 +1,19 @@
 ---
+import EntryCard from "@/components/EntryCard.astro"
 import MetaPage from "@/components/MetaPage.astro"
 import { PAGES, SITE } from "@/consts"
 import Layout from "@/layouts/Layout.astro"
 import searchScriptUrl from "@/scripts/search.js?url&no-inline"
+import type { CardData } from "@/lib/card"
+
+const placeholder: CardData = {
+  href: "#",
+  title: "",
+  eyebrow: " ",
+  excerpt: "",
+  stats: [" "],
+  tags: [" "],
+}
 ---
 
 <Layout crumbs={[{ label: "Search", href: "/search" }]}>
@@ -33,25 +44,22 @@ import searchScriptUrl from "@/scripts/search.js?url&no-inline"
       </label>
     </form>
 
-    <p class="meta-row" data-search-status></p>
+    <p class="meta-row" role="status" data-search-status></p>
   </search-page>
 
   <section data-search-section hidden>
-    <ol data-search-results data-entries aria-live="polite"></ol>
+    <ol
+      data-search-results
+      data-entries
+      aria-label="Search results"
+      aria-live="polite"
+    >
+    </ol>
   </section>
 </Layout>
 
 <template id="search-result-template">
-  <li class="interactive-card search-result">
-    <a class="card-overlay" data-link aria-label=""></a>
-    <div class="card-body">
-        <div class="card-eyebrow" data-section></div>
-        <h3 class="card-title" data-title></h3>
-        <div class="meta-row" data-meta></div>
-        <div class="chip-list" data-tags></div>
-        <p class="card-excerpt" data-snippet></p>
-    </div>
-  </li>
+  <EntryCard {...placeholder} class="search-result" />
 </template>
 
 <script is:inline type="module" src={searchScriptUrl}></script>

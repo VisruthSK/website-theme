@@ -174,7 +174,7 @@ import Ledger from "@/components/Ledger.astro"
 <Ledger title="Reading" description="Books I have read." linkLabel="Review" />
 ```
 
-The component reads the collection named after the lowercase title and is reached at `/` plus that name; pass `entries` or `href` to change either. The `description` is the page description and the line under the heading.
+The component reads the collection given by `collection`, which defaults to the lowercase title, and is reached at `/` plus that name; pass `href` for another path, or `entries` to supply the entries yourself. Pass `searchable={false}` to keep the page out of search. The `description` is the page description and the line under the heading.
 
 Only `title` is required. `creator` is optional and the byline is left out without it. `added` is the date an entry was added to the library: entries are grouped by the year of `ended`, the `started` date of a DNF, or `added`, in that order, and an entry with only `added` shows "Added" and the date. `url` is a full URL or a path on the site. `rating` is a whole number from 1 to 10, or `DNF`. `published` prints what it holds as a normal date: `1962`, `Jun 1962`, `1962-06` and `19620601` all work, and anything else is printed as written. `url` makes the title a link to the work, ideally its DOI, while the rest of the card stays a permalink. `link` names an entry in the collection given as the second argument to `defineLedger`. Pass `dated={false}` to `Ledger` for a plain list in file order with no year headings and no dates. Otherwise entries without an `ended` date are listed last under Undated, and a title read more than once gets `-01`, `-02` permalinks in the order the readings ended. Each entry is also its own search result.
 
@@ -191,6 +191,8 @@ Pass `ratings` to `Ledger` to show a bar chart of how many entries have each rat
 `Page` is the shell for a list or text page: it renders the layout, the page meta, an optional feed link, the heading and the content. It takes `title`, `description`, `crumb` (the page's own path, for the breadcrumb), `feed`, `noindex`, `metaTitle` when the meta title differs from the heading, `headingHtml` for a heading that contains markup, and `body="div" | "article"` to wrap the page in Pagefind's indexed region. Content goes in the default slot, extra head tags in `slot="head"` and a line under the heading in `slot="intro"`.
 
 `EntryCard` renders a `CardData` value (`href`, `title`, and optionally `eyebrow`, `excerpt`, `date`, `stats`, `series` and `tags`), so anything that can describe itself that way gets the same card. `PostCard` adapts a post to it, and `RecentlyAdded` and a site's own index pages pass the fields directly. `Card` is the bare shell for a card with other contents, as `LedgerCard` does. `EntryGroup` wraps a heading and a list of cards, and `groupByYear` splits entries into year groups, newest first, with an Undated group last.
+
+The search page marks its results list `aria-label="Search results"` and its status line `role="status"`, so tests can find them by role instead of by class.
 
 ## Overlay and shadowing
 

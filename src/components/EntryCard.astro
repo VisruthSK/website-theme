@@ -5,7 +5,7 @@ import TagChip from "@/components/TagChip.astro"
 import type { CardData } from "@/lib/card"
 import { formatTitleAsHtml } from "@/lib/text"
 
-type Props = CardData & { heading?: "h2" | "h3" }
+type Props = CardData & { heading?: "h2" | "h3"; class?: string }
 
 const {
   href,
@@ -17,10 +17,11 @@ const {
   series,
   tags = [],
   heading: Heading = "h3",
+  class: className,
 } = Astro.props
 ---
 
-<Card href={href} label={title}>
+<Card href={href} label={title} class={className}>
   {eyebrow && <div class="card-eyebrow">{eyebrow}</div>}
   <Heading class="card-title" set:html={formatTitleAsHtml(title)} />
   {excerpt !== undefined && <p class="card-excerpt">{excerpt}</p>}
