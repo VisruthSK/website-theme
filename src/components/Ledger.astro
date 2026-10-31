@@ -10,23 +10,21 @@ import {
   ledgerPermalinks,
   type LedgerEntry,
 } from '@/lib/ledger'
+import { getCollection } from 'astro:content'
 
 type Props = {
-  entries: LedgerEntry[]
   title: string
-  href: string
   description: string
-  intro?: string
+  entries?: LedgerEntry[]
+  href?: string
   linkLabel?: string
 }
 
+const { title, description, linkLabel = 'Link' } = Astro.props
+const name = title.toLowerCase()
 const {
-  entries,
-  title,
-  href,
-  description,
-  intro = description,
-  linkLabel = 'Link',
+  entries = (await getCollection(name as never)) as LedgerEntry[],
+  href = `/${name}`,
 } = Astro.props
 
 const groups = ledgerGroups(entries)
@@ -43,7 +41,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     <page-heading>
       <h1>{title}</h1>
     </page-heading>
-    <p class="intro">{intro}</p>
+    <p class="intro">{description}</p>
 
     {
       groups.map(({ heading, entries: group }) => (

@@ -165,17 +165,16 @@ export const collections = defineCollections({
 ---
 // src/pages/reading.astro
 import Ledger from '@/components/Ledger.astro'
-import { getCollection } from 'astro:content'
 ---
 
 <Ledger
   title="Reading"
-  href="/reading"
   description="Books I have read."
   linkLabel="Review"
-  entries={await getCollection('reading')}
 />
 ```
+
+The component reads the collection named after the lowercase title and is reached at `/` plus that name; pass `entries` or `href` to change either. The `description` is the page description and the line under the heading.
 
 Only `title` and `creator` are required. `rating` is a whole number from 1 to 10, or `DNF`. `published` prints what it holds as a normal date: `1962`, `Jun 1962`, `1962-06` and `19620601` all work, and anything else is printed as written. `link` names an entry in the collection given as the second argument to `defineLedger`. Entries without an `ended` date are listed last under Undated, and a title read more than once gets `-01`, `-02` permalinks in the order the readings ended. Each entry is also its own search result.
 
