@@ -83,6 +83,8 @@ and a `theme.json`, described below. Because `theme/` is a workspace package, `p
 
 `themeConfig` takes a second argument, an Astro config merged over the theme's, for site-only settings such as the dev server port.
 
+The build fails on any internal link in the built pages whose page or file does not exist, or whose `#anchor` matches no element `id` on the target page.
+
 HTML files in `public/`, such as slide decks, are copied through untouched and left out of the theme's link check, font subsetting and style rewriting.
 
 Content goes in `src/content/<collection>/` for each section and `src/content/pages/` for standalone pages, fonts in `src/assets/fonts/`, and bibliographies in `src/data/bibliographies/`. The build writes generated files to `src/generated/`, which should be ignored by git.

@@ -1,12 +1,12 @@
 import type { AstroIntegration } from 'astro'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { siteHtmlPages } from './html-pages'
 
 const INTERNAL_REFERENCE =
-  /\s(?:href|src)="(?!\/\/|[a-z][a-z0-9+.-]*:|#)([^"#?]+)/gi
+  /\s(?:href|src)="(?!\/\/|[a-z][a-z0-9+.-]*:)([^"#?]*)[^"#]*(?:#([^"]*))?"/gi
 
 const decode = (value: string) => {
   try {
@@ -35,23 +35,48 @@ export function linkCheck(publicDir: string, base: string): AstroIntegration {
         const redirects = redirectSources(
           existsSync(redirectsFile) ? readFileSync(redirectsFile, 'utf8') : '',
         )
-        const exists = (path: string) =>
-          [path, `${path}.html`, join(path, 'index.html')].some(existsSync)
+        const find = (path: string) =>
+          [path, `${path}.html`, join(path, 'index.html')].find(
+            (candidate) =>
+              existsSync(candidate) && statSync(candidate).isFile(),
+          )
+        const ids = new Map<string, Set<string>>()
+        const hasId = (file: string, id: string) => {
+          if (!ids.has(file)) {
+            const html = readFileSync(file, 'utf8')
+            ids.set(
+              file,
+              new Set(
+                [...html.matchAll(/\sid="([^"]*)"/g)].map(([, id]) => id),
+              ),
+            )
+          }
+          return ids.get(file)!.has(id)
+        }
         const broken: string[] = []
 
         for await (const file of siteHtmlPages(root, publicDir)) {
           const page = join(root, file)
-          for (const [, link] of readFileSync(page, 'utf8').matchAll(
+          for (const [, link, fragment] of readFileSync(page, 'utf8').matchAll(
             INTERNAL_REFERENCE,
           )) {
             const path = decode(link)
             const inside = !base || path === base || path.startsWith(`${base}/`)
-            const target = path.startsWith('/')
-              ? join(root, path.slice(base.length))
-              : resolve(dirname(page), path)
+            const target = !path
+              ? page
+              : path.startsWith('/')
+                ? join(root, path.slice(base.length))
+                : resolve(dirname(page), path)
             const found =
-              path.startsWith('/') && !inside ? false : exists(target)
-            if (!found && !redirects.has(path)) broken.push(`${file}: ${link}`)
+              path.startsWith('/') && !inside ? undefined : find(target)
+            const missing = found
+              ? fragment &&
+                !fragment.startsWith('/') &&
+                found.endsWith('.html') &&
+                !hasId(found, decode(fragment))
+              : !redirects.has(path)
+            if (missing)
+              broken.push(`${file}: ${link}${fragment ? `#${fragment}` : ''}`)
           }
         }
 
