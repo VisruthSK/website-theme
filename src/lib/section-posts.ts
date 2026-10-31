@@ -1,12 +1,12 @@
-import { SECTIONS, SECTION_SLUGS } from '@/consts'
+import { SECTIONS, SECTION_SLUGS } from "@/consts"
 import {
   getAllPostsAndSubposts,
   getAllPostsAndSubpostsChrono,
   type PostEntry,
-} from '@/lib/data-utils'
+} from "@/lib/data-utils"
 
 async function collect(
-  load: (collection: PostEntry['collection']) => Promise<PostEntry[]>,
+  load: (collection: PostEntry["collection"]) => Promise<PostEntry[]>,
 ) {
   const perSection = await Promise.all(
     SECTION_SLUGS.map((slug) => load(SECTIONS[slug].collection)),

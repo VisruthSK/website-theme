@@ -1,0 +1,27 @@
+---
+import type { HTMLAttributes } from "astro/types"
+
+import Time from "@/components/Time.astro"
+
+type Props = HTMLAttributes<"div"> & {
+  date?: Date
+  items?: (string | false | undefined)[]
+}
+
+const { date, items = [], class: className, ...attributes } = Astro.props
+const parts = items.filter((item): item is string => Boolean(item))
+---
+
+{
+  (date || parts.length > 0) && (
+    <div class:list={["meta-row", className]} {...attributes}>
+      {date && <span><Time date={date} /></span>}
+      {parts.map((part, index) => (
+        <>
+          {(date || index > 0) && <span class="meta-divider" aria-hidden="true" />}
+          <span>{part}</span>
+        </>
+      ))}
+    </div>
+  )
+}

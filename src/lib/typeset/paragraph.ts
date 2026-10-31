@@ -1,8 +1,8 @@
-import type { Run } from '@kitlangton/justice'
-import type { Element, ElementContent } from 'hast'
+import type { Run } from "@kitlangton/justice"
+import type { Element, ElementContent } from "hast"
 
 export interface Style {
-  face: 'roman' | 'italic' | 'bold' | 'mono'
+  face: "roman" | "italic" | "bold" | "mono"
   size: number
   smallCaps: boolean
   spacing: number
@@ -22,7 +22,7 @@ export interface Source {
 export class Unsupported extends Error {}
 
 export const ROMAN: Style = {
-  face: 'roman',
+  face: "roman",
   size: 1,
   smallCaps: false,
   spacing: 0,
@@ -31,7 +31,7 @@ const SUPERSCRIPT = 1 / 1.2
 const CODE_SIZE = 0.75
 const CODE_PADDING = 0.3 * CODE_SIZE
 const ICON_WIDTH = 0.85
-const NEUTRAL = new Set(['span', 'a', 'del', 'ins', 'mark', 'abbr'])
+const NEUTRAL = new Set(["span", "a", "del", "ins", "mark", "abbr"])
 
 export const classes = (element: Element): string[] =>
   Array.isArray(element.properties.className)
@@ -58,7 +58,7 @@ export function readParagraph(paragraph: Element): Source {
     for (const piece of raw.split(/([ \t\r\n\f]+)/)) {
       if (!piece) continue
       if (/^[ \t\r\n\f]+$/.test(piece)) {
-        if (length && !runs.at(-1)?.text.endsWith(' ')) push(' ', style)
+        if (length && !runs.at(-1)?.text.endsWith(" ")) push(" ", style)
       } else {
         push(piece, style)
       }
@@ -66,8 +66,8 @@ export function readParagraph(paragraph: Element): Source {
   }
 
   const walk = (node: ElementContent, style: Style) => {
-    if (node.type === 'text') return append(node.value, style)
-    if (node.type !== 'element') return
+    if (node.type === "text") return append(node.value, style)
+    if (node.type !== "element") return
     element(node, style)
   }
 
@@ -78,23 +78,23 @@ export function readParagraph(paragraph: Element): Source {
   const element = (node: Element, style: Style) => {
     const own = classes(node)
     switch (node.tagName) {
-      case 'side-note':
+      case "side-note":
         return
-      case 'em':
-      case 'i':
-        if (style.face === 'bold') throw new Unsupported('italic inside bold')
-        return children(node, { ...style, face: 'italic' })
-      case 'strong':
-      case 'b':
-        if (style.face !== 'roman') {
-          throw new Unsupported('bold inside another face')
+      case "em":
+      case "i":
+        if (style.face === "bold") throw new Unsupported("italic inside bold")
+        return children(node, { ...style, face: "italic" })
+      case "strong":
+      case "b":
+        if (style.face !== "roman") {
+          throw new Unsupported("bold inside another face")
         }
-        return children(node, { ...style, face: 'bold' })
-      case 'sup':
+        return children(node, { ...style, face: "bold" })
+      case "sup":
         return children(node, { ...style, size: style.size * SUPERSCRIPT })
-      case 'code': {
-        if (style.face === 'bold') throw new Unsupported('code inside bold')
-        const code = { ...style, face: 'mono' as const, size: CODE_SIZE }
+      case "code": {
+        if (style.face === "bold") throw new Unsupported("code inside bold")
+        const code = { ...style, face: "mono" as const, size: CODE_SIZE }
         gaps.push({ offset: length, width: CODE_PADDING })
         children(node, code)
         gaps.push({ offset: length, width: CODE_PADDING })
@@ -102,27 +102,27 @@ export function readParagraph(paragraph: Element): Source {
       }
     }
 
-    if (node.tagName === 'span') {
-      if (own.includes('drop-cap')) {
+    if (node.tagName === "span") {
+      if (own.includes("drop-cap")) {
         const letter = node.children
-          .filter((child) => child.type === 'text')
+          .filter((child) => child.type === "text")
           .map((child) => child.value)
-          .join('')
+          .join("")
         if (length || letter.length !== 1) {
-          throw new Unsupported('drop cap is not a single leading letter')
+          throw new Unsupported("drop cap is not a single leading letter")
         }
         cap = letter
         return push(letter, null)
       }
 
-      if (own.includes('opening-words')) {
+      if (own.includes("opening-words")) {
         return children(node, { ...style, smallCaps: true, spacing: 0.03 })
       }
 
-      if (own.includes('external-link-icon-wrap')) {
+      if (own.includes("external-link-icon-wrap")) {
         for (const child of node.children) {
-          if (child.type === 'text') walk(child, style)
-          else if (child.type === 'element' && child.tagName !== 'svg') {
+          if (child.type === "text") walk(child, style)
+          else if (child.type === "element" && child.tagName !== "svg") {
             throw new Unsupported(`unexpected <${child.tagName}> in link icon`)
           }
         }
@@ -137,7 +137,7 @@ export function readParagraph(paragraph: Element): Source {
 
   children(paragraph, ROMAN)
   const last = runs.at(-1)
-  if (last?.text.endsWith(' ')) {
+  if (last?.text.endsWith(" ")) {
     last.text = last.text.slice(0, -1)
     if (!last.text) runs.pop()
   }

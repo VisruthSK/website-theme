@@ -1,9 +1,9 @@
-import type { AstroIntegration } from 'astro'
-import { existsSync, readFileSync, statSync } from 'node:fs'
+import type { AstroIntegration } from "astro"
+import { existsSync, readFileSync, statSync } from "node:fs"
 
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { siteHtmlPages } from './html-pages'
+import { dirname, join, resolve } from "node:path"
+import { fileURLToPath } from "node:url"
+import { siteHtmlPages } from "./html-pages"
 
 const INTERNAL_REFERENCE =
   /\s(?:href|src)="(?!\/\/|[a-z][a-z0-9+.-]*:)([^"#?]*)[^"#]*(?:#([^"]*))?"/gi
@@ -19,31 +19,31 @@ const decode = (value: string) => {
 export const redirectSources = (text: string) =>
   new Set(
     text
-      .split('\n')
+      .split("\n")
       .map((line) => line.trim().split(/\s+/)[0])
-      .filter((source) => source && !source.startsWith('#'))
+      .filter((source) => source && !source.startsWith("#"))
       .map(decode),
   )
 
 export function linkCheck(publicDir: string, base: string): AstroIntegration {
   return {
-    name: 'link-check',
+    name: "link-check",
     hooks: {
-      'astro:build:done': async ({ dir }) => {
+      "astro:build:done": async ({ dir }) => {
         const root = fileURLToPath(dir)
-        const redirectsFile = join(root, '_redirects')
+        const redirectsFile = join(root, "_redirects")
         const redirects = redirectSources(
-          existsSync(redirectsFile) ? readFileSync(redirectsFile, 'utf8') : '',
+          existsSync(redirectsFile) ? readFileSync(redirectsFile, "utf8") : "",
         )
         const find = (path: string) =>
-          [path, `${path}.html`, join(path, 'index.html')].find(
+          [path, `${path}.html`, join(path, "index.html")].find(
             (candidate) =>
               existsSync(candidate) && statSync(candidate).isFile(),
           )
         const ids = new Map<string, Set<string>>()
         const hasId = (file: string, id: string) => {
           if (!ids.has(file)) {
-            const html = readFileSync(file, 'utf8')
+            const html = readFileSync(file, "utf8")
             ids.set(
               file,
               new Set(
@@ -57,31 +57,31 @@ export function linkCheck(publicDir: string, base: string): AstroIntegration {
 
         for await (const file of siteHtmlPages(root, publicDir)) {
           const page = join(root, file)
-          for (const [, link, fragment] of readFileSync(page, 'utf8').matchAll(
+          for (const [, link, fragment] of readFileSync(page, "utf8").matchAll(
             INTERNAL_REFERENCE,
           )) {
             const path = decode(link)
             const inside = !base || path === base || path.startsWith(`${base}/`)
             const target = !path
               ? page
-              : path.startsWith('/')
+              : path.startsWith("/")
                 ? join(root, path.slice(base.length))
                 : resolve(dirname(page), path)
             const found =
-              path.startsWith('/') && !inside ? undefined : find(target)
+              path.startsWith("/") && !inside ? undefined : find(target)
             const missing = found
               ? fragment &&
-                !fragment.startsWith('/') &&
-                found.endsWith('.html') &&
+                !fragment.startsWith("/") &&
+                found.endsWith(".html") &&
                 !hasId(found, decode(fragment))
               : !redirects.has(path)
             if (missing)
-              broken.push(`${file}: ${link}${fragment ? `#${fragment}` : ''}`)
+              broken.push(`${file}: ${link}${fragment ? `#${fragment}` : ""}`)
           }
         }
 
         if (broken.length)
-          throw new Error(`Broken links:\n${broken.join('\n')}`)
+          throw new Error(`Broken links:\n${broken.join("\n")}`)
       },
     },
   }

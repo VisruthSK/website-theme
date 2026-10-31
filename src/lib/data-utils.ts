@@ -1,8 +1,9 @@
-import { getCollection, type CollectionEntry } from 'astro:content'
+import { getCollection, type CollectionEntry } from "astro:content"
 
-import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
-import { calculateWordCountFromHtml, readingTime } from '@/lib/site-utils'
-import type { ContentCollection } from '@/types'
+import { COLLECTION_TO_SECTION, SECTIONS } from "@/consts"
+import { calculateWordCountFromHtml, readingTime } from "@/lib/site-utils"
+import { formatCount } from "@/lib/text"
+import type { ContentCollection } from "@/types"
 
 type EntryFor<C extends ContentCollection> = CollectionEntry<C>
 export type PostEntry = CollectionEntry<ContentCollection>
@@ -22,11 +23,11 @@ const slugOf = (name: string) =>
   name
     .trim()
     .toLowerCase()
-    .replace(/[\s_-]+/g, '-')
+    .replace(/[\s_-]+/g, "-")
 
-export const isSubpost = (postId: string) => postId.includes('/')
+export const isSubpost = (postId: string) => postId.includes("/")
 
-export const getParentId = (subpostId: string) => subpostId.split('/')[0]
+export const getParentId = (subpostId: string) => subpostId.split("/")[0]
 
 export function getPostHref(entry: PostEntry): string {
   const section = SECTIONS[COLLECTION_TO_SECTION[entry.collection]]
@@ -58,23 +59,23 @@ function inListedOrder<T extends PostEntry>(
   parent: string,
 ): T[] {
   const bySlug = new Map(
-    subposts.map((post) => [slugOf(post.id.split('/')[1]), post]),
+    subposts.map((post) => [slugOf(post.id.split("/")[1]), post]),
   )
   const names = order
     .map((entry) =>
       entry
         .trim()
-        .replace(/\\/g, '/')
-        .split('/')
+        .replace(/\\/g, "/")
+        .split("/")
         .pop()!
-        .replace(/\.md$/i, '')
+        .replace(/\.md$/i, "")
         .trim(),
     )
     .filter(Boolean)
   const missing = names.filter((name) => !bySlug.has(slugOf(name)))
   if (missing.length > 0) {
     throw new Error(
-      `Subpost ordering error for parent "${parent}": entries not found: [${missing.join(', ')}]. Existing subposts: [${[...bySlug.keys()].join(', ') || '(none)'}]`,
+      `Subpost ordering error for parent "${parent}": entries not found: [${missing.join(", ")}]. Existing subposts: [${[...bySlug.keys()].join(", ") || "(none)"}]`,
     )
   }
   return names.map((name) => bySlug.get(slugOf(name))!)
@@ -128,7 +129,7 @@ export async function getAllTags(
   const counts = new Map<string, number>()
   for (const collection of [collections].flat()) {
     for (const post of await getAllPosts(collection)) {
-      const drafted = INCLUDE_DRAFTS && post.data.draft ? ['draft'] : []
+      const drafted = INCLUDE_DRAFTS && post.data.draft ? ["draft"] : []
       for (const tag of [...(post.data.tags ?? []), ...drafted]) {
         counts.set(tag, (counts.get(tag) ?? 0) + 1)
       }
@@ -152,20 +153,7 @@ export async function getPostsByTag<C extends ContentCollection>(
 ): Promise<EntryFor<C>[]> {
   const posts = await getAllPosts(collection)
   return posts.filter((post) =>
-    tag === 'draft' ? post.data.draft : post.data.tags?.includes(tag),
-  )
-}
-
-export function groupPostsByYear<C extends ContentCollection>(
-  posts: EntryFor<C>[],
-): Record<string, EntryFor<C>[]> {
-  return posts.reduce(
-    (groups, post) => {
-      const year = post.data.date.getFullYear().toString()
-      ;(groups[year] ??= []).push(post)
-      return groups
-    },
-    {} as Record<string, EntryFor<C>[]>,
+    tag === "draft" ? post.data.draft : post.data.tags?.includes(tag),
   )
 }
 
@@ -191,6 +179,18 @@ export async function getPostStats(post: PostEntry) {
   }
 }
 
+export function postStatItems(stats: Awaited<ReturnType<typeof getPostStats>>) {
+  const combined =
+    stats.combinedWordCount !== null &&
+    stats.combinedWordCount !== stats.wordCount
+  return [
+    `${formatCount(stats.wordCount)} words${combined ? ` (${formatCount(stats.combinedWordCount!)} total)` : ""}`,
+    `${stats.readingTime}${combined ? ` (${stats.combinedReadingTime} total)` : ""}`,
+    stats.subpostCount > 0 &&
+      `${stats.subpostCount} chapter${stats.subpostCount === 1 ? "" : "s"}`,
+  ]
+}
+
 type RenderedHeading = {
   slug: string
   text: string
@@ -201,12 +201,12 @@ export function withReferencesHeading(
   headings: RenderedHeading[],
   hasBibliography: boolean,
 ): RenderedHeading[] {
-  const hadReferences = headings.some(({ slug }) => slug === 'references')
+  const hadReferences = headings.some(({ slug }) => slug === "references")
   const next = headings.filter(
-    ({ slug }) => slug !== 'references' && slug !== 'footnotes',
+    ({ slug }) => slug !== "references" && slug !== "footnotes",
   )
   if (hasBibliography || hadReferences) {
-    next.push({ slug: 'references', text: 'References', depth: 2 })
+    next.push({ slug: "references", text: "References", depth: 2 })
   }
   return next
 }

@@ -1,7 +1,7 @@
-import { SECTIONS, SECTION_SLUGS, SITE } from '@/consts'
-import { getAllTags, getPostHref, getPostsByTag } from '@/lib/data-utils'
-import { renderFeed } from '@/lib/feed'
-import type { APIContext, GetStaticPaths } from 'astro'
+import { SECTIONS, SECTION_SLUGS, SITE } from "@/consts"
+import { getAllTags, getPostHref, getPostsByTag } from "@/lib/data-utils"
+import { renderFeed } from "@/lib/feed"
+import type { APIContext, GetStaticPaths } from "astro"
 
 const collections = SECTION_SLUGS.map((slug) => SECTIONS[slug].collection)
 
@@ -16,7 +16,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export async function GET(context: APIContext) {
   const raw = context.params?.tag
   if (!raw) {
-    return new Response('Tag not specified', { status: 400 })
+    return new Response("Tag not specified", { status: 400 })
   }
 
   const tag = decodeURIComponent(raw)

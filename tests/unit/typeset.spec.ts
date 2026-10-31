@@ -1,15 +1,15 @@
-import { expect, test } from '@playwright/test'
-import { SITES } from '../sites.ts'
-import { typesetConstants } from '../../src/lib/typeset/constants.ts'
-import { decodePlan, encodePlan } from '../../src/lib/typeset/encode.ts'
-import { loadFaces, typefaceFiles } from '../../src/lib/typeset/fonts.ts'
-import { edgeTables } from '../../src/lib/typeset/optical.ts'
-import { Unsupported } from '../../src/lib/typeset/paragraph.ts'
+import { expect, test } from "@playwright/test"
+import { SITES } from "../sites.ts"
+import { typesetConstants } from "../../src/lib/typeset/constants.ts"
+import { decodePlan, encodePlan } from "../../src/lib/typeset/encode.ts"
+import { loadFaces, typefaceFiles } from "../../src/lib/typeset/fonts.ts"
+import { edgeTables } from "../../src/lib/typeset/optical.ts"
+import { Unsupported } from "../../src/lib/typeset/paragraph.ts"
 
 const { theme } = SITES.example
 const { constants, source } = typesetConstants(theme.prose)
 
-test('the planner and the renderer read the same constants', async () => {
+test("the planner and the renderer read the same constants", async () => {
   const module = await import(
     `data:text/javascript,${encodeURIComponent(source)}`
   )
@@ -23,7 +23,7 @@ test('the planner and the renderer read the same constants', async () => {
   })
 })
 
-test('plans survive an encode and decode round trip', () => {
+test("plans survive an encode and decode round trip", () => {
   const header = { words: 120, indent: constants.INDENT, cap: 2.4 }
   const bands = [
     { from: 540, breaks: [9, 18, 27, 36] },
@@ -35,7 +35,7 @@ test('plans survive an encode and decode round trip', () => {
   expect(decodePlan(encoded, constants)).toEqual({ header, bands })
 })
 
-test('lines too long to encode fall back to native breaking', () => {
+test("lines too long to encode fall back to native breaking", () => {
   const encoded = encodePlan(
     { words: 80, indent: 0, cap: 0 },
     [{ from: 540, breaks: [40, 80] }],
@@ -46,13 +46,13 @@ test('lines too long to encode fall back to native breaking', () => {
   ])
 })
 
-test('typeface files follow the configured body faces', () => {
+test("typeface files follow the configured body faces", () => {
   expect(typefaceFiles(theme.fonts)).toEqual({
-    roman: 'plex-sans-400-normal.woff2',
-    italic: 'plex-sans-400-italic.woff2',
-    bold: 'plex-sans-600-normal.woff2',
-    mono: 'plex-mono-400-normal.woff2',
-    cap: 'plex-sans-600-normal.woff2',
+    roman: "plex-sans-400-normal.woff2",
+    italic: "plex-sans-400-italic.woff2",
+    bold: "plex-sans-600-normal.woff2",
+    mono: "plex-mono-400-normal.woff2",
+    cap: "plex-sans-600-normal.woff2",
   })
   expect(typefaceFiles(SITES.minimal.theme.fonts).mono).toBeUndefined()
 })
@@ -64,26 +64,26 @@ for (const site of Object.values(SITES)) {
       typefaceFiles(site.theme.fonts),
     )
     const edges = edgeTables(faces)
-    for (const mark of ['.', ',', '”', '’']) {
+    for (const mark of [".", ",", "”", "’"]) {
       const [advance, , right] = edges.roman[mark]
       expect(right, mark).toBeCloseTo(advance, 6)
     }
-    expect(edges.roman.n?.[1] ?? 0).toBeLessThan(edges.roman['“'][1])
-    expect(edges.roman['“'][1]).toBeGreaterThan(0)
+    expect(edges.roman.n?.[1] ?? 0).toBeLessThan(edges.roman["“"][1])
+    expect(edges.roman["“"][1]).toBeGreaterThan(0)
     expect(Object.keys(edges.roman).length).toBeGreaterThan(10)
     if (!site.theme.fonts.mono) {
-      expect(() => faces('mono', [])).toThrow(Unsupported)
+      expect(() => faces("mono", [])).toThrow(Unsupported)
     }
   })
 }
 
-test('a missing glyph is named as a whole character, even outside the BMP', async () => {
+test("a missing glyph is named as a whole character, even outside the BMP", async () => {
   const { theme, dir } = SITES.example
   const faces = await loadFaces(
     `${dir}/${theme.fonts.directory}`,
     typefaceFiles(theme.fonts),
   )
-  expect(faces('roman', []).missing('é漢')).toEqual(['漢'])
-  expect(faces('roman', []).missing('😀漢')).toEqual(['😀', '漢'])
-  expect(faces('roman', []).missing('plain')).toEqual([])
+  expect(faces("roman", []).missing("é漢")).toEqual(["漢"])
+  expect(faces("roman", []).missing("😀漢")).toEqual(["😀", "漢"])
+  expect(faces("roman", []).missing("plain")).toEqual([])
 })

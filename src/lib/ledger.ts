@@ -1,10 +1,12 @@
+import { groupByYear } from "./group"
+
 export interface LedgerEntry {
   id: string
   data: {
     title: string
     creator?: string
     published?: Date | string | number
-    rating?: number | 'DNF'
+    rating?: number | "DNF"
     favorite: boolean
     started?: Date
     ended?: Date
@@ -18,35 +20,21 @@ export interface LedgerEntry {
 const UNDATED = Number.MAX_SAFE_INTEGER
 
 const ledgerDate = ({ data }: LedgerEntry) =>
-  data.ended ?? (data.rating === 'DNF' ? data.started : undefined) ?? data.added
+  data.ended ?? (data.rating === "DNF" ? data.started : undefined) ?? data.added
 
 const endedTime = (entry: LedgerEntry) =>
   ledgerDate(entry)?.valueOf() ?? UNDATED
 
 export const slugify = (text: string) =>
   text
-    .normalize('NFKD')
-    .replace(/\p{M}/gu, '')
+    .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
 
-export function ledgerGroups<T extends LedgerEntry>(entries: T[]) {
-  const years = Map.groupBy(
-    entries.filter((entry) => ledgerDate(entry)),
-    (entry) => ledgerDate(entry)!.getUTCFullYear(),
-  )
-  const groups = [...years]
-    .sort(([a], [b]) => b - a)
-    .map(([year, group]) => ({
-      heading: String(year),
-      entries: group.toSorted((a, b) => endedTime(b) - endedTime(a)),
-    }))
-  const undated = entries.filter((entry) => !ledgerDate(entry))
-  return undated.length
-    ? [...groups, { heading: 'Undated', entries: undated }]
-    : groups
-}
+export const ledgerGroups = <T extends LedgerEntry>(entries: T[]) =>
+  groupByYear(entries, ledgerDate, (a, b) => endedTime(b) - endedTime(a))
 
 export function ledgerPermalinks(entries: LedgerEntry[]) {
   const counts = new Map<string, number>()
@@ -57,7 +45,7 @@ export function ledgerPermalinks(entries: LedgerEntry[]) {
         const base = slugify(data.title)
         const count = (counts.get(base) ?? 0) + 1
         counts.set(base, count)
-        return [id, `${base}-${String(count).padStart(2, '0')}`] as const
+        return [id, `${base}-${String(count).padStart(2, "0")}`] as const
       }),
   )
 }

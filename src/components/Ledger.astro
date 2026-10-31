@@ -1,22 +1,12 @@
 ---
-import Link from '@/components/Link.astro'
-import MetaPage from '@/components/MetaPage.astro'
-import PageHeading from '@/components/PageHeading.astro'
-import PageIntro from '@/components/PageIntro.astro'
-import PagefindMeta from '@/components/PagefindMeta.astro'
-import RatingSpread from '@/components/RatingSpread.astro'
-import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
-import Layout from '@/layouts/Layout.astro'
-import { withBase } from '@/lib/base'
-import { formatDate, formatLooseDate } from '@/lib/dates'
-import {
-  dateRange,
-  ledgerGroups,
-  ledgerPermalinks,
-  type LedgerEntry,
-} from '@/lib/ledger'
-import { getCollection } from 'astro:content'
-import { renderLedgerNote } from '@/lib/ledger-note'
+import EntryGroup from "@/components/EntryGroup.astro"
+import LedgerCard from "@/components/LedgerCard.astro"
+import Page from "@/components/Page.astro"
+import PageIntro from "@/components/PageIntro.astro"
+import PagefindMeta from "@/components/PagefindMeta.astro"
+import RatingSpread from "@/components/RatingSpread.astro"
+import { ledgerGroups, ledgerPermalinks, type LedgerEntry } from "@/lib/ledger"
+import { getLedger } from "@/lib/ledger-entries"
 
 type Props = {
   title: string
@@ -32,230 +22,52 @@ type Props = {
 const {
   title,
   description,
-  linkLabel = 'Link',
+  linkLabel = "Link",
   dated = true,
   ratings = false,
   feed,
 } = Astro.props
 const name = title.toLowerCase()
 const {
-  entries = (await getCollection(name as never)) as LedgerEntry[],
+  entries = await getLedger(name),
   href = `/${name}`,
 } = Astro.props
 
-const groups = dated ? ledgerGroups(entries) : [{ heading: '', entries }]
+const groups = dated ? ledgerGroups(entries) : [{ heading: "", entries }]
 const permalinks = ledgerPermalinks(entries)
-const linkHref = ({ collection, id }: { collection: string; id: string }) =>
-  `${SECTIONS[COLLECTION_TO_SECTION[collection]].href}/${id}/`
 ---
 
-<Layout crumbs={[{ label: title, href }]}>
-  <MetaPage slot="head" title={title} description={description} />
+<Page
+  title={title}
+  description={description}
+  crumb={href}
+  feed={feed}
+  body="div"
+>
   <PagefindMeta slot="head" sectionLabel={title} entries />
-  {
-    feed && (
-      <link
-        slot="head"
-        rel="alternate"
-        type="application/rss+xml"
-        title={feed.label}
-        href={new URL(withBase(feed.href), Astro.site ?? Astro.url.origin).href}
-      />
-    )
-  }
-
-  <div data-pagefind-body>
-    <PageHeading title={title} feed={feed} />
-    {description && <PageIntro>{description}</PageIntro>}
-    {ratings && <RatingSpread entries={entries} />}
-
+  <Fragment slot="intro">
     {
-      groups.map(({ heading, entries: group }) => (
-        <entry-group>
-          {heading && <h2 data-year>{heading}</h2>}
-          <ul data-entries>
-            {group.map(({ id, data }) => {
-              const permalink = permalinks.get(id)!
-              const { dates, open } = dated ? dateRange(data.started, data.ended) : { dates: [], open: false }
-              const hasDetails = Boolean(data.note || data.link)
-              return (
-                <li
-                  class="interactive-card"
-                  data-favorite={data.favorite || undefined}
-                >
-                  <a
-                    class="card-overlay"
-                    href={`#${permalink}`}
-                    aria-label={`${data.title}, permalink`}
-                  />
-                  <div class="card-body">
-                    <div class="head">
-                      <div>
-                        <h3 class="card-title" id={permalink} data-prose>
-                          {data.url ? <Link href={withBase(data.url)}>{data.title}</Link> : data.title}
-                        </h3>
-                        {(data.creator || data.published) && (
-                          <p class="meta-row byline">
-                            {data.creator && <span>{data.creator}</span>}
-                            {data.published && (
-                              <>
-                                {data.creator && <span class="meta-divider" aria-hidden="true" />}
-                                <span>{formatLooseDate(data.published)}</span>
-                              </>
-                            )}
-                          </p>
-                        )}
-                        {dated && dates.length === 0 && data.added && (
-                          <p class="meta-row" data-pagefind-ignore>
-                            <span>
-                              Added <time datetime={data.added.toISOString()}>{formatDate(data.added)}</time>
-                            </span>
-                          </p>
-                        )}
-                        {dates.length > 0 && (
-                          <p class="meta-row" data-pagefind-ignore>
-                            <span>
-                              {dates.map((date, index) => (
-                                <>
-                                  {index > 0 && ' – '}
-                                  <time datetime={date.toISOString()}>
-                                    {formatDate(date)}
-                                  </time>
-                                </>
-                              ))}
-                              {open && ' –'}
-                            </span>
-                          </p>
-                        )}
-                      </div>
-                      {(data.rating !== undefined || (data.favorite && !hasDetails)) && (
-                        <div class="side" data-pagefind-ignore>
-                          {data.rating === 'DNF' ? (
-                            <span class="dnf">DNF</span>
-                          ) : (
-                            data.rating !== undefined && (
-                              <span class="score">{data.rating}</span>
-                            )
-                          )}
-                          {data.favorite && !hasDetails && <span class="chip">Favorite</span>}
-                        </div>
-                      )}
-                    </div>
-                    {hasDetails && (
-                      <div class:list={['ledger-details', !data.note && 'without-note']}>
-                        <div class="details-body">
-                          {data.note && (
-                            <prose-content class="note card-excerpt" data-compact set:html={renderLedgerNote(data.note)} />
-                          )}
-                          {data.link && (
-                            <p class="link card-excerpt" data-prose data-pagefind-ignore>
-                              <a href={linkHref(data.link)}>{linkLabel}</a>
-                            </p>
-                          )}
-                        </div>
-                        {data.favorite && <span class="chip" data-pagefind-ignore>Favorite</span>}
-                      </div>
-                    )}
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
-        </entry-group>
-      ))
+      (description || Astro.slots.has("intro")) && (
+        <PageIntro>
+          {description}
+          <slot name="intro" />
+        </PageIntro>
+      )
     }
-  </div>
-</Layout>
-
-<style>
-  .card-title {
-    scroll-margin-block-start: calc(var(--space-s) + 1rem);
+  </Fragment>
+  {ratings && <RatingSpread entries={entries} />}
+  {
+    groups.map(({ heading, entries: group }) => (
+      <EntryGroup heading={heading} year>
+        {group.map((entry) => (
+          <LedgerCard
+            entry={entry}
+            permalink={permalinks.get(entry.id)!}
+            dated={dated}
+            linkLabel={linkLabel}
+          />
+        ))}
+      </EntryGroup>
+    ))
   }
-
-  li:has(:target) {
-    border-color: var(--flourish);
-  }
-
-  .head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--space-s);
-  }
-
-  .meta-row {
-    margin-block-end: 0;
-  }
-
-  .byline {
-    margin-block-end: 0.25rem;
-    color: var(--ink-subtle);
-  }
-
-  .side {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.5rem;
-    flex-shrink: 0;
-    font-family: var(--font-sans);
-  }
-
-  .score {
-    font-size: 3rem;
-    line-height: 0.9;
-    font-weight: 900;
-  }
-
-  [data-favorite] .score {
-    color: var(--flourish);
-  }
-
-  .side .chip,
-  .ledger-details .chip {
-    flex-shrink: 0;
-    font-family: var(--font-sans);
-    border-color: color-mix(in oklab, var(--flourish) 30%, transparent);
-    background: color-mix(in oklab, var(--flourish) 8%, transparent);
-    color: var(--flourish);
-    pointer-events: none;
-    transform: none;
-  }
-
-  .dnf {
-    font-size: 2.125rem;
-    line-height: 1;
-    font-weight: 900;
-    color: var(--ink-muted);
-  }
-
-  .ledger-details {
-    display: flex;
-    align-items: flex-end;
-    gap: var(--space-xs);
-    margin-block-start: var(--space-s);
-  }
-
-  .ledger-details.without-note {
-    margin-block-start: var(--space-2xs);
-  }
-
-  .details-body {
-    flex: 1;
-    min-inline-size: 0;
-  }
-
-  .note,
-  .link {
-    margin: 0;
-  }
-
-  .note + .link {
-    margin-block-start: var(--space-2xs);
-  }
-
-  .link a {
-    display: inline-block;
-    padding-block: 0.125rem;
-  }
-</style>
+</Page>

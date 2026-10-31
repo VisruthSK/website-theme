@@ -1,8 +1,9 @@
 ---
-import { withBase } from '@/lib/base'
-import theme from '@/scripts/theme.js?url&no-inline'
-import { BROWSER_COLORS, SITE } from '@/consts'
-import { fonts } from 'virtual:theme/assets'
+import FeedLink from "@/components/FeedLink.astro"
+import { withBase } from "@/lib/base"
+import theme from "@/scripts/theme.js?url&no-inline"
+import { BROWSER_COLORS, SITE } from "@/consts"
+import { fonts } from "virtual:theme/assets"
 ---
 
 <head>
@@ -36,15 +37,10 @@ import { fonts } from 'virtual:theme/assets'
   />
 
   <link rel="icon" href="data:;base64,=" />
-  <link rel="manifest" href={withBase('/site.webmanifest')} />
+  <link rel="manifest" href={withBase("/site.webmanifest")} />
 
-  <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
-  <link
-    rel="alternate"
-    type="application/rss+xml"
-    title={SITE.title}
-    href={new URL(withBase('/rss.xml'), Astro.site)}
-  />
+  <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
+  <FeedLink href="/rss.xml" title={SITE.title} />
 
   <link
     rel="preload"

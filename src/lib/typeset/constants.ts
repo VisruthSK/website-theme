@@ -35,14 +35,14 @@ export function typesetConstants(
   const source = [
     `export const PLAN_SIZE = ${planSize}`,
     `export const ROOT_RATIO = ${ratio}`,
-    'export const CAP_LINES = 3',
+    "export const CAP_LINES = 3",
     `export const INDENT = ${indent}`,
-    'export const CAP_CLEARANCE = 1.5 / PLAN_SIZE',
-    'export const CAP_SCALE = 10',
-    'export const STRETCH = 0.5',
-    'export const TRACKING = 0.3 / PLAN_SIZE',
-    'export const SHRINK = 1 / 3',
+    "export const CAP_CLEARANCE = 1.5 / PLAN_SIZE",
+    "export const CAP_SCALE = 10",
+    "export const STRETCH = 0.5",
+    "export const TRACKING = 0.3 / PLAN_SIZE",
+    "export const SHRINK = 1 / 3",
     `export const CAP_TOLERANCE = ${capTolerance}`,
-  ].join('\n')
+  ].join("\n")
   return { constants, source }
 }

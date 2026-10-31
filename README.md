@@ -55,15 +55,15 @@ The overrides keep `@astrojs/markdown-satteri` and `satteri-expressive-code`, wh
 
 ```ts
 // astro.config.ts
-import { defineConfig } from 'astro/config'
-import { themeConfig } from './theme/src/integrations/theme'
+import { defineConfig } from "astro/config"
+import { themeConfig } from "./theme/src/integrations/theme"
 
-export default defineConfig(await themeConfig(new URL('./', import.meta.url)))
+export default defineConfig(await themeConfig(new URL("./", import.meta.url)))
 ```
 
 ```ts
 // src/content.config.ts
-import { defineCollections } from '@/lib/collections'
+import { defineCollections } from "@/lib/collections"
 
 export const collections = defineCollections()
 ```
@@ -158,24 +158,20 @@ Notes support Markdown and are rendered at build time.
 
 ```ts
 // src/content.config.ts
-import { defineCollections, defineLedger } from '@/lib/collections'
+import { defineCollections, defineLedger } from "@/lib/collections"
 
 export const collections = defineCollections({
-  reading: defineLedger('src/data/reading.yaml', 'reviews'),
+  reading: defineLedger("src/data/reading.yaml", "reviews"),
 })
 ```
 
 ```astro
 ---
 // src/pages/reading.astro
-import Ledger from '@/components/Ledger.astro'
+import Ledger from "@/components/Ledger.astro"
 ---
 
-<Ledger
-  title="Reading"
-  description="Books I have read."
-  linkLabel="Review"
-/>
+<Ledger title="Reading" description="Books I have read." linkLabel="Review" />
 ```
 
 The component reads the collection named after the lowercase title and is reached at `/` plus that name; pass `entries` or `href` to change either. The `description` is the page description and the line under the heading.
@@ -184,7 +180,17 @@ Only `title` is required. `creator` is optional and the byline is left out witho
 
 To give ledgers a feed, add an endpoint that returns `renderLedgerFeed(context, sources, { title, description })`, where each source is `{ collection, href, noun }` for a ledger and the page it is shown on. Items are dated by `ended`, then `added`, and link to the entry's card. Pass `feed={{ href, label }}`, with `href` a path on the site, to `Ledger` to show the RSS button and advertise the feed in the page head.
 
+A ledger entry may also carry `feed`, the URL of the site's own RSS or Atom feed, for lists such as a blogroll that you export as OPML.
+
+`RecentlyAdded` lists the newest entries by `added` across one or more ledgers: `<RecentlyAdded sources={[{ collection, href, noun }]} limit={5} />`.
+
 Pass `ratings` to `Ledger` to show a bar chart of how many entries have each rating, with favorites highlighted, between the description and the list. It is inline SVG drawn at build time in the theme colours.
+
+## Pages and cards
+
+`Page` is the shell for a list or text page: it renders the layout, the page meta, an optional feed link, the heading and the content. It takes `title`, `description`, `crumb` (the page's own path, for the breadcrumb), `feed`, `noindex`, `metaTitle` when the meta title differs from the heading, `headingHtml` for a heading that contains markup, and `body="div" | "article"` to wrap the page in Pagefind's indexed region. Content goes in the default slot, extra head tags in `slot="head"` and a line under the heading in `slot="intro"`.
+
+`EntryCard` renders a `CardData` value (`href`, `title`, and optionally `eyebrow`, `excerpt`, `date`, `stats`, `series` and `tags`), so anything that can describe itself that way gets the same card. `PostCard` adapts a post to it, and `RecentlyAdded` and a site's own index pages pass the fields directly. `Card` is the bare shell for a card with other contents, as `LedgerCard` does. `EntryGroup` wraps a heading and a list of cards, and `groupByYear` splits entries into year groups, newest first, with an Undated group last.
 
 ## Overlay and shadowing
 

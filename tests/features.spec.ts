@@ -1,6 +1,6 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
-import { expect, test } from './sites.ts'
+import { existsSync, readdirSync, readFileSync } from "node:fs"
+import { join } from "node:path"
+import { expect, test } from "./sites.ts"
 
 const traces = {
   typeset: [/typeset\.[\w-]+\.js/, /\bdata-j=/],
@@ -18,16 +18,16 @@ function contents(directory: string): string {
     .flatMap((entry) => {
       const path = join(directory, entry.name)
       if (entry.isDirectory())
-        return entry.name === 'pagefind' ? [] : [contents(path)]
+        return entry.name === "pagefind" ? [] : [contents(path)]
       return /\.(html|css|js)$/.test(entry.name)
-        ? [readFileSync(path, 'utf8')]
+        ? [readFileSync(path, "utf8")]
         : []
     })
-    .join('\n')
+    .join("\n")
 }
 
-test('switched-off features leave nothing in the build', ({ site }) => {
-  const dist = join(process.cwd(), site.dir, 'dist')
+test("switched-off features leave nothing in the build", ({ site }) => {
+  const dist = join(process.cwd(), site.dir, "dist")
   const built = contents(dist)
   for (const [feature, patterns] of Object.entries(traces)) {
     const enabled = site.theme.features[feature as keyof typeof traces]
@@ -35,8 +35,8 @@ test('switched-off features leave nothing in the build', ({ site }) => {
       expect(pattern.test(built), `${feature} ${pattern}`).toBe(enabled)
     }
   }
-  expect(existsSync(join(dist, 'pagefind'))).toBe(site.theme.features.search)
-  expect(existsSync(join(dist, 'search', 'index.html'))).toBe(
+  expect(existsSync(join(dist, "pagefind"))).toBe(site.theme.features.search)
+  expect(existsSync(join(dist, "search", "index.html"))).toBe(
     site.theme.features.search,
   )
 })

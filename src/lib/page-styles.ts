@@ -9,16 +9,16 @@ export type PageStyle = keyof typeof PAGE_MARKERS
 export const PAGE_FILES: [RegExp, PageStyle][] = [
   [
     /[\\/]styles[\\/](?:prose|notes|typography-tables|callout)\.css$/,
-    'article',
+    "article",
   ],
-  [/[\\/]styles[\\/]typography-math\.css$/, 'math'],
+  [/[\\/]styles[\\/]typography-math\.css$/, "math"],
 ]
 
-const edge = (name: string, side: 's' | 'e') =>
+const edge = (name: string, side: "s" | "e") =>
   `.zw-${name}-${side}{--zw-${name}:${side}}`
 
 export const wrapPageStyle = (name: string, css: string) =>
-  `${edge(name, 's')}${css}${edge(name, 'e')}`
+  `${edge(name, "s")}${css}${edge(name, "e")}`
 
 const REGION = /\.zw-([a-z]+)-s\{--zw-\1:s\}([\s\S]*?)\.zw-\1-e\{--zw-\1:e\}/g
 
@@ -55,19 +55,19 @@ export function arrangeStyles(sheets: string[], html: string): StyleFile[] {
       ;(groups.size ? after : before).push(sheet)
       continue
     }
-    for (const { name = 'base', css } of parts) {
-      groups.set(name, (groups.get(name) ?? '') + css)
+    for (const { name = "base", css } of parts) {
+      groups.set(name, (groups.get(name) ?? "") + css)
     }
   }
 
-  const layout = ['base', ...Object.keys(PAGE_MARKERS)]
+  const layout = ["base", ...Object.keys(PAGE_MARKERS)]
     .filter(
-      (name) => name === 'base' || PAGE_MARKERS[name as PageStyle].test(html),
+      (name) => name === "base" || PAGE_MARKERS[name as PageStyle].test(html),
     )
-    .map((stem) => ({ stem, css: groups.get(stem) ?? '' }))
+    .map((stem) => ({ stem, css: groups.get(stem) ?? "" }))
   return [
-    { stem: 'pre', css: before.join('') },
+    { stem: "pre", css: before.join("") },
     ...layout,
-    { stem: 'route', css: after.join('') },
+    { stem: "route", css: after.join("") },
   ].filter(({ css }) => css)
 }

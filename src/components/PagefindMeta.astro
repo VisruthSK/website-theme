@@ -1,5 +1,5 @@
 ---
-import { FEATURES } from '@/consts'
+import { FEATURES } from "@/consts"
 
 interface Props {
   description?: string
@@ -68,7 +68,7 @@ const tagsValue = JSON.stringify(tags.filter(Boolean))
 }
 
 {
-  FEATURES.search && typeof wordCount === 'number' && (
+  FEATURES.search && typeof wordCount === "number" && (
     <meta
       name="pagefind:word_count"
       data-pagefind-meta="word_count[content]"

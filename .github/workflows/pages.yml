@@ -3,7 +3,7 @@ name: Pages
 on:
   push:
     branches: [main]
-    paths: ['examples/full/**', 'src/**', 'config/**', 'astro-erudite']
+    paths: ["examples/full/**", "src/**", "config/**", "astro-erudite"]
   workflow_dispatch:
 
 permissions:
