@@ -1,10 +1,10 @@
-declare module 'virtual:erudite/config' {
+declare module 'virtual:theme/config' {
   const theme: import('../config/theme').Theme
   export const paths: { bibliographies: string; public: string }
   export default theme
 }
 
-declare module 'virtual:erudite/assets' {
+declare module 'virtual:theme/assets' {
   export const fonts: {
     body: string
     bodyItalic?: string

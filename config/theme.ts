@@ -157,6 +157,14 @@ function resolveColors(
   ) as Record<ColorToken, Color>
 }
 
+function browserColors({ background, palette }: Brand) {
+  const resolve = (mode: 'light' | 'dark') => {
+    const value = typeof background === 'string' ? background : background[mode]
+    return palette[value] ?? value
+  }
+  return { light: resolve('light'), dark: resolve('dark') }
+}
+
 const fileName = z.string().regex(/^[^/\\]+\.(?:woff2|woff|ttf|otf)$/)
 
 const face = z.strictObject({
@@ -233,21 +241,21 @@ export const themeSchema = z
       postsPerPage: z.int().positive().default(10),
       featuredPostCount: z.int().nonnegative().default(3),
       featured: z.array(z.string()).default([]),
-      footer: z.string().optional(),
-      themeColor: z.strictObject({ light: nonEmpty, dark: nonEmpty }),
-      manifest: z.strictObject({ background: nonEmpty, theme: nonEmpty }),
     }),
-    text: z
+    pages: z
       .strictObject({
-        recentDescription: nonEmpty.default(
-          'Every post in reverse chronological order.',
-        ),
-        searchPlaceholder: nonEmpty.default('Search'),
+        recent: z
+          .strictObject({
+            description: nonEmpty.default(
+              'Every post in reverse chronological order.',
+            ),
+          })
+          .prefault({}),
+        search: z
+          .strictObject({ placeholder: nonEmpty.default('Search') })
+          .prefault({}),
       })
-      .default({
-        recentDescription: 'Every post in reverse chronological order.',
-        searchPlaceholder: 'Search',
-      }),
+      .prefault({}),
     sections: z
       .array(
         z.strictObject({
@@ -258,7 +266,12 @@ export const themeSchema = z
       )
       .min(1),
     navigation: z.array(z.union([z.strictObject({ section: slug }), link])),
-    socials: z.array(link.extend({ icon: slug })).default([]),
+    footer: z
+      .strictObject({
+        text: z.string().optional(),
+        links: z.array(link.extend({ icon: slug })).default([]),
+      })
+      .prefault({}),
     brand,
     colors,
     fonts,
@@ -281,7 +294,6 @@ export const themeSchema = z
       externalLinkIcons: true,
     }),
     bibliographies: nonEmpty.default('src/data/bibliographies'),
-    prebuilt: z.array(z.string().regex(/^[\w.-]+$/)).default([]),
     unhinted: z
       .array(z.string().startsWith('/'))
       .default(['/_astro/*', '/pagefind/*']),
@@ -319,6 +331,7 @@ export const themeSchema = z
   .transform((theme) => ({
     ...theme,
     colors: resolveColors(theme.colors, theme.brand),
+    browserColors: browserColors(theme.brand),
   }))
 
 export type Theme = z.output<typeof themeSchema>

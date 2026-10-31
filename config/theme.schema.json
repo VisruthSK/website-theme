@@ -54,73 +54,43 @@
           "items": {
             "type": "string"
           }
-        },
-        "footer": {
-          "type": "string"
-        },
-        "themeColor": {
-          "type": "object",
-          "properties": {
-            "light": {
-              "type": "string",
-              "minLength": 1
-            },
-            "dark": {
-              "type": "string",
-              "minLength": 1
-            }
-          },
-          "required": [
-            "light",
-            "dark"
-          ],
-          "additionalProperties": false
-        },
-        "manifest": {
-          "type": "object",
-          "properties": {
-            "background": {
-              "type": "string",
-              "minLength": 1
-            },
-            "theme": {
-              "type": "string",
-              "minLength": 1
-            }
-          },
-          "required": [
-            "background",
-            "theme"
-          ],
-          "additionalProperties": false
         }
       },
       "required": [
         "title",
         "description",
         "href",
-        "author",
-        "themeColor",
-        "manifest"
+        "author"
       ],
       "additionalProperties": false
     },
-    "text": {
-      "default": {
-        "recentDescription": "Every post in reverse chronological order.",
-        "searchPlaceholder": "Search"
-      },
+    "pages": {
+      "default": {},
       "type": "object",
       "properties": {
-        "recentDescription": {
-          "default": "Every post in reverse chronological order.",
-          "type": "string",
-          "minLength": 1
+        "recent": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "description": {
+              "default": "Every post in reverse chronological order.",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
         },
-        "searchPlaceholder": {
-          "default": "Search",
-          "type": "string",
-          "minLength": 1
+        "search": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "placeholder": {
+              "default": "Search",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
@@ -190,32 +160,42 @@
         ]
       }
     },
-    "socials": {
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "href": {
-            "type": "string",
-            "minLength": 1
-          },
-          "label": {
-            "type": "string",
-            "minLength": 1
-          },
-          "icon": {
-            "type": "string",
-            "pattern": "^[a-z0-9][a-z0-9-]*$"
-          }
+    "footer": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
         },
-        "required": [
-          "href",
-          "label",
-          "icon"
-        ],
-        "additionalProperties": false
-      }
+        "links": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "href": {
+                "type": "string",
+                "minLength": 1
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "icon": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]*$"
+              }
+            },
+            "required": [
+              "href",
+              "label",
+              "icon"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
     },
     "brand": {
       "default": {},
@@ -1717,14 +1697,6 @@
       "default": "src/data/bibliographies",
       "type": "string",
       "minLength": 1
-    },
-    "prebuilt": {
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "string",
-        "pattern": "^[\\w.-]+$"
-      }
     },
     "unhinted": {
       "default": [

@@ -1,4 +1,4 @@
-import { SITE } from '@/consts'
+import { BROWSER_COLORS, SITE } from '@/consts'
 import { withBase } from '@/lib/base'
 
 export const prerender = true
@@ -11,8 +11,8 @@ export async function GET() {
     start_url: withBase('/'),
     scope: withBase('/'),
     display: 'minimal-ui',
-    background_color: SITE.manifest.background,
-    theme_color: SITE.manifest.theme,
+    background_color: BROWSER_COLORS.light,
+    theme_color: BROWSER_COLORS.dark,
     lang: SITE.locale,
     icons: [],
   }

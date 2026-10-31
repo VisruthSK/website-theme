@@ -33,7 +33,7 @@ function themeRules(selector: string, style: string) {
 }
 
 export function inlineStyles(
-  prebuilt: string[],
+  publicDir: string,
   base: string,
 ): AstroIntegration {
   return {
@@ -44,7 +44,7 @@ export function inlineStyles(
         const rules = new Map<string, string>()
         const pages = new Map<string, string>()
 
-        for await (const file of siteHtmlPages(root, prebuilt)) {
+        for await (const file of siteHtmlPages(root, publicDir)) {
           const html = await readFile(join(root, file), 'utf8')
           const rewritten = html.replace(
             STYLED_TAG,

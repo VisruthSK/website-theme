@@ -22,6 +22,7 @@ export interface Site {
   series?: string
   code?: string
   tag: string
+  unfeeded?: string
   visual: string[]
 }
 
@@ -47,6 +48,7 @@ export const SITES = {
     series: '/essays/grimm/',
     code: '/notes/everything/',
     tag: '/tags/story/',
+    unfeeded: '/essays/grimm/',
     visual: [
       '/',
       '/essays/',

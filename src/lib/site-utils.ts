@@ -31,7 +31,6 @@ function hasFileExtension(pathname: string): boolean {
 }
 
 export function canonicalizePath(path: string): string {
-  if (typeof path !== 'string') return path
   const trimmed = path.trim()
   if (!trimmed) return ''
   if (trimmed === '/' || !trimmed.startsWith('/')) return trimmed

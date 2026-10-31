@@ -6,19 +6,7 @@
     "href": "https://journal.example.net/",
     "author": "Sample Writer",
     "locale": "en-GB",
-    "postsPerPage": 5,
-    "themeColor": {
-      "light": "#f4f6ef",
-      "dark": "#121610"
-    },
-    "manifest": {
-      "background": "#f4f6ef",
-      "theme": "#121610"
-    }
-  },
-  "text": {
-    "recentDescription": "Every journal entry, newest first.",
-    "searchPlaceholder": "Search the journal"
+    "postsPerPage": 5
   },
   "sections": [
     {
@@ -40,10 +28,18 @@
       "label": "Recent"
     }
   ],
+  "pages": {
+    "recent": {
+      "description": "Every journal entry, newest first."
+    },
+    "search": {
+      "placeholder": "Search the journal"
+    }
+  },
   "brand": {
     "palette": {
-      "paper": "oklch(0.97 0.012 120)",
-      "night": "oklch(0.17 0.012 140)",
+      "paper": "#f4f6ef",
+      "night": "#121610",
       "moss": "oklch(0.22 0.03 150)",
       "lichen": "oklch(0.93 0.012 120)",
       "fern": "oklch(0.42 0.1 150)",

@@ -1,11 +1,11 @@
 ---
 import SocialIcons from "@/components/SocialIcons.astro"
-import { SITE, SOCIALS } from "@/consts"
+import { FOOTER } from "@/consts"
 ---
 
 <footer>
-  {SITE.footer && <p><em>{SITE.footer}</em></p>}
-  <SocialIcons links={SOCIALS} />
+  {FOOTER.text && <p><em>{FOOTER.text}</em></p>}
+  <SocialIcons links={FOOTER.links} />
 </footer>
 
 <style>

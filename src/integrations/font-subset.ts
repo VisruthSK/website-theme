@@ -1,6 +1,7 @@
 import type { AstroIntegration } from 'astro'
 import { subset } from '@web-alchemy/fonttools'
 import { decodeHTML } from 'entities'
+import { existsSync } from 'node:fs'
 import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -67,7 +68,7 @@ export function fontSubset(theme: Theme, root: URL): AstroIntegration {
       .filter((name) => !shared.has(name))
   const boldStems = only(({ weight }) => weight >= 600)
   const italicStems = only(({ style }) => style === 'italic')
-  const prebuilt = theme.prebuilt.map((directory) => `${directory}/`)
+  const publicDir = fileURLToPath(new URL('public/', root))
 
   return {
     name: 'font-subset',
@@ -81,7 +82,7 @@ export function fontSubset(theme: Theme, root: URL): AstroIntegration {
 
         await walk(outputPath, async (path) => {
           const file = posix(relative(outputPath, path))
-          if (prebuilt.some((prefix) => file.startsWith(prefix))) return
+          if (existsSync(join(publicDir, file))) return
           if (path.endsWith('.html')) {
             const html = await readFile(path, 'utf8')
             if (html.includes(BUNDLE_REFERENCE)) {

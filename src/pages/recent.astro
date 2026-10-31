@@ -1,7 +1,7 @@
 ---
 import EntryCard from '@/components/EntryCard.astro'
 import MetaPage from '@/components/MetaPage.astro'
-import { TEXT } from '@/consts'
+import { PAGES } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
 import { getSectionPostsChrono } from '@/lib/section-posts'
 
@@ -12,7 +12,7 @@ const posts = await getSectionPostsChrono()
   <MetaPage
     slot="head"
     title="Recent"
-    description={TEXT.recentDescription}
+    description={PAGES.recent.description}
   />
   <page-heading>
     <h1>Recent</h1>
