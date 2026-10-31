@@ -51,3 +51,15 @@ an-undated-book:
   creator: Bram Stoker
   published: 1897
   rating: 7
+
+the-ugly-duckling:
+  title: The Ugly Duckling
+  creator: Hans Christian Andersen
+  published: 1843
+  url: https://en.wikisource.org/wiki/The_Ugly_Duckling
+  added: 2026-10-20
+
+the-three-little-pigs:
+  title: The Three Little Pigs
+  url: /essays/the-selfish-giant/
+  added: 2026-10-25

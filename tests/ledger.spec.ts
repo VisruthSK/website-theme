@@ -17,6 +17,8 @@ test.describe('list page', () => {
       .locator('.interactive-card .card-title')
       .evaluateAll((titles) => titles.map((title) => title.id))
     expect(ids).toEqual([
+      'the-three-little-pigs-01',
+      'the-ugly-duckling-01',
       'the-gift-of-the-magi-01',
       'the-selfish-giant-02',
       'moby-dick-01',
@@ -48,6 +50,30 @@ test.describe('list page', () => {
     await expect(
       page.locator('.interactive-card', { hasText: 'May 1888' }),
     ).toHaveCount(2)
+  })
+
+  test('shows the added date and links titles to the work', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const duckling = page.locator('.interactive-card', {
+      hasText: 'The Ugly Duckling',
+    })
+    await expect(duckling).toContainText('Added 20 October 2026')
+    await expect(duckling.locator('.card-title a')).toHaveAttribute(
+      'href',
+      'https://en.wikisource.org/wiki/The_Ugly_Duckling',
+    )
+
+    const pigs = page.locator('.interactive-card', {
+      hasText: 'The Three Little Pigs',
+    })
+    await expect(pigs.locator('.byline')).toHaveCount(0)
+    await expect(pigs.locator('.card-title a')).toHaveAttribute(
+      'href',
+      `${baseOf(site)}/essays/the-selfish-giant/`,
+    )
   })
 
   test('the review link and favorite share a row when there is no note', async ({

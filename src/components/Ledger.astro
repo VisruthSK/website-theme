@@ -92,7 +92,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                     <div class="head">
                       <div>
                         <h3 class="card-title" id={permalink} data-prose>
-                          {data.url ? <Link href={data.url}>{data.title}</Link> : data.title}
+                          {data.url ? <Link href={withBase(data.url)}>{data.title}</Link> : data.title}
                         </h3>
                         {(data.creator || data.published) && (
                           <p class="meta-row byline">

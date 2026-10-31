@@ -58,7 +58,7 @@ export async function renderLedgerFeed(
                   ? `<p>${[data.creator, rating].filter(Boolean).join(' · ')}</p>`
                   : '',
                 data.url
-                  ? `<p><a href="${data.url}">${data.title}</a></p>`
+                  ? `<p><a href="${withBase(data.url)}">${data.title}</a></p>`
                   : '',
                 data.note ? renderLedgerNote(data.note) : '',
               ].join(''),
