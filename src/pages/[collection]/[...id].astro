@@ -4,7 +4,7 @@ import Bibliography from '@/components/Bibliography.astro'
 import PostMeta from '@/components/PostMeta.astro'
 import PagefindMeta from '@/components/PagefindMeta.astro'
 import TableOfContents from '@/components/TableOfContents.astro'
-import { FEATURES, SECTIONS, SECTION_SLUGS, type SectionSlug } from '@/consts'
+import { FEATURES, SECTIONS, SECTION_SLUGS, SITE, type SectionSlug } from '@/consts'
 import { fonts } from 'virtual:theme/assets'
 import TypesetScript from '@/components/TypesetScript.astro'
 import codeScript from '@/generated/code.js?url&no-inline'
@@ -30,15 +30,17 @@ import {
 } from '@/lib/site-utils'
 import { formatCount, formatTitleAsHtml } from '@/lib/text'
 import { render } from 'astro:content'
+import { buildBacklinks } from '@/lib/backlinks'
 
 export async function getStaticPaths() {
   const paths = []
+  const backlinksFor = await buildBacklinks(SITE.href)
   for (const slug of SECTION_SLUGS) {
     const posts = await getAllPostsAndSubposts(SECTIONS[slug].collection)
     for (const post of posts) {
       paths.push({
         params: { collection: slug, id: post.id },
-        props: { post },
+        props: { post, backlinks: backlinksFor(post) },
       })
     }
   }
@@ -46,6 +48,7 @@ export async function getStaticPaths() {
 }
 
 const post = Astro.props.post as PostEntry
+const backlinks = Astro.props.backlinks as PostEntry[]
 const section = SECTIONS[Astro.params.collection as SectionSlug]
 const { collection } = section
 const basePath = section.href
@@ -211,10 +214,23 @@ const showCombined =
         <Bibliography bib={bib} citedKeys={citedKeys} />
       )}
     </prose-content>
+    {backlinks.length > 0 && (
+      <aside class="backlinks" data-pagefind-ignore>
+        <h2>Mentioned in</h2>
+        <ul>{backlinks.map((entry) => <li><a href={getPostHref(entry)}>{plainTitle(entry.data.title)}</a></li>)}</ul>
+      </aside>
+    )}
   </article>
 </Layout>
 
 <style>
+  .backlinks {
+    margin-block-start: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+    h2 { font-size: inherit; }
+    ul { padding-inline-start: 1.25rem; }
+  }
   header {
     margin-block-end: var(--space-m);
 
