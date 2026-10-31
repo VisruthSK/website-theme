@@ -26,7 +26,7 @@ test("the configured faces are applied", async ({ page, site }) => {
     return {
       heading: used("h1"),
       body: used("prose-content p"),
-      wordmark: used("aside [data-brand] span"),
+      wordmark: used("[data-bar] [data-brand] span"),
     }
   })
   const { body, heading } = site.theme.fonts

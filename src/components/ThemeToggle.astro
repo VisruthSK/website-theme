@@ -23,26 +23,27 @@ import themeToggleUrl from "@/scripts/theme-toggle.js?url&no-inline"
 </style>
 
 <style is:global>
+  :root {
+    --light-icon: inline;
+    --dark-icon: none;
+  }
+
+  light-icon {
+    display: var(--light-icon);
+  }
+
+  dark-icon {
+    display: var(--dark-icon);
+  }
+
   :root[data-theme="light"] {
     color-scheme: light;
   }
 
   :root[data-theme="dark"] {
     color-scheme: dark;
-  }
-
-  dark-icon {
-    display: none;
-  }
-
-  :root[data-theme="dark"] {
-    light-icon {
-      display: none;
-    }
-
-    dark-icon {
-      display: inline;
-    }
+    --light-icon: none;
+    --dark-icon: inline;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -51,27 +52,16 @@ import themeToggleUrl from "@/scripts/theme-toggle.js?url&no-inline"
     }
 
     :root:not([data-theme]):not(:has(.theme-flip:checked)) {
-      light-icon {
-        display: none;
-      }
-
-      dark-icon {
-        display: inline;
-      }
+      --light-icon: none;
+      --dark-icon: inline;
     }
   }
 
   @media (prefers-color-scheme: light) {
     :root:not([data-theme]):has(.theme-flip:checked) {
       color-scheme: dark;
-
-      light-icon {
-        display: none;
-      }
-
-      dark-icon {
-        display: inline;
-      }
+      --light-icon: none;
+      --dark-icon: inline;
     }
   }
 </style>

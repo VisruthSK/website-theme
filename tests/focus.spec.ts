@@ -22,11 +22,11 @@ for (const mode of ["light", "dark"] as Mode[]) {
   }) => {
     const listing = sectionHref(site)
     const targets = [
-      { url: listing, focus: "aside nav a" },
+      { url: listing, focus: "[data-bar] nav a" },
       { url: listing, focus: ".theme-flip", read: "[data-theme-toggle]" },
       { url: listing, focus: ".chip" },
       { url: listing, focus: ".card-overlay", read: ".interactive-card" },
-      { url: site.typeset[0], focus: "aside nav ul ul a" },
+      { url: site.typeset[0], focus: "[data-bar] nav ul ul a" },
       ...(site.series
         ? [{ url: site.series, focus: 'nav[aria-label="Chapters"] a' }]
         : []),

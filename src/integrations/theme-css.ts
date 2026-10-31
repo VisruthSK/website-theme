@@ -11,6 +11,7 @@ const FIXED_TOKENS = [
   ["tracking-tight", "0em"],
   ["focus-ring", "2px solid var(--ring)"],
   ["focus-ring-offset", "2px"],
+  ["box-border", "1px solid var(--border-subtle)"],
   [
     "shadow-menu",
     "light-dark(0 4px 6px -1px oklch(0 0 0 / 0.1), 0 4px 6px -1px oklch(0 0 0 / 0.5))",

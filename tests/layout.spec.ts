@@ -1,6 +1,19 @@
 import { expect, sectionHref, test, visit } from "./sites.ts"
 
 test.describe("layout", () => {
+  test("the site navigation sits in the banner landmark", async ({
+    page,
+    site,
+  }) => {
+    await visit(page, site, "/", "light")
+    const banner = page.getByRole("banner")
+    await expect(banner).toHaveCount(1)
+    await expect(
+      banner.getByRole("navigation", { name: "Primary" }),
+    ).toBeVisible()
+    await expect(page.getByRole("complementary")).toHaveCount(0)
+  })
+
   test("the mobile menu opens and closes", async ({ page, site }) => {
     await page.setViewportSize({ width: 390, height: 800 })
     await visit(page, site, "/", "light")
@@ -21,7 +34,7 @@ test.describe("layout", () => {
     await visit(page, site, site.typeset[0], "light")
     await page.evaluate(() => window.scrollTo(0, 700))
     const top = await page
-      .locator("aside")
+      .getByRole("banner")
       .evaluate((element) => element.getBoundingClientRect().top)
     expect(top).toBeLessThan(0)
   })
@@ -95,7 +108,8 @@ test.describe("layout", () => {
       const colour = getComputedStyle(probe).color
       probe.remove()
       return [
-        getComputedStyle(document.querySelector("aside [data-brand]")!).color,
+        getComputedStyle(document.querySelector("[data-bar] [data-brand]")!)
+          .color,
         colour,
       ]
     })

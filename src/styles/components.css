@@ -33,7 +33,7 @@
   position: relative;
   display: block;
   padding: 1rem;
-  border: 1px solid var(--border-subtle);
+  border: var(--box-border);
   border-radius: var(--radius-xl);
   color: inherit;
   text-decoration-line: none;

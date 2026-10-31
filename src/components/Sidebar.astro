@@ -1,9 +1,10 @@
 ---
-import { withBase } from "@/lib/base"
+import CrumbItems from "@/components/CrumbItems.astro"
 import ThemeToggle from "@/components/ThemeToggle.astro"
 import { NAVIGATION, SITE } from "@/consts"
 import MenuIcon from "@/icons/menu.svg"
 import CloseIcon from "@/icons/x.svg"
+import { withBase } from "@/lib/base"
 import { externalTo, newTabProps } from "@/lib/external-link-utils"
 import { normalizePath } from "@/lib/utils"
 
@@ -17,7 +18,7 @@ const section = NAVIGATION.find(
 const isExternal = externalTo(SITE.href)
 ---
 
-<aside data-bar>
+<header data-bar>
   <input
     type="checkbox"
     id="menu-toggle"
@@ -49,37 +50,18 @@ const isExternal = externalTo(SITE.href)
           </a>
           {item === section && crumbs.length > 0 && pathname !== item.href && (
             <ul>
-              {crumbs.map((crumb, i) => (
-                <li data-depth={i ? 1 : undefined}>
-                  <a
-                    href={withBase(crumb.href)}
-                    aria-current={i === crumbs.length - 1 ? "page" : undefined}
-                  >
-                    {crumb.label}
-                  </a>
-                </li>
-              ))}
+              <CrumbItems crumbs={crumbs} />
             </ul>
           )}
         </li>
       ))}
-      {!section &&
-        crumbs.map((crumb, i) => (
-          <li data-depth={i ? 1 : undefined}>
-            <a
-              href={withBase(crumb.href)}
-              aria-current={i === crumbs.length - 1 ? "page" : undefined}
-            >
-              {crumb.label}
-            </a>
-          </li>
-        ))}
+      {!section && <CrumbItems crumbs={crumbs} />}
     </ul>
   </nav>
-</aside>
+</header>
 
 <style>
-  aside {
+  [data-bar] {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -156,7 +138,7 @@ const isExternal = externalTo(SITE.href)
     }
   }
 
-  aside:has(.menu-toggle:checked) [data-menu-button] {
+  [data-bar]:has(.menu-toggle:checked) [data-menu-button] {
     svg:nth-of-type(1) {
       display: none;
     }
@@ -166,7 +148,7 @@ const isExternal = externalTo(SITE.href)
     }
   }
 
-  aside:has(.menu-toggle:focus-visible) [data-menu-button] {
+  [data-bar]:has(.menu-toggle:focus-visible) [data-menu-button] {
     outline: var(--focus-ring);
     outline-offset: var(--focus-ring-offset);
   }
@@ -183,7 +165,7 @@ const isExternal = externalTo(SITE.href)
     }
   }
 
-  aside:has(.menu-toggle:checked) nav {
+  [data-bar]:has(.menu-toggle:checked) nav {
     display: block;
   }
 
@@ -191,43 +173,43 @@ const isExternal = externalTo(SITE.href)
     display: flex;
     flex-direction: column;
     gap: var(--space-3xs);
+  }
 
-    a {
-      display: block;
-      font-size: 1.0625rem;
-      color: var(--ink-muted);
-      text-decoration-line: none;
-      transition: color var(--duration-fast) ease;
+  nav ul ul {
+    margin-block-start: var(--space-3xs);
+  }
 
-      &:hover {
-        color: var(--ink-soft);
-      }
+  nav ul :global(a) {
+    display: block;
+    font-size: 1.0625rem;
+    color: var(--ink-muted);
+    text-decoration-line: none;
+    transition: color var(--duration-fast) ease;
+  }
 
-      &[aria-current="page"] {
-        color: var(--foreground);
-        font-weight: 500;
-      }
-    }
+  nav ul :global(a:hover) {
+    color: var(--ink-soft);
+  }
 
-    li[data-depth="1"] a,
-    ul a {
-      font-size: calc(1.0625rem - 2pt);
-    }
+  nav ul :global(a[aria-current="page"]) {
+    color: var(--foreground);
+    font-weight: 500;
+  }
 
-    li[data-depth="1"] a {
-      margin-inline-start: var(--space-xs);
-    }
+  nav ul :global(li[data-depth="1"] a),
+  nav ul ul :global(a) {
+    font-size: calc(1.0625rem - 2pt);
+  }
 
-    ul {
-      margin-block-start: var(--space-3xs);
+  nav ul :global(li[data-depth="1"] a) {
+    margin-inline-start: var(--space-xs);
+  }
 
-      a {
-        margin-inline-start: var(--space-xs);
-      }
+  nav ul ul :global(a) {
+    margin-inline-start: var(--space-xs);
+  }
 
-      li[data-depth="1"] a {
-        margin-inline-start: calc(2 * var(--space-xs));
-      }
-    }
+  nav ul ul :global(li[data-depth="1"] a) {
+    margin-inline-start: calc(2 * var(--space-xs));
   }
 </style>
