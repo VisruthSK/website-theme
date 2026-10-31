@@ -25,7 +25,7 @@ export const redirectSources = (text: string) =>
       .map(decode),
   )
 
-export function linkCheck(prebuilt: string[], base: string): AstroIntegration {
+export function linkCheck(publicDir: string, base: string): AstroIntegration {
   return {
     name: 'link-check',
     hooks: {
@@ -39,7 +39,7 @@ export function linkCheck(prebuilt: string[], base: string): AstroIntegration {
           [path, `${path}.html`, join(path, 'index.html')].some(existsSync)
         const broken: string[] = []
 
-        for await (const file of siteHtmlPages(root, prebuilt)) {
+        for await (const file of siteHtmlPages(root, publicDir)) {
           const page = join(root, file)
           for (const [, link] of readFileSync(page, 'utf8').matchAll(
             INTERNAL_REFERENCE,

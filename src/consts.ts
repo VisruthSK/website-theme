@@ -4,7 +4,8 @@ import { withBase } from '@/lib/base'
 import type { ContentCollection, SectionMetadata } from '@/types'
 
 export const SITE = theme.site
-export const TEXT = theme.text
+export const PAGES = theme.pages
+export const BROWSER_COLORS = theme.browserColors
 export const FEATURES = theme.features
 
 export const FEATURED_POST_IDS: string[] = theme.site.featured
@@ -35,10 +36,13 @@ export const NAVIGATION = theme.navigation.map((item) =>
     : { ...item, href: withBase(item.href) },
 )
 
-export const SOCIALS = theme.socials.map(({ icon, ...link }) => ({
-  ...link,
-  href: withBase(link.href),
-  icon: icons[icon],
-}))
+export const FOOTER = {
+  text: theme.footer.text,
+  links: theme.footer.links.map(({ icon, ...link }) => ({
+    ...link,
+    href: withBase(link.href),
+    icon: icons[icon],
+  })),
+}
 
 export const PATHS = paths

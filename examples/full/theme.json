@@ -6,16 +6,7 @@
     "href": "https://visruthsk.github.io/website-theme/",
     "author": "Example Author",
     "postsPerPage": 3,
-    "featured": ["everything", "measuring-the-theme"],
-    "footer": "Story text from Project Gutenberg, in the public domain.",
-    "themeColor": {
-      "light": "#fcfcfc",
-      "dark": "#111111"
-    },
-    "manifest": {
-      "background": "#fcfcfc",
-      "theme": "#111111"
-    }
+    "featured": ["everything", "measuring-the-theme"]
   },
   "sections": [
     {
@@ -53,23 +44,26 @@
       "label": "Search"
     }
   ],
-  "socials": [
-    {
-      "href": "/rss.xml",
-      "label": "RSS",
-      "icon": "rss"
-    },
-    {
-      "href": "https://github.com/example",
-      "label": "GitHub",
-      "icon": "github"
-    },
-    {
-      "href": "mailto:author@example.com",
-      "label": "Email",
-      "icon": "mail"
-    }
-  ],
+  "footer": {
+    "text": "Story text from Project Gutenberg, in the public domain.",
+    "links": [
+      {
+        "href": "/rss.xml",
+        "label": "RSS",
+        "icon": "rss"
+      },
+      {
+        "href": "https://github.com/example",
+        "label": "GitHub",
+        "icon": "github"
+      },
+      {
+        "href": "mailto:author@example.com",
+        "label": "Email",
+        "icon": "mail"
+      }
+    ]
+  },
   "fonts": {
     "body": {
       "family": "IBM Plex Sans",

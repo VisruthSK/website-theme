@@ -1,11 +1,11 @@
+import { existsSync } from 'node:fs'
 import { glob } from 'node:fs/promises'
-import { sep } from 'node:path'
+import { join, sep } from 'node:path'
 
 export const posix = (path: string) => path.split(sep).join('/')
 
-export async function* siteHtmlPages(root: string, prebuilt: string[]) {
-  const skipped = prebuilt.map((directory) => `${directory}/`)
+export async function* siteHtmlPages(root: string, publicDir: string) {
   for await (const file of glob('**/*.html', { cwd: root })) {
-    if (!skipped.some((prefix) => posix(file).startsWith(prefix))) yield file
+    if (!existsSync(join(publicDir, file))) yield file
   }
 }
