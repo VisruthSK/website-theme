@@ -1,13 +1,13 @@
 import { SECTIONS, SITE, type SectionSlug } from "@/consts"
 import { withBase } from "@/lib/base"
-import { buildFeedItem, resolveSiteUrl } from "@/lib/content-render"
+import { buildFeedItem } from "@/lib/content-render"
 import {
   getAllPostsAndSubposts,
   getPostHref,
   type PostEntry,
 } from "@/lib/data-utils"
-import rss from "@astrojs/rss"
-import type { RSSFeedItem } from "@astrojs/rss"
+import { resolveSiteUrl } from "@/lib/site-utils"
+import rss, { type RSSFeedItem } from "@astrojs/rss"
 import type { APIContext } from "astro"
 
 type FeedEntry = { entry: PostEntry; href: string }
@@ -35,7 +35,7 @@ export function respondWithFeed(
   return rss({
     title,
     description,
-    site: new URL(withBase("/"), resolveSiteUrl(context, SITE.href)).href,
+    site: new URL(withBase("/"), resolveSiteUrl(context)).href,
     items: items.toSorted(
       (a, b) => (b.pubDate?.valueOf() ?? 0) - (a.pubDate?.valueOf() ?? 0),
     ),
@@ -47,7 +47,7 @@ export async function renderFeed(
   context: APIContext,
   { title, description, entries }: FeedOptions,
 ) {
-  const baseUrl = resolveSiteUrl(context, SITE.href)
+  const baseUrl = resolveSiteUrl(context)
   const items = await Promise.all(
     entries.map(({ entry, href }) => buildFeedItem(entry, baseUrl, href)),
   )

@@ -88,12 +88,12 @@ function iconPath(name: string, srcDir: URL) {
   return `@/icons/${name}.svg`
 }
 
-function virtualModules(theme: Theme, root: URL) {
+function virtualModules(
+  theme: Theme,
+  root: URL,
+  paths: { bibliographies: string; public: string },
+) {
   const srcDir = new URL("src/", root)
-  const paths = {
-    bibliographies: fileURLToPath(new URL(theme.bibliographies, root)),
-    public: fileURLToPath(new URL("public/", root)),
-  }
   const fontUrl = (file: string) =>
     JSON.stringify(`/${theme.fonts.directory}/${file}?url&no-inline`)
   const { body, heading, mono, dropCap } = theme.fonts
@@ -142,8 +142,10 @@ export async function themeConfig(
   overrides: AstroUserConfig = {},
 ): Promise<AstroUserConfig> {
   const theme = await loadTheme(new URL("theme.json", root))
-  const bibliographies = fileURLToPath(new URL(theme.bibliographies, root))
-  const publicDir = fileURLToPath(new URL("public/", root))
+  const paths = {
+    bibliographies: fileURLToPath(new URL(theme.bibliographies, root)),
+    public: fileURLToPath(new URL("public/", root)),
+  }
   const { features } = theme
   const { origin, pathname } = new URL(theme.site.href)
   const base = pathname.replace(/\/$/, "")
@@ -167,11 +169,11 @@ export async function themeConfig(
     integrations: [
       routes(theme),
       generatedAssets(theme),
-      inlineStyles(publicDir, base),
+      inlineStyles(paths.public, base),
       bundleCss(base),
       sitemap(),
       ...(features.search ? [pagefindSearch()] : []),
-      linkCheck(publicDir, base),
+      linkCheck(paths.public, base),
       earlyHints(theme, base),
       ...(features.typeset ? [typeset(theme, root)] : []),
       fontSubset(theme, root),
@@ -189,7 +191,7 @@ export async function themeConfig(
         assetsInlineLimit: 0,
       },
       plugins: [
-        virtualModules(theme, root),
+        virtualModules(theme, root, paths),
         themeCss(theme),
         ...(localCsp ? [localHeadersPlugin(root)] : []),
       ],
@@ -211,7 +213,7 @@ export async function themeConfig(
           dashes,
           ...(features.callouts ? [calloutDirective] : []),
           inlineExpressiveCode,
-          ...(features.citations ? [cite(bibliographies)] : []),
+          ...(features.citations ? [cite(paths.bibliographies)] : []),
           ...(features.marginNotes ? [footnoteSentences] : []),
           ...(features.math ? [temmlMath] : []),
         ],

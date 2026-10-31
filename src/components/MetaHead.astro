@@ -1,5 +1,6 @@
 ---
 import FeedLink from "@/components/FeedLink.astro"
+import FontPreload from "@/components/FontPreload.astro"
 import { withBase } from "@/lib/base"
 import theme from "@/scripts/theme.js?url&no-inline"
 import { BROWSER_COLORS, SITE } from "@/consts"
@@ -42,15 +43,8 @@ import { fonts } from "virtual:theme/assets"
   <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
   <FeedLink href="/rss.xml" title={SITE.title} />
 
-  <link
-    rel="preload"
-    href={fonts.heading}
-    as="font"
-    type="font/woff2"
-    crossorigin
-  />
-  <link rel="preload" href={fonts.body} as="font" type="font/woff2" crossorigin />
-
+  <FontPreload href={fonts.heading} />
+  <FontPreload href={fonts.body} />
   <script is:inline src={theme}></script>
   <slot />
 </head>

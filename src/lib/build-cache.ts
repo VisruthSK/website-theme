@@ -12,6 +12,8 @@ export const digest = (...parts: (string | Uint8Array)[]) => {
   return hash.digest("hex").slice(0, KEY_LENGTH)
 }
 
+export const shortHash = (text: string) => digest(text).slice(0, 8)
+
 export function buildCache(root: URL, kind: string) {
   const directory = new URL("node_modules/.astro/website-theme/", root)
   const file = (key: string) => new URL(`${kind}-${key}`, directory)

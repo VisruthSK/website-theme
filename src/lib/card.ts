@@ -4,6 +4,7 @@ import {
   getPostStats,
   isSubpost,
   postStatItems,
+  postTags,
   type PostEntry,
 } from "@/lib/data-utils"
 import { canonicalizePathSegments } from "@/lib/site-utils"
@@ -28,7 +29,6 @@ export async function postCard(
   const parent = isSubpost(entry.id)
     ? await getParentPost(entry.id, collection)
     : null
-  const tags = data.tags ?? []
   return {
     href: canonicalizePathSegments(section.href, entry.id),
     title: data.title,
@@ -42,6 +42,6 @@ export async function postCard(
           title: parent.data.title,
         }
       : undefined,
-    tags: data.draft ? ["draft", ...tags] : tags,
+    tags: postTags(entry),
   }
 }

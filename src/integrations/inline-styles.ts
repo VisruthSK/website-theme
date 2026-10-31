@@ -1,8 +1,8 @@
 import type { AstroIntegration } from "astro"
-import { createHash } from "node:crypto"
 import { readFile, writeFile } from "node:fs/promises"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
+import { shortHash } from "../lib/build-cache"
 import { siteHtmlPages } from "./html-pages"
 
 const STYLED_TAG = /<([a-z][a-z0-9-]*)([^<>]*?)\sstyle="([^"]*)"([^<>]*)>/gi
@@ -14,9 +14,6 @@ const TOKEN_PROPERTY: Record<string, string> = {
   fw: "font-weight",
   td: "text-decoration",
 }
-
-const hash = (text: string) =>
-  createHash("sha256").update(text).digest("hex").slice(0, 8)
 
 function themeRules(selector: string, style: string) {
   const themes: string[][] = [[], []]
@@ -49,7 +46,7 @@ export function inlineStyles(
           const rewritten = html.replace(
             STYLED_TAG,
             (_, tag, before, style, after) => {
-              const name = `s${hash(style)}`
+              const name = `s${shortHash(style)}`
               rules.set(name, style)
               const attributes = before + after
               return /\sclass="/.test(attributes)
@@ -68,7 +65,7 @@ export function inlineStyles(
               `.${name}{${style}}\n${themeRules(`.${name}`, style)}`,
           )
           .join("\n")
-        const name = `/_astro/inline-styles.${hash(css)}.css`
+        const name = `/_astro/inline-styles.${shortHash(css)}.css`
         const href = `${base}${name}`
         await writeFile(join(root, name), css)
 

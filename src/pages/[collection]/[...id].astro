@@ -1,10 +1,12 @@
 ---
 import Bibliography from "@/components/Bibliography.astro"
-import MetaRow from "@/components/MetaRow.astro"
+import FontPreload from "@/components/FontPreload.astro"
 import MetaPost from "@/components/MetaPost.astro"
-import TagChip from "@/components/TagChip.astro"
+import MetaRow from "@/components/MetaRow.astro"
 import PagefindMeta from "@/components/PagefindMeta.astro"
 import TableOfContents from "@/components/TableOfContents.astro"
+import TagChip from "@/components/TagChip.astro"
+import TypesetScript from "@/components/TypesetScript.astro"
 import {
   FEATURES,
   SECTIONS,
@@ -12,14 +14,11 @@ import {
   SITE,
   type SectionSlug,
 } from "@/consts"
-import { fonts } from "virtual:theme/assets"
-import TypesetScript from "@/components/TypesetScript.astro"
-import codeScript from "@/generated/code.js?url&no-inline"
 import codeStyles from "@/generated/code.css?url&no-inline"
+import codeScript from "@/generated/code.js?url&no-inline"
 import Layout from "@/layouts/Layout.astro"
-import { assertNoBrokenLinks } from "@/lib/links"
+import { buildBacklinks } from "@/lib/backlinks"
 import {
-  withReferencesHeading,
   getAllPostsAndSubposts,
   getParentId,
   getParentPost,
@@ -28,13 +27,16 @@ import {
   getSubpostsForParent,
   isSubpost,
   postStatItems,
+  postTags,
+  withReferencesHeading,
   type PostEntry,
 } from "@/lib/data-utils"
+import { assertNoBrokenLinks } from "@/lib/links"
 import { extractCitedKeys } from "@/lib/markdown/cite"
 import { canonicalizePathSegments, plainTitle } from "@/lib/site-utils"
 import { formatTitleAsHtml } from "@/lib/text"
 import { render } from "astro:content"
-import { buildBacklinks } from "@/lib/backlinks"
+import { fonts } from "virtual:theme/assets"
 
 export async function getStaticPaths() {
   const paths = []
@@ -81,8 +83,7 @@ const chapters = await getSubpostsForParent(seriesId, collection)
 const seriesParent = parent ?? post
 
 const stats = await getPostStats(post)
-const tags = post.data.tags ?? []
-const displayTags = post.data.draft ? ["draft", ...tags] : tags
+const displayTags = postTags(post)
 const parentHref = parent && canonicalizePathSegments(basePath, parent.id)
 const crumbs = [
   ...(parent && parentHref
@@ -98,36 +99,15 @@ const crumbs = [
 <Layout crumbs={crumbs}>
   <MetaPost slot="head" post={post} canonical={parentHref ?? undefined} />
   <TypesetScript slot="head" />
-  {fonts.bodyItalic && (
-    <link
-      slot="head"
-      rel="preload"
-      href={fonts.bodyItalic}
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-  )}
-  {usesMono && fonts.mono && (
-    <link
-      slot="head"
-      rel="preload"
-      href={fonts.mono}
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-  )}
-  {remarkPluginFrontmatter.dropCap && fonts.dropCap && (
-    <link
-      slot="head"
-      rel="preload"
-      href={fonts.dropCap}
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-  )}
+  <Fragment slot="head">
+    {fonts.bodyItalic && <FontPreload href={fonts.bodyItalic} />}
+    {usesMono && fonts.mono && <FontPreload href={fonts.mono} />}
+    {
+      remarkPluginFrontmatter.dropCap && fonts.dropCap && (
+        <FontPreload href={fonts.dropCap} />
+      )
+    }
+  </Fragment>
   <PagefindMeta
     slot="head"
     description={post.data.description}
@@ -135,7 +115,7 @@ const crumbs = [
     parentUrl={parentHref ?? undefined}
     publishedAt={post.data.date.toISOString()}
     sectionLabel={section.label}
-    tags={tags}
+    tags={post.data.tags}
     wordCount={stats.wordCount}
   />
   {hasCode && (
@@ -165,11 +145,15 @@ const crumbs = [
         items={postStatItems(stats)}
         data-pagefind-ignore
       />
-      {displayTags.length > 0 && (
-        <div class="chip-list" data-pagefind-ignore>
-          {displayTags.map((tag) => <TagChip tag={tag} />)}
-        </div>
-      )}
+      {
+        displayTags.length > 0 && (
+          <div class="chip-list" data-pagefind-ignore>
+            {displayTags.map((tag) => (
+              <TagChip tag={tag} />
+            ))}
+          </div>
+        )
+      }
     </header>
 
     {chapters.length > 0 && (
@@ -199,20 +183,19 @@ const crumbs = [
     {backlinks.length > 0 && (
       <aside class="backlinks" data-pagefind-ignore>
         <h2>Mentioned in</h2>
-        <ul>{backlinks.map((entry) => <li><a href={getPostHref(entry)}>{plainTitle(entry.data.title)}</a></li>)}</ul>
+        <ul>
+          {backlinks.map((entry) => (
+            <li>
+              <a href={getPostHref(entry)}>{plainTitle(entry.data.title)}</a>
+            </li>
+          ))}
+        </ul>
       </aside>
     )}
   </article>
 </Layout>
 
 <style>
-  .backlinks {
-    margin-block-start: var(--space-m);
-    font-size: var(--step--1);
-    color: var(--muted-foreground);
-    h2 { font-size: inherit; }
-    ul { padding-inline-start: 1.25rem; }
-  }
   header {
     margin-block-end: var(--space-m);
   }
@@ -250,6 +233,20 @@ const crumbs = [
       &:hover {
         color: var(--foreground);
       }
+    }
+  }
+
+  .backlinks {
+    margin-block-start: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+
+    h2 {
+      font-size: inherit;
+    }
+
+    ul {
+      padding-inline-start: 1.25rem;
     }
   }
 </style>

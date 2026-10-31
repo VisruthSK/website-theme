@@ -2,6 +2,7 @@ import { SECTIONS, SECTION_SLUGS } from "@/consts"
 import {
   getAllPostsAndSubposts,
   getAllPostsAndSubpostsChrono,
+  newestFirst,
   type PostEntry,
 } from "@/lib/data-utils"
 
@@ -18,5 +19,5 @@ export const getSectionPosts = () => collect(getAllPostsAndSubposts)
 
 export async function getSectionPostsChrono() {
   const posts = await collect(getAllPostsAndSubpostsChrono)
-  return posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  return posts.sort(newestFirst)
 }

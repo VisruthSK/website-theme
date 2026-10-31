@@ -16,8 +16,13 @@ if (Number.isNaN(BUILD_NOW.valueOf())) {
   throw new Error(`Invalid SITE_NOW value "${import.meta.env.SITE_NOW}"`)
 }
 
-const newestFirst = (a: PostEntry, b: PostEntry) =>
+export const newestFirst = (a: PostEntry, b: PostEntry) =>
   b.data.date.valueOf() - a.data.date.valueOf()
+
+export const postTags = (post: PostEntry) => [
+  ...(post.data.draft ? ["draft"] : []),
+  ...(post.data.tags ?? []),
+]
 
 const slugOf = (name: string) =>
   name
@@ -129,8 +134,7 @@ export async function getAllTags(
   const counts = new Map<string, number>()
   for (const collection of [collections].flat()) {
     for (const post of await getAllPosts(collection)) {
-      const drafted = INCLUDE_DRAFTS && post.data.draft ? ["draft"] : []
-      for (const tag of [...(post.data.tags ?? []), ...drafted]) {
+      for (const tag of postTags(post)) {
         counts.set(tag, (counts.get(tag) ?? 0) + 1)
       }
     }

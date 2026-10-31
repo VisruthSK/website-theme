@@ -1,3 +1,5 @@
+import type { APIContext } from "astro"
+
 import { SITE } from "@/consts"
 
 export function calculateWordCountFromHtml(
@@ -10,6 +12,9 @@ export function calculateWordCountFromHtml(
 
 export const siteOrigin = ({ site, url }: { site?: URL; url: URL }) =>
   site ?? new URL(url.origin)
+
+export const resolveSiteUrl = (context: APIContext) =>
+  (context.site?.toString() ?? SITE.href).replace(/\/$/, "")
 
 export function readingTime(wordCount: number): string {
   const readingTimeMinutes = Math.max(1, Math.round(wordCount / 200))

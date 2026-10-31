@@ -3,7 +3,6 @@ import { FEATURES } from "@/consts"
 import type { PostEntry } from "@/lib/data-utils"
 import { extractCitedKeys } from "@/lib/markdown/cite"
 import type { RSSFeedItem } from "@astrojs/rss"
-import type { APIContext } from "astro"
 import { experimental_AstroContainer as AstroContainer } from "astro/container"
 import { loadRenderers } from "astro:container"
 import { render, type CollectionEntry } from "astro:content"
@@ -136,10 +135,6 @@ export function renderEntryContent(entry: RenderableEntry, baseUrl: string) {
     renderedContent.set(key, content)
   }
   return content
-}
-
-export function resolveSiteUrl(context: APIContext, fallback: string): string {
-  return (context.site?.toString() ?? fallback).replace(/\/$/, "")
 }
 
 export async function buildFeedItem(

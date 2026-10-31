@@ -4,7 +4,7 @@ import ThemeToggle from "@/components/ThemeToggle.astro"
 import { NAVIGATION, SITE } from "@/consts"
 import MenuIcon from "@/icons/menu.svg"
 import CloseIcon from "@/icons/x.svg"
-import { externalTo } from "@/lib/external-link-utils"
+import { externalTo, newTabProps } from "@/lib/external-link-utils"
 import { normalizePath } from "@/lib/utils"
 
 type Props = { crumbs?: { label: string; href: string }[] }
@@ -43,8 +43,7 @@ const isExternal = externalTo(SITE.href)
           <a
             href={item.href}
             aria-current={pathname === item.href ? "page" : undefined}
-            target={isExternal(item.href) ? "_blank" : undefined}
-            rel={isExternal(item.href) ? "noopener noreferrer" : undefined}
+            {...newTabProps(isExternal(item.href))}
           >
             {item.label}
           </a>

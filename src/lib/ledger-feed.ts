@@ -1,12 +1,11 @@
 import type { APIContext } from "astro"
 
-import { SITE } from "@/consts"
 import { withBase } from "@/lib/base"
-import { resolveSiteUrl } from "@/lib/content-render"
 import { respondWithFeed } from "@/lib/feed"
 import { ledgerPermalinks } from "@/lib/ledger"
 import { getLedger } from "@/lib/ledger-entries"
 import { renderLedgerNote } from "@/lib/ledger-note"
+import { resolveSiteUrl } from "@/lib/site-utils"
 
 interface LedgerSource {
   collection: string
@@ -26,7 +25,7 @@ export async function renderLedgerFeed(
   sources: LedgerSource[],
   { title, description }: { title: string; description: string },
 ) {
-  const site = resolveSiteUrl(context, SITE.href)
+  const site = resolveSiteUrl(context)
   const absolutize = (html: string) =>
     html.replaceAll('href="/', `href="${site}/`)
 

@@ -1,12 +1,9 @@
 import type { AstroIntegration } from "astro"
-import { createHash } from "node:crypto"
 import { glob, readFile, rm, writeFile } from "node:fs/promises"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
+import { shortHash } from "../lib/build-cache"
 import { arrangeStyles } from "../lib/page-styles"
-
-const hash = (text: string) =>
-  createHash("sha256").update(text).digest("hex").slice(0, 8)
 
 export function bundleCss(base: string): AstroIntegration {
   const stylesheet = new RegExp(
@@ -23,7 +20,7 @@ export function bundleCss(base: string): AstroIntegration {
         const fileOf = (href: string) => join(root, href.slice(base.length))
 
         const emit = async (stem: string, css: string) => {
-          const href = `${base}/_astro/${stem}.${hash(css)}.css`
+          const href = `${base}/_astro/${stem}.${shortHash(css)}.css`
           if (!written.has(href)) {
             written.add(href)
             await writeFile(fileOf(href), css)

@@ -76,7 +76,6 @@ export function pagefindSearch(): AstroIntegration {
           await patchPagefindRuntime(pagefindPath)
 
           await cp(pagefindPath, pagefindPublicPath, { recursive: true })
-          await patchPagefindRuntime(pagefindPublicPath)
 
           logger.info(`Pagefind indexed ${indexing.page_count} pages.`)
         } finally {

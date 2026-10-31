@@ -2,7 +2,7 @@
 import Page from "@/components/Page.astro"
 import PostCard from "@/components/PostCard.astro"
 import { SECTIONS, SECTION_SLUGS } from "@/consts"
-import { getAllTags, getPostsByTag } from "@/lib/data-utils"
+import { getAllTags, getPostsByTag, newestFirst } from "@/lib/data-utils"
 
 export async function getStaticPaths() {
   const collections = SECTION_SLUGS.map((slug) => SECTIONS[slug].collection)
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
         )
       )
         .flat()
-        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+        .sort(newestFirst)
       return { params: { id: tag }, props: { tag, posts } }
     }),
   )
