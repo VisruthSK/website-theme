@@ -1,0 +1,53 @@
+the-gift-of-the-magi:
+  title: The Gift of the Magi
+  creator: O. Henry
+  published: 1905
+  rating: 9
+  favorite: true
+  started: 2026-10-01
+  ended: 2026-10-14
+  note: Two gifts that cancel each other out, and the better for it.
+  link: the-gift-of-the-magi
+
+the-selfish-giant-reread:
+  title: The Selfish Giant
+  creator: Oscar Wilde
+  published: May 1888
+  rating: 8
+  started: 2026-09-12
+  ended: 2026-09-20
+  note: |
+    Better the second time, once I stopped waiting for the ending.
+
+    The garden is the whole story, and the winter in it never quite leaves.
+  link: the-selfish-giant
+
+moby-dick:
+  title: Moby-Dick
+  creator: Herman Melville
+  published: 1851-10-18
+  rating: DNF
+  started: 2026-08-03
+  ended: 2026-08-20
+  note: Stopped in the middle of the whaling chapters.
+
+the-selfish-giant:
+  title: The Selfish Giant
+  creator: Oscar Wilde
+  published: 18880504
+  rating: 6
+  ended: 2025-12-30
+  note: A first reading, with no dates kept.
+
+an-unscored-book:
+  title: Walden
+  creator: Henry David Thoreau
+  published: 1854
+  started: 2025-03-02
+  ended: 2025-03-20
+
+an-undated-book:
+  title: Dracula
+  creator: Bram Stoker
+  published: 1897
+  rating: 7

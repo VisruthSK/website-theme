@@ -1,0 +1,12 @@
+---
+import Ledger from '@/components/Ledger.astro'
+import { getCollection } from 'astro:content'
+---
+
+<Ledger
+  title="Reading"
+  href="/reading"
+  description="Public domain books and stories read for this example site."
+  linkLabel="Essay"
+  entries={await getCollection('reading')}
+/>

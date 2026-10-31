@@ -36,12 +36,6 @@
             "rtl"
           ]
         },
-        "postsPerPage": {
-          "default": 10,
-          "type": "integer",
-          "exclusiveMinimum": 0,
-          "maximum": 9007199254740991
-        },
         "featuredPostCount": {
           "default": 3,
           "type": "integer",

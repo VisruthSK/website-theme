@@ -1,0 +1,23 @@
+---
+import EntryCard from '@/components/EntryCard.astro'
+import { groupPostsByYear, type PostEntry } from '@/lib/data-utils'
+
+type Props = { entries: PostEntry[] }
+
+const { entries } = Astro.props
+const byYear = groupPostsByYear(entries)
+const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a))
+---
+
+{
+  years.map((year) => (
+    <entry-group>
+      <h2 data-year>{year}</h2>
+      <ul data-entries>
+        {byYear[year].map((entry) => (
+          <EntryCard entry={entry} />
+        ))}
+      </ul>
+    </entry-group>
+  ))
+}

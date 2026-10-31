@@ -5,8 +5,7 @@
     "description": "Public domain stories in a quiet setting",
     "href": "https://journal.example.net/",
     "author": "Sample Writer",
-    "locale": "en-GB",
-    "postsPerPage": 5
+    "locale": "en-GB"
   },
   "sections": [
     {

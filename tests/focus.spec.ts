@@ -27,11 +27,6 @@ for (const mode of ['light', 'dark'] as Mode[]) {
       { url: listing, focus: '.chip' },
       { url: listing, focus: '.card-overlay', read: '.interactive-card' },
       { url: site.typeset[0], focus: 'aside nav ul ul a' },
-      {
-        url: listing,
-        focus: '.pagination-link:not(.is-disabled)',
-        optional: true,
-      },
       ...(site.series
         ? [{ url: site.series, focus: 'nav[aria-label="Chapters"] a' }]
         : []),

@@ -16,21 +16,20 @@ const input = $('[data-search-input]')
 const readout = $('[data-search-status]')
 const section = $('[data-search-section]')
 const list = $('[data-search-results]')
-const nav = $('[data-search-pagination]')
 const template = $('#search-result-template')
 
-const pageSize = Number.parseInt(section.dataset.pageSize, 10) || 10
-const dateFormat = new Intl.DateTimeFormat('en-US', {
+const monthFormat = new Intl.DateTimeFormat('en-US', {
   timeZone: 'UTC',
-  year: 'numeric',
   month: 'long',
-  day: 'numeric',
 })
+const formatDate = (time) => {
+  const date = new Date(time)
+  return `${date.getUTCDate()} ${monthFormat.format(date)} ${date.getUTCFullYear()}`
+}
 const numberFormat = new Intl.NumberFormat('en-US')
 
 const url = new URL(window.location.href)
 let query = url.searchParams.get('q') ?? ''
-let page = Math.max(1, Number.parseInt(url.searchParams.get('page'), 10) || 1)
 let results = []
 let ticket = 0
 let timer = 0
@@ -132,7 +131,7 @@ const toResult = async (hit) => {
     .map((prefix) => prefix.trim())
     .filter(Boolean)
 
-  return {
+  const result = {
     url: data.url,
     title,
     sectionLabel,
@@ -146,14 +145,31 @@ const toResult = async (hit) => {
       withoutLeading(excerpt.text, prefixes) ||
       withoutLeading(meta.description ?? '', prefixes),
   }
+
+  const entries =
+    meta.entries === 'true'
+      ? data.sub_results
+          .filter((sub) => sub.anchor)
+          .map((sub) => {
+            const subExcerpt = parseExcerpt(sub.excerpt)
+            return {
+              ...result,
+              url: sub.url,
+              title: sub.title,
+              terms: termsFor(subExcerpt.marked),
+              publishedAt: 0,
+              wordCount: 0,
+              snippet: withoutLeading(subExcerpt.text, [sub.title]),
+            }
+          })
+      : []
+  return entries.length ? entries : [result]
 }
 
 const metaItems = (result) => {
   const items = []
   if (result.publishedAt > 0) {
-    items.push(
-      element('span', 'meta-item', dateFormat.format(result.publishedAt)),
-    )
+    items.push(element('span', 'meta-item', formatDate(result.publishedAt)))
   }
   if (result.wordCount > 0) {
     const minutes = Math.max(1, Math.round(result.wordCount / WORDS_PER_MINUTE))
@@ -218,61 +234,10 @@ const resultNode = (result) => {
   return node
 }
 
-const pageButton = (target, label, ariaLabel, disabled = false) => {
-  const button = element('button', 'pagination-link', label)
-  button.type = 'button'
-  button.dataset.page = String(target)
-  button.setAttribute('aria-label', ariaLabel)
-  if (disabled) {
-    button.disabled = true
-    button.classList.add('is-disabled')
-  }
-  if (target === page && label === String(target)) {
-    button.classList.add('is-active')
-    button.setAttribute('aria-current', 'page')
-  }
-  return button
-}
-
-const paginationList = (totalPages) => {
-  const shown = [...new Set([1, totalPages, page - 1, page, page + 1])]
-    .filter((number) => number >= 1 && number <= totalPages)
-    .sort((a, b) => a - b)
-
-  const items = [
-    pageButton(Math.max(1, page - 1), '‹', 'Previous page', page === 1),
-  ]
-  shown.forEach((number, index) => {
-    if (index && number - shown[index - 1] > 1) {
-      items.push(element('span', 'pagination-ellipsis', '…'))
-    }
-    items.push(pageButton(number, String(number), `Go to page ${number}`))
-  })
-  items.push(
-    pageButton(
-      Math.min(totalPages, page + 1),
-      '›',
-      'Next page',
-      page === totalPages,
-    ),
-  )
-
-  const ul = element('ul', 'pagination-list')
-  ul.append(
-    ...items.map((item) => {
-      const li = document.createElement('li')
-      li.append(item)
-      return li
-    }),
-  )
-  return ul
-}
-
 const syncUrl = () => {
   if (query) url.searchParams.set('q', query)
   else url.searchParams.delete('q')
-  if (page > 1) url.searchParams.set('page', String(page))
-  else url.searchParams.delete('page')
+  url.searchParams.delete('page')
   window.history.replaceState({}, '', url)
 }
 
@@ -280,8 +245,6 @@ const reset = (message) => {
   results = []
   list.replaceChildren()
   section.hidden = true
-  nav.hidden = true
-  nav.replaceChildren()
   readout.textContent = message
 }
 
@@ -296,16 +259,9 @@ const show = async (current = ticket) => {
     return reset(query ? 'No matches found. Try different keywords.' : IDLE)
   }
 
-  const totalPages = Math.ceil(results.length / pageSize)
-  page = Math.min(Math.max(1, page), totalPages)
-  syncUrl()
-
-  const start = (page - 1) * pageSize
   let visible
   try {
-    visible = await Promise.all(
-      results.slice(start, start + pageSize).map(toResult),
-    )
+    visible = (await Promise.all(results.map(toResult))).flat()
   } catch (error) {
     console.error(error)
     if (current === ticket) reset(UNAVAILABLE)
@@ -315,18 +271,15 @@ const show = async (current = ticket) => {
 
   section.hidden = false
   readout.textContent =
-    results.length === 1
+    visible.length === 1
       ? 'Showing 1 match.'
-      : `Showing ${start + 1}–${start + visible.length} of ${results.length} matches.`
+      : `Showing ${visible.length} matches.`
   list.replaceChildren(...visible.map(resultNode))
-  nav.hidden = totalPages <= 1
-  nav.replaceChildren(...(totalPages > 1 ? [paginationList(totalPages)] : []))
 }
 
-const search = async (text, keepPage = false) => {
+const search = async (text) => {
   const current = ++ticket
   query = text.trim()
-  if (!keepPage) page = 1
   syncUrl()
   if (!query) return reset(IDLE)
 
@@ -361,12 +314,5 @@ $('form[role="search"]').addEventListener('submit', (event) => {
   void search(input.value)
 })
 
-nav.addEventListener('click', (event) => {
-  const button = event.target.closest?.('button[data-page]')
-  if (!button || button.disabled) return
-  page = Math.max(1, Number.parseInt(button.dataset.page, 10) || 1)
-  void show()
-})
-
-if (query.trim()) void search(query, true)
+if (query.trim()) void search(query)
 else reset(IDLE)
