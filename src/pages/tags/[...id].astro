@@ -1,0 +1,55 @@
+---
+import EntryCard from '@/components/EntryCard.astro'
+import MetaPage from '@/components/MetaPage.astro'
+import { SECTIONS, SECTION_SLUGS } from '@/consts'
+import FeedLink from '@/components/FeedLink.astro'
+import PageHeading from '@/components/PageHeading.astro'
+import Layout from '@/layouts/Layout.astro'
+import { getAllTags, getPostsByTag } from '@/lib/data-utils'
+
+export async function getStaticPaths() {
+  const collections = SECTION_SLUGS.map((slug) => SECTIONS[slug].collection)
+  const tags = await getAllTags(collections)
+
+  return Promise.all(
+    [...tags.keys()].map(async (tag) => {
+      const posts = (
+        await Promise.all(
+          collections.map((collection) => getPostsByTag(tag, collection)),
+        )
+      )
+        .flat()
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+      return { params: { id: tag }, props: { tag, posts } }
+    }),
+  )
+}
+
+const { tag, posts } = Astro.props
+const feed = {
+  href: `/tags/${encodeURIComponent(tag)}/rss.xml`,
+  label: `RSS feed for #${tag}`,
+}
+---
+
+<Layout
+  crumbs={[{ label: `#${tag}`, href: `/tags/${encodeURIComponent(tag)}` }]}
+>
+  <MetaPage
+    slot="head"
+    title={`Posts tagged with "${tag}"`}
+    description={`A collection of posts tagged with ${tag}.`}
+    noindex
+  />
+  <FeedLink slot="head" href={feed.href} title={feed.label} />
+
+  <PageHeading title={`#${tag}`} feed={feed} />
+  <p class="meta-row">
+    {posts.length} post{posts.length === 1 ? '' : 's'}
+  </p>
+  <ul data-entries>
+    {posts.map((post) => (
+      <EntryCard heading="h2" entry={post} />
+    ))}
+  </ul>
+</Layout>

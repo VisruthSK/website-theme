@@ -1,0 +1,28 @@
+---
+import HomePosts from '@/components/HomePosts.astro'
+import MetaPage from '@/components/MetaPage.astro'
+import { SITE } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+---
+
+<Layout>
+  <MetaPage slot="head" title="Home" />
+
+  <header>
+    <h1 data-page-title>{SITE.title}</h1>
+    <p>{SITE.description}</p>
+  </header>
+
+  <HomePosts />
+</Layout>
+
+<style>
+  header {
+    margin-block-end: var(--space-m);
+
+    p {
+      margin-block-start: var(--space-3xs);
+      color: var(--muted-foreground);
+    }
+  }
+</style>

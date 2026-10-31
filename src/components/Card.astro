@@ -1,0 +1,12 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+type Props = HTMLAttributes<'li'> & { href: string; label: string }
+
+const { href, label, ...attributes } = Astro.props
+---
+
+<li class="interactive-card" {...attributes}>
+  <a class="card-overlay" href={href} aria-label={label}></a>
+  <div class="card-body"><slot /></div>
+</li>

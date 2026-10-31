@@ -1,0 +1,141 @@
+---
+import Link from '@/components/Link.astro'
+import { PATHS } from '@/consts'
+import { formatAuthors, readBibliography } from '@/lib/bibliography'
+
+interface Props {
+  bib: string
+  citedKeys: string[]
+}
+
+const { bib, citedKeys } = Astro.props
+const bibliography = readBibliography(PATHS.bibliographies, bib)
+const entries = citedKeys.flatMap((key) => bibliography?.[key] ?? [])
+
+const warning = !bibliography
+  ? `Bibliography file not found: ${bib}.bib`
+  : entries.length === 0
+    ? `Bibliography is empty: ${bib}.bib`
+    : null
+---
+
+{warning ? (
+  <div class="bibliography-warning">
+    <p>
+      <strong>Warning:</strong> {warning}
+    </p>
+  </div>
+) : (
+  <section class="bibliography" aria-label="References">
+    <h2 id="references">References</h2>
+    <ol class="bibliography-list">
+      {entries.map((entry) => (
+        <li id={`ref-${entry.key}`} class="bibliography-entry">
+          <span class="bibliography-authors">
+            {formatAuthors(entry.author, 100)}
+          </span>{' '}
+          <span class="bibliography-year">({entry.year ?? "n.d."}).</span>{' '}
+          <span class="bibliography-title">{entry.title}.</span>
+          {entry.journal && (
+            <>
+              {' '}
+              <em class="bibliography-journal">{entry.journal}</em>
+              {entry.volume && (
+                <span class="bibliography-volume">, {entry.volume}</span>
+              )}
+              {entry.issue && (
+                <span class="bibliography-issue">({entry.issue})</span>
+              )}
+              {entry.pages && (
+                <span class="bibliography-pages">, {entry.pages}</span>
+              )}
+              .
+            </>
+          )}
+          {entry.publisher && !entry.journal && (
+            <>
+              {' '}
+              <span class="bibliography-publisher">{entry.publisher}.</span>
+            </>
+          )}
+          {entry.doi && (
+            <>
+              {' '}
+              <Link
+                href={`https://doi.org/${entry.doi}`}
+                class="bibliography-doi"
+              >
+                doi:{entry.doi}
+              </Link>
+            </>
+          )}
+          {entry.url && !entry.doi && (
+            <>
+              {' '}
+              <Link href={entry.url} class="bibliography-url">
+                {entry.url}
+              </Link>
+            </>
+          )}
+        </li>
+      ))}
+    </ol>
+  </section>
+)}
+
+<style>
+  .bibliography {
+    margin: 2rem 0;
+  }
+
+  .bibliography h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .bibliography-list {
+    list-style-type: none;
+    counter-reset: bibliography-counter;
+    padding-left: 0;
+  }
+
+  .bibliography-entry {
+    counter-increment: bibliography-counter;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .bibliography-entry::before {
+    content: '[' counter(bibliography-counter) ']';
+    position: absolute;
+    left: 0;
+    font-weight: 500;
+  }
+
+  .bibliography-authors {
+    font-weight: 500;
+  }
+
+  .bibliography-title {
+    font-style: normal;
+  }
+
+  .bibliography-journal {
+    font-style: italic;
+  }
+
+  .bibliography-warning {
+    margin: 1rem 0;
+    border-left: 4px solid var(--warning);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    background: var(--surface-warning);
+  }
+
+  .bibliography-warning p {
+    margin: 0;
+    color: var(--ink-strong);
+  }
+</style>

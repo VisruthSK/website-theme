@@ -1,0 +1,28 @@
+---
+import SeoMeta from '@/components/SeoMeta.astro'
+import { SITE } from '@/consts'
+import { pageTitle, siteOrigin } from '@/lib/site-utils'
+
+type Props = {
+  title?: string
+  description?: string
+  noindex?: boolean
+}
+
+const { title, description = SITE.description, noindex = false } = Astro.props
+
+const base = siteOrigin(Astro)
+const ogTitle = title ?? SITE.title
+const fullTitle = title ? pageTitle(title) : SITE.title
+const canonical = new URL(Astro.url.pathname, base)
+---
+
+{noindex && <meta name="robots" content="noindex, nofollow">}
+<SeoMeta
+  title={ogTitle}
+  fullTitle={fullTitle}
+  description={description}
+  canonical={canonical}
+  url={canonical}
+  type="website"
+/>

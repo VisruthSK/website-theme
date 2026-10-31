@@ -1,0 +1,74 @@
+---
+import EntryGroup from '@/components/EntryGroup.astro'
+import FeedLink from '@/components/FeedLink.astro'
+import LedgerCard from '@/components/LedgerCard.astro'
+import MetaPage from '@/components/MetaPage.astro'
+import PageHeading from '@/components/PageHeading.astro'
+import PageIntro from '@/components/PageIntro.astro'
+import PagefindMeta from '@/components/PagefindMeta.astro'
+import RatingSpread from '@/components/RatingSpread.astro'
+import Layout from '@/layouts/Layout.astro'
+import { ledgerGroups, ledgerPermalinks, type LedgerEntry } from '@/lib/ledger'
+import { getCollection } from 'astro:content'
+
+type Props = {
+  title: string
+  description?: string
+  entries?: LedgerEntry[]
+  href?: string
+  linkLabel?: string
+  dated?: boolean
+  ratings?: boolean
+  feed?: { href: string; label: string }
+}
+
+const {
+  title,
+  description,
+  linkLabel = 'Link',
+  dated = true,
+  ratings = false,
+  feed,
+} = Astro.props
+const name = title.toLowerCase()
+const {
+  entries = (await getCollection(name as never)) as LedgerEntry[],
+  href = `/${name}`,
+} = Astro.props
+
+const groups = dated ? ledgerGroups(entries) : [{ heading: '', entries }]
+const permalinks = ledgerPermalinks(entries)
+---
+
+<Layout crumbs={[{ label: title, href }]}>
+  <MetaPage slot="head" title={title} description={description} />
+  <PagefindMeta slot="head" sectionLabel={title} entries />
+  {feed && <FeedLink slot="head" href={feed.href} title={feed.label} />}
+
+  <div data-pagefind-body>
+    <PageHeading title={title} feed={feed} />
+    {
+      (description || Astro.slots.has('intro')) && (
+        <PageIntro>
+          {description}
+          <slot name="intro" />
+        </PageIntro>
+      )
+    }
+    {ratings && <RatingSpread entries={entries} />}
+    {
+      groups.map(({ heading, entries: group }) => (
+        <EntryGroup heading={heading} year>
+          {group.map((entry) => (
+            <LedgerCard
+              entry={entry}
+              permalink={permalinks.get(entry.id)!}
+              dated={dated}
+              linkLabel={linkLabel}
+            />
+          ))}
+        </EntryGroup>
+      ))
+    }
+  </div>
+</Layout>

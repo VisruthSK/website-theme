@@ -1,0 +1,99 @@
+---
+import MetaPage from '@/components/MetaPage.astro'
+import { PAGES, SITE } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+import searchScriptUrl from '@/scripts/search.js?url&no-inline'
+---
+
+<Layout crumbs={[{ label: 'Search', href: '/search' }]}>
+  <MetaPage
+    slot="head"
+    title="Search"
+    description={`Search through ${SITE.title}`}
+  />
+
+  <search-page>
+    <header>
+      <h1 data-page-title>Find something specific</h1>
+      <p>Full-text search across everything in {SITE.title}</p>
+    </header>
+
+    <form role="search">
+      <label for="site-search">
+        <span class="sr-only">Search the site</span>
+        <input
+          id="site-search"
+          name="q"
+          type="search"
+          placeholder={PAGES.search.placeholder}
+          autocomplete="off"
+          spellcheck="false"
+          data-search-input
+        />
+      </label>
+    </form>
+
+    <p class="meta-row" data-search-status></p>
+  </search-page>
+
+  <section data-search-section hidden>
+    <ol data-search-results data-entries aria-live="polite"></ol>
+  </section>
+</Layout>
+
+<template id="search-result-template">
+  <li class="interactive-card search-result">
+    <a class="card-overlay" data-link aria-label=""></a>
+    <div class="card-body">
+        <div class="card-eyebrow" data-section></div>
+        <h3 class="card-title" data-title></h3>
+        <div class="meta-row" data-meta></div>
+        <div class="chip-list" data-tags></div>
+        <p class="card-excerpt" data-snippet></p>
+    </div>
+  </li>
+</template>
+
+<script is:inline type="module" src={searchScriptUrl}></script>
+
+<style>
+  search-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    margin-block-end: var(--space-m);
+
+    header p {
+      color: var(--muted-foreground);
+    }
+  }
+
+  label {
+    display: block;
+  }
+
+  input {
+    inline-size: 100%;
+    padding: 0.9rem 1.125rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    background: color-mix(in oklab, var(--muted) 10%, transparent);
+    color: inherit;
+    font: inherit;
+    font-size: var(--step--1);
+
+    &::placeholder {
+      color: var(--ink-muted);
+    }
+
+    &:focus-visible {
+      border-color: var(--ring);
+      background: color-mix(in oklab, var(--muted) 20%, transparent);
+    }
+  }
+
+  [data-search-results] {
+    list-style: none;
+    padding: 0;
+  }
+</style>

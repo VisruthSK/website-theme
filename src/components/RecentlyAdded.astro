@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content'
+
+import Card from '@/components/Card.astro'
+import EntryGroup from '@/components/EntryGroup.astro'
+import Time from '@/components/Time.astro'
+import { withBase } from '@/lib/base'
+import { ledgerPermalinks, type LedgerEntry } from '@/lib/ledger'
+
+type Props = {
+  sources: { collection: string; href: string; noun: string }[]
+  limit?: number
+  title?: string
+}
+
+const { sources, limit = 5, title = 'Recently added' } = Astro.props
+
+const items = (
+  await Promise.all(
+    sources.map(async ({ collection, href, noun }) => {
+      const entries = (await getCollection(collection as never)) as LedgerEntry[]
+      const permalinks = ledgerPermalinks(entries)
+      return entries.flatMap(({ id, data }) =>
+        data.added
+          ? [{ title: data.title, noun, added: data.added, href: `${withBase(href)}#${permalinks.get(id)}` }]
+          : [],
+      )
+    }),
+  )
+)
+  .flat()
+  .toSorted((a, b) => b.added.valueOf() - a.added.valueOf())
+  .slice(0, limit)
+---
+
+{
+  items.length > 0 && (
+    <EntryGroup heading={title}>
+        {items.map((item) => (
+          <Card href={item.href} label={item.title}>
+              <div class="card-eyebrow">{item.noun}</div>
+              <h3 class="card-title">{item.title}</h3>
+              <div class="meta-row">
+                <Time date={item.added} />
+              </div>
+          </Card>
+        ))}
+    </EntryGroup>
+  )
+}
+

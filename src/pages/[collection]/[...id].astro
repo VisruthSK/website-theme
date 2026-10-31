@@ -1,0 +1,249 @@
+---
+import Bibliography from '@/components/Bibliography.astro'
+import MetaRow from '@/components/MetaRow.astro'
+import PostMeta from '@/components/PostMeta.astro'
+import TagChip from '@/components/TagChip.astro'
+import PagefindMeta from '@/components/PagefindMeta.astro'
+import TableOfContents from '@/components/TableOfContents.astro'
+import { FEATURES, SECTIONS, SECTION_SLUGS, SITE, type SectionSlug } from '@/consts'
+import { fonts } from 'virtual:theme/assets'
+import TypesetScript from '@/components/TypesetScript.astro'
+import codeScript from '@/generated/code.js?url&no-inline'
+import codeStyles from '@/generated/code.css?url&no-inline'
+import Layout from '@/layouts/Layout.astro'
+import { assertNoBrokenLinks } from '@/lib/links'
+import {
+  withReferencesHeading,
+  getAllPostsAndSubposts,
+  getParentId,
+  getParentPost,
+  getPostHref,
+  getPostStats,
+  getSubpostsForParent,
+  isSubpost,
+  postStatItems,
+  type PostEntry,
+} from '@/lib/data-utils'
+import { extractCitedKeys } from '@/lib/markdown/cite'
+import { canonicalizePathSegments, plainTitle } from '@/lib/site-utils'
+import { formatTitleAsHtml } from '@/lib/text'
+import { render } from 'astro:content'
+import { buildBacklinks } from '@/lib/backlinks'
+
+export async function getStaticPaths() {
+  const paths = []
+  const backlinksFor = await buildBacklinks(SITE.href)
+  for (const slug of SECTION_SLUGS) {
+    const posts = await getAllPostsAndSubposts(SECTIONS[slug].collection)
+    for (const post of posts) {
+      paths.push({
+        params: { collection: slug, id: post.id },
+        props: { post, backlinks: backlinksFor(post) },
+      })
+    }
+  }
+  return paths
+}
+
+const post = Astro.props.post as PostEntry
+const backlinks = Astro.props.backlinks as PostEntry[]
+const section = SECTIONS[Astro.params.collection as SectionSlug]
+const { collection } = section
+const basePath = section.href
+
+const { Content, headings, remarkPluginFrontmatter } = await render(post)
+assertNoBrokenLinks(post.id, remarkPluginFrontmatter)
+const body = post.body ?? ''
+const { bib } = post.data
+const hasBibliography = Boolean(bib)
+const hasCode = /^\s*(```|~~~)/m.test(body)
+const usesMono =
+  hasCode || [post.data.title, body].some((text) => /`[^`\n]+`/.test(text))
+const citedKeys = hasBibliography ? extractCitedKeys(body) : []
+
+const tocHeadings = withReferencesHeading(headings, hasBibliography).filter(
+  ({ depth, text }) => depth >= 2 && depth <= 4 && text.trim(),
+)
+const showToc =
+  tocHeadings.length > 1 || (tocHeadings.length > 0 && hasBibliography)
+
+const parent = isSubpost(post.id)
+  ? await getParentPost(post.id, collection)
+  : null
+const seriesId = isSubpost(post.id) ? getParentId(post.id) : post.id
+const chapters = await getSubpostsForParent(seriesId, collection)
+const seriesParent = parent ?? post
+
+const stats = await getPostStats(post)
+const tags = post.data.tags ?? []
+const displayTags = post.data.draft ? ['draft', ...tags] : tags
+const parentHref = parent && canonicalizePathSegments(basePath, parent.id)
+const crumbs = [
+  ...(parent && parentHref
+    ? [{ label: plainTitle(parent.data.title), href: parentHref }]
+    : []),
+  {
+    label: plainTitle(post.data.title),
+    href: canonicalizePathSegments(basePath, post.id),
+  },
+]
+---
+
+<Layout crumbs={crumbs}>
+  <PostMeta slot="head" post={post} canonical={parentHref ?? undefined} />
+  <TypesetScript slot="head" />
+  {fonts.bodyItalic && (
+    <link
+      slot="head"
+      rel="preload"
+      href={fonts.bodyItalic}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  )}
+  {usesMono && fonts.mono && (
+    <link
+      slot="head"
+      rel="preload"
+      href={fonts.mono}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  )}
+  {remarkPluginFrontmatter.dropCap && fonts.dropCap && (
+    <link
+      slot="head"
+      rel="preload"
+      href={fonts.dropCap}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  )}
+  <PagefindMeta
+    slot="head"
+    description={post.data.description}
+    parentTitle={parent?.data.title}
+    parentUrl={parentHref ?? undefined}
+    publishedAt={post.data.date.toISOString()}
+    sectionLabel={section.label}
+    tags={tags}
+    wordCount={stats.wordCount}
+  />
+  {hasCode && (
+    <Fragment slot="head">
+      <link rel="stylesheet" href={codeStyles} />
+      <script is:inline type="module" src={codeScript} />
+    </Fragment>
+  )}
+  {showToc && (
+    <TableOfContents
+      slot="toc"
+      title="Table of Contents"
+      sections={[{ label: plainTitle(post.data.title), headings: tocHeadings }]}
+    />
+  )}
+
+  <article data-pagefind-body>
+    <header>
+      <h1
+        id="post-title"
+        data-page-title
+        data-pagefind-weight="10"
+        set:html={formatTitleAsHtml(post.data.title)}
+      />
+      <MetaRow
+        date={post.data.date}
+        items={postStatItems(stats)}
+        data-pagefind-ignore
+      />
+      {displayTags.length > 0 && (
+        <div class="chip-list" data-pagefind-ignore>
+          {displayTags.map((tag) => <TagChip tag={tag} />)}
+        </div>
+      )}
+    </header>
+
+    {chapters.length > 0 && (
+      <nav aria-label="Chapters" data-pagefind-ignore>
+        <h2>Chapters</h2>
+        <ol>
+          {[seriesParent, ...chapters].map((chapter) => (
+            <li>
+              <a
+                href={getPostHref(chapter)}
+                aria-current={chapter.id === post.id ? 'page' : undefined}
+              >
+                {chapter.data.title}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <prose-content data-compact={stats.wordCount < 500 || undefined}>
+      <Content />
+      {FEATURES.citations && bib && citedKeys.length > 0 && (
+        <Bibliography bib={bib} citedKeys={citedKeys} />
+      )}
+    </prose-content>
+    {backlinks.length > 0 && (
+      <aside class="backlinks" data-pagefind-ignore>
+        <h2>Mentioned in</h2>
+        <ul>{backlinks.map((entry) => <li><a href={getPostHref(entry)}>{plainTitle(entry.data.title)}</a></li>)}</ul>
+      </aside>
+    )}
+  </article>
+</Layout>
+
+<style>
+  .backlinks {
+    margin-block-start: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+    h2 { font-size: inherit; }
+    ul { padding-inline-start: 1.25rem; }
+  }
+  header {
+    margin-block-end: var(--space-m);
+  }
+
+  header > :global(.meta-row) {
+    margin-block-start: var(--space-3xs);
+  }
+
+  header > :global(.chip-list) {
+    margin-block-start: var(--space-2xs);
+  }
+
+  nav[aria-label='Chapters'] {
+    margin-block-end: var(--space-m);
+    padding: var(--space-xs);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    font-size: var(--step--1);
+
+    h2 {
+      margin-block-end: var(--space-3xs);
+      font-size: var(--step-0);
+    }
+
+    ol {
+      padding-inline-start: 1.25rem;
+    }
+
+    a {
+      display: inline-block;
+      min-block-size: 1.5rem;
+      color: var(--muted-foreground);
+
+      &[aria-current='page'],
+      &:hover {
+        color: var(--foreground);
+      }
+    }
+  }
+</style>

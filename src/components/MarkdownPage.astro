@@ -1,0 +1,36 @@
+---
+import MetaPage from '@/components/MetaPage.astro'
+import PageHeading from '@/components/PageHeading.astro'
+import PagefindMeta from '@/components/PagefindMeta.astro'
+import Layout from '@/layouts/Layout.astro'
+import { assertNoBrokenLinks } from '@/lib/links'
+import { formatTitleAsHtml } from '@/lib/text'
+import type { CollectionEntry } from 'astro:content'
+import { render } from 'astro:content'
+
+interface Props {
+  entry: CollectionEntry<'pages'>
+}
+
+const { entry } = Astro.props
+const { Content, remarkPluginFrontmatter } = await render(entry)
+assertNoBrokenLinks(entry.id, remarkPluginFrontmatter)
+const { title, description, date } = entry.data
+---
+
+<Layout crumbs={[{ label: title, href: `/${entry.id}` }]}>
+  <MetaPage slot="head" title={title} description={description} />
+  <PagefindMeta
+    slot="head"
+    description={description}
+    publishedAt={date instanceof Date ? date.toISOString() : undefined}
+    sectionLabel="Pages"
+  />
+
+  <article data-pagefind-body>
+    <PageHeading title={formatTitleAsHtml(title)} html />
+    <prose-content>
+      <Content />
+    </prose-content>
+  </article>
+</Layout>

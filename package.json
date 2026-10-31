@@ -1,0 +1,39 @@
+{
+  "name": "website-theme",
+  "description": "An Astro 7 theme for long-form writing, built on astro-erudite.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@astrojs/markdown-satteri": "0.4.6",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "@citation-js/core": "^0.9.0",
+    "@citation-js/plugin-bibtex": "^0.9.0",
+    "@expressive-code/plugin-collapsible-sections": "^0.44.3",
+    "@expressive-code/plugin-line-numbers": "^0.44.3",
+    "@kitlangton/justice": "^0.4.0",
+    "@playform/compress": "0.2.5",
+    "@types/hast": "^3.0.5",
+    "@types/mdast": "^4.0.4",
+    "@web-alchemy/fonttools": "^1.4.0",
+    "entities": "^9.0.0",
+    "esbuild": "0.28.2",
+    "github-slugger": "^2.0.0",
+    "harfbuzzjs": "^1.6.3",
+    "hast-util-from-html": "^2.0.3",
+    "hast-util-select": "^6.0.4",
+    "hast-util-to-html": "^9.0.5",
+    "hastscript": "^9.0.1",
+    "mdast-util-to-hast": "^13.2.1",
+    "pagefind": "^1.5.2",
+    "satteri": "^0.11.6",
+    "satteri-expressive-code": "^0.1.31",
+    "satteri-validate-links": "^0.3.0",
+    "temml": "^0.14.0",
+    "wawoff2": "^2.0.1"
+  },
+  "peerDependencies": {
+    "astro": "^7.4.4"
+  }
+}

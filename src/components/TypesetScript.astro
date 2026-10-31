@@ -1,0 +1,7 @@
+---
+import { typesetScript } from 'virtual:theme/assets'
+---
+
+{typesetScript && (
+  <script is:inline defer src={typesetScript} {...{ blocking: 'render' }}></script>
+)}

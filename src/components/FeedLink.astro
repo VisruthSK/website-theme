@@ -1,0 +1,15 @@
+---
+import { withBase } from '@/lib/base'
+import { siteOrigin } from '@/lib/site-utils'
+
+type Props = { href: string; title: string }
+
+const { href, title } = Astro.props
+---
+
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={title}
+  href={new URL(withBase(href), siteOrigin(Astro)).href}
+/>

@@ -1,0 +1,57 @@
+---
+import Card from '@/components/Card.astro'
+import MetaRow from '@/components/MetaRow.astro'
+import TagChip from '@/components/TagChip.astro'
+import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
+import {
+  getParentPost,
+  getPostStats,
+  isSubpost,
+  postStatItems,
+  type PostEntry,
+} from '@/lib/data-utils'
+import { canonicalizePathSegments } from '@/lib/site-utils'
+import { formatTitleAsHtml } from '@/lib/text'
+
+interface Props {
+  entry: PostEntry
+  showSectionLabel?: boolean
+  heading?: 'h2' | 'h3'
+}
+
+const { entry, showSectionLabel = true, heading: Heading = 'h3' } = Astro.props
+const { collection } = entry
+const section = SECTIONS[COLLECTION_TO_SECTION[collection]]
+const basePath = section.href
+const stats = await getPostStats(entry)
+const parentPost = isSubpost(entry.id)
+  ? await getParentPost(entry.id, collection)
+  : null
+
+const tags = entry.data.tags ?? []
+const displayTags = entry.data.draft ? ['draft', ...tags] : tags
+const href = canonicalizePathSegments(basePath, entry.id)
+const seriesHref = parentPost
+  ? canonicalizePathSegments(basePath, parentPost.id)
+  : undefined
+---
+
+<Card href={href} label={entry.data.title}>
+  {showSectionLabel && <div class="card-eyebrow">{section.label}</div>}
+  <Heading
+    class="card-title"
+    set:html={formatTitleAsHtml(entry.data.title)}
+  />
+  <p class="card-excerpt">{entry.data.description}</p>
+  <MetaRow date={entry.data.date} items={postStatItems(stats)} />
+  {(seriesHref || displayTags.length > 0) && (
+    <div class="chip-list">
+      {seriesHref && (
+        <a href={seriesHref} class="chip">
+          {parentPost!.data.title}
+        </a>
+      )}
+      {displayTags.map((tag) => <TagChip tag={tag} />)}
+    </div>
+  )}
+</Card>
