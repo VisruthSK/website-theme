@@ -55,15 +55,15 @@ The overrides keep `@astrojs/markdown-satteri` and `satteri-expressive-code`, wh
 
 ```ts
 // astro.config.ts
-import { defineConfig } from 'astro/config'
-import { themeConfig } from './theme/src/integrations/theme'
+import { defineConfig } from "astro/config"
+import { themeConfig } from "./theme/src/integrations/theme"
 
-export default defineConfig(await themeConfig(new URL('./', import.meta.url)))
+export default defineConfig(await themeConfig(new URL("./", import.meta.url)))
 ```
 
 ```ts
 // src/content.config.ts
-import { defineCollections } from '@/lib/collections'
+import { defineCollections } from "@/lib/collections"
 
 export const collections = defineCollections()
 ```
@@ -158,33 +158,41 @@ Notes support Markdown and are rendered at build time.
 
 ```ts
 // src/content.config.ts
-import { defineCollections, defineLedger } from '@/lib/collections'
+import { defineCollections, defineLedger } from "@/lib/collections"
 
 export const collections = defineCollections({
-  reading: defineLedger('src/data/reading.yaml', 'reviews'),
+  reading: defineLedger("src/data/reading.yaml", "reviews"),
 })
 ```
 
 ```astro
 ---
 // src/pages/reading.astro
-import Ledger from '@/components/Ledger.astro'
+import Ledger from "@/components/Ledger.astro"
 ---
 
-<Ledger
-  title="Reading"
-  description="Books I have read."
-  linkLabel="Review"
-/>
+<Ledger title="Reading" description="Books I have read." linkLabel="Review" />
 ```
 
-The component reads the collection named after the lowercase title and is reached at `/` plus that name; pass `entries` or `href` to change either. The `description` is the page description and the line under the heading.
+The component reads the collection given by `collection`, which defaults to the lowercase title, and is reached at `/` plus that name; pass `href` for another path, or `entries` to supply the entries yourself. Pass `searchable={false}` to keep the page out of search. The `description` is the page description and the line under the heading.
 
 Only `title` is required. `creator` is optional and the byline is left out without it. `added` is the date an entry was added to the library: entries are grouped by the year of `ended`, the `started` date of a DNF, or `added`, in that order, and an entry with only `added` shows "Added" and the date. `url` is a full URL or a path on the site. `rating` is a whole number from 1 to 10, or `DNF`. `published` prints what it holds as a normal date: `1962`, `Jun 1962`, `1962-06` and `19620601` all work, and anything else is printed as written. `url` makes the title a link to the work, ideally its DOI, while the rest of the card stays a permalink. `link` names an entry in the collection given as the second argument to `defineLedger`. Pass `dated={false}` to `Ledger` for a plain list in file order with no year headings and no dates. Otherwise entries without an `ended` date are listed last under Undated, and a title read more than once gets `-01`, `-02` permalinks in the order the readings ended. Each entry is also its own search result.
 
 To give ledgers a feed, add an endpoint that returns `renderLedgerFeed(context, sources, { title, description })`, where each source is `{ collection, href, noun }` for a ledger and the page it is shown on. Items are dated by `ended`, then `added`, and link to the entry's card. Pass `feed={{ href, label }}`, with `href` a path on the site, to `Ledger` to show the RSS button and advertise the feed in the page head.
 
+A ledger entry may also carry `feed`, the URL of the site's own RSS or Atom feed, for lists such as a blogroll that you export as OPML.
+
+`RecentlyAdded` lists the newest entries across one or more ledgers: `<RecentlyAdded sources={[{ collection, href, noun }]} limit={5} />`. An entry counts from its `added` date, or from its `ended` date (the `started` date of a DNF) when it has no `added`, so a book you finished needs only `ended`.
+
 Pass `ratings` to `Ledger` to show a bar chart of how many entries have each rating, with favorites highlighted, between the description and the list. It is inline SVG drawn at build time in the theme colours.
+
+## Pages and cards
+
+`Page` is the shell for a list or text page: it renders the layout, the page meta, an optional feed link, the heading and the content. It takes `title`, `description`, `crumb` (the page's own path, for the breadcrumb), `feed`, `noindex`, `metaTitle` when the meta title differs from the heading, `headingHtml` for a heading that contains markup, and `body="div" | "article"` to wrap the page in Pagefind's indexed region. Content goes in the default slot, extra head tags in `slot="head"` and a line under the heading in `slot="intro"`.
+
+`EntryCard` renders a `CardData` value (`href`, `title`, and optionally `eyebrow`, `excerpt`, `date`, `stats`, `series` and `tags`), so anything that can describe itself that way gets the same card. `PostCard` adapts a post to it, and `RecentlyAdded` and a site's own index pages pass the fields directly. `Card` is the bare shell for a card with other contents, as `LedgerCard` does. `EntryGroup` wraps a heading and a list of cards, and `groupByYear` splits entries into year groups, newest first, with an Undated group last.
+
+The search page marks its results list `aria-label="Search results"` and its status line `role="status"`, so tests can find them by role instead of by class.
 
 ## Overlay and shadowing
 
@@ -236,6 +244,7 @@ pnpm dev
 
 `pnpm dev` serves `examples/full`. `pnpm check`, `pnpm knip` and `pnpm format` lint; `pnpm test` builds both examples and runs the suite in Chromium, Firefox and WebKit, and `pnpm exec playwright test --project=unit` runs only the unit tests.
 
+- Code uses double quotes. `pnpm format` runs prettier and `tools/format-astro.mjs`, which keeps `.astro` files on double quotes with formatted frontmatter and changes no whitespace in the markup; `pnpm format:write` fixes both. The Astro prettier plugin is not used because it pads inline elements and SVG text, which changes what the page renders. A site can run the same tool with `node theme/tools/format-astro.mjs`.
 - Nothing inside `astro-erudite/` is edited. To change what it provides, add a file at the same path under `src/`.
 - Anything that varies between sites belongs in `theme.json` and `config/theme.ts`, and a feature that is switched off leaves nothing in the build.
 - Visual snapshots are generated on Linux. Run the _Update visual snapshots_ workflow from the Actions tab, or label a pull request `update-snapshots`.

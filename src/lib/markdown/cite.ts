@@ -2,17 +2,17 @@ import {
   defineMdastPlugin,
   type MdastPluginDefinition,
   type PluginFactoryContext,
-} from 'satteri'
+} from "satteri"
 import {
   formatReference,
   readBibliography,
   type Bibliography,
-} from '../bibliography'
-import { escapeHtml } from '../text'
+} from "../bibliography"
+import { escapeHtml } from "../text"
 
 const KEY = String.raw`[A-Za-z0-9_](?:[A-Za-z0-9_]|[:.#$%&+?<>~/-](?=[A-Za-z0-9_]))*`
 
-const CITE_MARKER_PATTERN = new RegExp(String.raw`(^|[^\w])@(${KEY})`, 'g')
+const CITE_MARKER_PATTERN = new RegExp(String.raw`(^|[^\w])@(${KEY})`, "g")
 const CITE_GROUP_PATTERN = /\[([^[\]]*@[^[\]]*)\]/g
 const CITE_ITEM_PATTERN = new RegExp(
   String.raw`^([\s\S]*?)(-?)@(${KEY})([\s\S]*)$`,
@@ -50,9 +50,9 @@ export function extractCitedKeys(body: string | undefined): string[] {
 const GROUP_SEPARATOR_PATTERN = /^[\s,;]+$/
 const SPACE_BEFORE_PUNCTUATION_PATTERN = /^\s+(?=[.,;:!?)])/
 
-type Context = Parameters<NonNullable<MdastPluginDefinition['paragraph']>>[1]
+type Context = Parameters<NonNullable<MdastPluginDefinition["paragraph"]>>[1]
 type Child = { type: string; value?: string }
-type Part = { type: 'text' | 'html'; value: string }
+type Part = { type: "text" | "html"; value: string }
 type CitationGroup = { keys: string[]; start: number; end: number }
 
 function groupAdjacentCitations(
@@ -65,7 +65,7 @@ function groupAdjacentCitations(
     const current = groups[groups.length - 1]
     const separator = current
       ? value.slice(current.end, marker.markerStart)
-      : ''
+      : ""
 
     if (current && GROUP_SEPARATOR_PATTERN.test(separator)) {
       current.keys.push(marker.key)
@@ -94,7 +94,7 @@ function renderLink(
     return `<span class="citation-missing" title="Citation key not found: ${safeKey}">${safeKey}?</span>`
   }
   const label = escapeHtml(
-    `${number}. ${entry.author.join(', ')}, ${entry.year ?? 'n.d.'}. ${entry.title}`,
+    `${number}. ${entry.author.join(", ")}, ${entry.year ?? "n.d."}. ${entry.title}`,
   )
   const preview = escapeHtml(formatReference(entry))
   return `<a href="#ref-${safeKey}" class="citation-link" aria-label="${label}" data-citation-preview="${preview}">${number}</a>`
@@ -104,7 +104,7 @@ export const cite =
   (directory: string) =>
   ({ data }: PluginFactoryContext) => {
     const bibName = data.astro?.frontmatter.bib
-    if (typeof bibName !== 'string' || !bibName) return null
+    if (typeof bibName !== "string" || !bibName) return null
 
     const bibliography = readBibliography(directory, bibName)
     const citationNumbers = new Map<string, number>()
@@ -119,19 +119,19 @@ export const cite =
 
     const bracketed = (inner: string): Part[] => {
       const rendered: string[] = []
-      for (const item of inner.split(';')) {
+      for (const item of inner.split(";")) {
         const match = CITE_ITEM_PATTERN.exec(item)
-        if (!match) return [{ type: 'text', value: `[${inner}]` }]
+        if (!match) return [{ type: "text", value: `[${inner}]` }]
         const [, prefix, , key, suffix] = match
         const lead = prefix.trim()
         rendered.push(
-          `${lead ? `${escapeHtml(lead)} ` : ''}${renderLink(key, numberFor(key), bibliography)}${escapeHtml(suffix.trimEnd())}`,
+          `${lead ? `${escapeHtml(lead)} ` : ""}${renderLink(key, numberFor(key), bibliography)}${escapeHtml(suffix.trimEnd())}`,
         )
       }
       return [
         {
-          type: 'html',
-          value: `<span class="citation">[${rendered.join('; ')}]</span>`,
+          type: "html",
+          value: `<span class="citation">[${rendered.join("; ")}]</span>`,
         },
       ]
     }
@@ -145,15 +145,15 @@ export const cite =
         parseCitationMarkers(value),
       )) {
         if (group.start > cursor) {
-          parts.push({ type: 'text', value: value.slice(cursor, group.start) })
+          parts.push({ type: "text", value: value.slice(cursor, group.start) })
         }
 
         const links = group.keys.map((key) =>
           renderLink(key, numberFor(key), bibliography),
         )
         parts.push({
-          type: 'html',
-          value: `<span class="citation">[${links.join(', ')}]</span>`,
+          type: "html",
+          value: `<span class="citation">[${links.join(", ")}]</span>`,
         })
 
         cursor = group.end
@@ -162,7 +162,7 @@ export const cite =
       }
 
       if (cursor < value.length) {
-        parts.push({ type: 'text', value: value.slice(cursor) })
+        parts.push({ type: "text", value: value.slice(cursor) })
       }
       return parts
     }
@@ -176,7 +176,7 @@ export const cite =
         cursor = group.index + group[0].length
       }
       parts.push(...narrative(value.slice(cursor)))
-      return parts.some(({ type }) => type === 'html') ? parts : null
+      return parts.some(({ type }) => type === "html") ? parts : null
     }
 
     const rewrite = (
@@ -186,19 +186,19 @@ export const cite =
       const children = parent.children as readonly Child[]
       let start = 0
       while (start < children.length) {
-        if (children[start].type !== 'text') {
+        if (children[start].type !== "text") {
           start += 1
           continue
         }
         let end = start
-        while (end + 1 < children.length && children[end + 1].type === 'text') {
+        while (end + 1 < children.length && children[end + 1].type === "text") {
           end += 1
         }
         const value = children
           .slice(start, end + 1)
           .map((child) => child.value)
-          .join('')
-        const parts = value.includes('@') ? convert(value) : null
+          .join("")
+        const parts = value.includes("@") ? convert(value) : null
         if (parts) {
           ctx.replaceNode(children[start] as never, parts)
           for (let index = start + 1; index <= end; index += 1) {
@@ -210,7 +210,7 @@ export const cite =
     }
 
     return defineMdastPlugin({
-      name: 'cite',
+      name: "cite",
       paragraph: rewrite,
       heading: rewrite,
       emphasis: rewrite,

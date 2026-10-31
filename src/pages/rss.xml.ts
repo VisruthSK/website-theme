@@ -1,7 +1,7 @@
-import { SECTIONS, SECTION_SLUGS, SITE } from '@/consts'
-import { getAllPostsAndSubposts, getPostHref } from '@/lib/data-utils'
-import { renderFeed } from '@/lib/feed'
-import type { APIContext } from 'astro'
+import { SECTIONS, SECTION_SLUGS, SITE } from "@/consts"
+import { getAllPostsAndSubposts, getPostHref } from "@/lib/data-utils"
+import { renderFeed } from "@/lib/feed"
+import type { APIContext } from "astro"
 
 export async function GET(context: APIContext) {
   try {
@@ -22,7 +22,7 @@ export async function GET(context: APIContext) {
       entries,
     })
   } catch (error) {
-    console.error('Error generating RSS feed:', error)
-    return new Response('Error generating RSS feed', { status: 500 })
+    console.error("Error generating RSS feed:", error)
+    return new Response("Error generating RSS feed", { status: 500 })
   }
 }

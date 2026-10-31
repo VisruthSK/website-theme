@@ -132,23 +132,23 @@ prose-content {
 }
 
 @feature callouts {
-  prose-content [data-callout='note'] {
+  prose-content [data-callout="note"] {
     --accent: var(--info);
   }
 
-  prose-content [data-callout='tip'] {
+  prose-content [data-callout="tip"] {
     --accent: var(--success);
   }
 
-  prose-content [data-callout='warning'] {
+  prose-content [data-callout="warning"] {
     --accent: var(--warning);
   }
 
-  prose-content [data-callout='caution'] {
+  prose-content [data-callout="caution"] {
     --accent: var(--danger);
   }
 
-  prose-content [data-callout='important'] {
+  prose-content [data-callout="important"] {
     --accent: var(--primary);
   }
 

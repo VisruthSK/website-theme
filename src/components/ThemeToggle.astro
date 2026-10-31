@@ -1,7 +1,7 @@
 ---
-import MoonIcon from '@/icons/moon.svg'
-import SunIcon from '@/icons/sun.svg'
-import themeToggleUrl from '@/scripts/theme-toggle.js?url&no-inline'
+import MoonIcon from "@/icons/moon.svg"
+import SunIcon from "@/icons/sun.svg"
+import themeToggleUrl from "@/scripts/theme-toggle.js?url&no-inline"
 ---
 
 <label data-theme-toggle data-icon-button>
@@ -23,26 +23,27 @@ import themeToggleUrl from '@/scripts/theme-toggle.js?url&no-inline'
 </style>
 
 <style is:global>
-  :root[data-theme='light'] {
-    color-scheme: light;
+  :root {
+    --light-icon: inline;
+    --dark-icon: none;
   }
 
-  :root[data-theme='dark'] {
-    color-scheme: dark;
+  light-icon {
+    display: var(--light-icon);
   }
 
   dark-icon {
-    display: none;
+    display: var(--dark-icon);
   }
 
-  :root[data-theme='dark'] {
-    light-icon {
-      display: none;
-    }
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
 
-    dark-icon {
-      display: inline;
-    }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --light-icon: none;
+    --dark-icon: inline;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -51,27 +52,16 @@ import themeToggleUrl from '@/scripts/theme-toggle.js?url&no-inline'
     }
 
     :root:not([data-theme]):not(:has(.theme-flip:checked)) {
-      light-icon {
-        display: none;
-      }
-
-      dark-icon {
-        display: inline;
-      }
+      --light-icon: none;
+      --dark-icon: inline;
     }
   }
 
   @media (prefers-color-scheme: light) {
     :root:not([data-theme]):has(.theme-flip:checked) {
       color-scheme: dark;
-
-      light-icon {
-        display: none;
-      }
-
-      dark-icon {
-        display: inline;
-      }
+      --light-icon: none;
+      --dark-icon: inline;
     }
   }
 </style>

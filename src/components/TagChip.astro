@@ -1,0 +1,16 @@
+---
+import { withBase } from "@/lib/base"
+import { canonicalizePathSegments } from "@/lib/site-utils"
+
+type Props = { tag: string; count?: number }
+
+const { tag, count } = Astro.props
+const href = canonicalizePathSegments(
+  withBase("/tags"),
+  encodeURIComponent(tag),
+)
+---
+
+<a {href} class:list={["chip", tag === "draft" && "chip-draft"]}>
+  #{tag}{count !== undefined && <> <span>({count})</span></>}
+</a>

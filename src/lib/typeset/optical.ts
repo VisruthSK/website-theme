@@ -30,9 +30,9 @@
  * SOFTWARE.
  */
 
-import type { Faces, Typeface } from './fonts.ts'
+import type { Faces, Typeface } from "./fonts.ts"
 
-type Side = 'left' | 'right'
+type Side = "left" | "right"
 
 const RASTER = 32
 const PAD = RASTER / 2
@@ -49,21 +49,21 @@ const HEFT = 0.3
 const INK = 0.2
 const MINIMUM = 15
 
-const TAILS = ['nono', 'aese']
-const HEADS = ['onon', 'esea']
+const TAILS = ["nono", "aese"]
+const HEADS = ["onon", "esea"]
 const STEMS = {
-  left: [...'nhmurbpk'],
-  right: [...'dhnmulkq'],
+  left: [..."nhmurbpk"],
+  right: [..."dhnmulkq"],
 }
 const POPULATION = {
-  left: [...('tasw' + 'ocnhdrilfmpbeg')],
-  right: [...'esdtnyrolfhmagkwpx'],
+  left: [...("tasw" + "ocnhdrilfmpbeg")],
+  right: [..."esdtnyrolfhmagkwpx"],
 }
 const CANDIDATES = [
-  ...'“”‘’"\'.,;:!?-–—‐()[]{}«»‹›¡¿*/@%~_+‚„<>\\|=&',
-  ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-  ...'abcdefghijklmnopqrstuvwxyz',
-  ...'0123456789',
+  ..."“”‘’\"'.,;:!?-–—‐()[]{}«»‹›¡¿*/@%~_+‚„<>\\|=&",
+  ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  ..."abcdefghijklmnopqrstuvwxyz",
+  ..."0123456789",
 ]
 
 type Edge = [number, number, number, number]
@@ -82,11 +82,11 @@ function outlineEdges(face: Typeface, text: string, origin: number): Edge[] {
       pen = to
     }
     for (const { type, values } of face.outline(glyph)) {
-      if (type === 'M') {
+      if (type === "M") {
         pen = start = at(values[0], values[1])
-      } else if (type === 'L') {
+      } else if (type === "L") {
         line(at(values[0], values[1]))
-      } else if (type === 'Q' || type === 'C') {
+      } else if (type === "Q" || type === "C") {
         const points = [pen]
         for (let i = 0; i < values.length; i += 2) {
           points.push(at(values[i], values[i + 1]))
@@ -106,7 +106,7 @@ function outlineEdges(face: Typeface, text: string, origin: number): Edge[] {
             mix(points.map((point) => point[1]))[0],
           ])
         }
-      } else if (type === 'Z') {
+      } else if (type === "Z") {
         line(start)
       }
     }
@@ -159,7 +159,7 @@ function geometry(face: Typeface, glyph: string) {
 
 function centroid(face: Typeface, text: string, side: Side): number | null {
   const advance = face.advance(text) * RASTER
-  const cover = ink(face, text, side === 'left' ? PAD : STRIP - PAD - advance)
+  const cover = ink(face, text, side === "left" ? PAD : STRIP - PAD - advance)
   const columns = new Float64Array(STRIP)
   cover.forEach((alpha, index) => {
     if (alpha > INK) columns[index % STRIP] += alpha - INK
@@ -167,7 +167,7 @@ function centroid(face: Typeface, text: string, side: Side): number | null {
   let sum = 0
   let moment = 0
   columns.forEach((column, x) => {
-    const depth = side === 'left' ? x - PAD : STRIP - PAD - 1 - x
+    const depth = side === "left" ? x - PAD : STRIP - PAD - 1 - x
     const weight = column * Math.exp(-Math.max(0, depth) / RASTER / LAMBDA)
     sum += weight
     moment += weight * (depth + 0.5)
@@ -184,21 +184,21 @@ const present = (values: (number | null)[]) =>
 function measureProtrusion(face: Typeface): Record<string, [number, number]> {
   const advanceOf = (char: string) => face.advance(char) * RASTER
   const solid = new Map<string, NonNullable<ReturnType<typeof geometry>>>()
-  for (const char of [...CANDIDATES, 'n']) {
+  for (const char of [...CANDIDATES, "n"]) {
     const found = geometry(face, char)
     if (found) solid.set(char, found)
   }
-  const reference = solid.get('n')!.mass
+  const reference = solid.get("n")!.mass
 
   const table: Record<string, [number, number]> = {}
-  for (const side of ['left', 'right'] as const) {
-    const contexts = side === 'left' ? TAILS : HEADS
+  for (const side of ["left", "right"] as const) {
+    const contexts = side === "left" ? TAILS : HEADS
     const position = (char: string): number | null => {
       const readings = present(
         contexts.map((context) =>
           centroid(
             face,
-            side === 'left' ? char + context : context + char,
+            side === "left" ? char + context : context + char,
             side,
           ),
         ),
@@ -222,7 +222,7 @@ function measureProtrusion(face: Typeface): Record<string, [number, number]> {
     const bearingOf = (char: string): number => {
       const [{ glyph }] = face.placed(char)
       const { left, right } = face.inkBounds(glyph)
-      return side === 'left' ? left * RASTER : advanceOf(char) - right * RASTER
+      return side === "left" ? left * RASTER : advanceOf(char) - right * RASTER
     }
     const stem = mean(STEMS[side].map(bearingOf))
 
@@ -236,7 +236,7 @@ function measureProtrusion(face: Typeface): Record<string, [number, number]> {
       const reading =
         raw * Math.max(0, 1 - (noise / (Math.abs(raw) || 1e-9)) ** 2)
       const inkLine = bearingOf(char) - stem
-      const middle = side === 'left' ? shape.centre : advance - shape.centre
+      const middle = side === "left" ? shape.centre : advance - shape.centre
       const light = Math.exp(-((shape.mass / reference / HEFT) ** 2))
       const ceiling = Math.max(
         0,
@@ -248,16 +248,16 @@ function measureProtrusion(face: Typeface): Record<string, [number, number]> {
       )
       if (Math.abs(permille) < MINIMUM) continue
       table[char] ??= [0, 0]
-      table[char][side === 'left' ? 0 : 1] = permille
+      table[char][side === "left" ? 0 : 1] = permille
     }
   }
   return table
 }
 
-const HANGING_END = [...'\'"‘’“”‚„‹›«».,']
+const HANGING_END = [..."'\"‘’“”‚„‹›«».,"]
 
 type Edges = Record<string, readonly [number, number, number]>
-export type EdgeTables = Record<'roman' | 'italic' | 'bold', Edges>
+export type EdgeTables = Record<"roman" | "italic" | "bold", Edges>
 
 const DISTINCT = 0.02
 
@@ -266,7 +266,7 @@ function edgeTable(
   face: keyof EdgeTables,
   also: Iterable<string> = [],
 ): Edges {
-  const typeface = faces(face, ['pnum'])
+  const typeface = faces(face, ["pnum"])
   const measured = measureProtrusion(typeface)
   const table: Edges = {}
   for (const char of new Set([
@@ -288,8 +288,8 @@ function edgeTable(
 }
 
 export function edgeTables(faces: Faces): EdgeTables {
-  const roman = edgeTable(faces, 'roman')
-  const distinct = (face: 'italic' | 'bold'): Edges =>
+  const roman = edgeTable(faces, "roman")
+  const distinct = (face: "italic" | "bold"): Edges =>
     Object.fromEntries(
       Object.entries(edgeTable(faces, face, Object.keys(roman))).filter(
         ([char, edge]) =>
@@ -297,5 +297,5 @@ export function edgeTables(faces: Faces): EdgeTables {
           edge.some((value, i) => Math.abs(value - roman[char][i]) >= DISTINCT),
       ),
     )
-  return { roman, italic: distinct('italic'), bold: distinct('bold') }
+  return { roman, italic: distinct("italic"), bold: distinct("bold") }
 }

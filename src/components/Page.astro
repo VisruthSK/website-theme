@@ -1,0 +1,51 @@
+---
+import FeedLink from "@/components/FeedLink.astro"
+import MetaPage from "@/components/MetaPage.astro"
+import PageHeading from "@/components/PageHeading.astro"
+import Layout from "@/layouts/Layout.astro"
+
+type Props = {
+  title: string
+  headingHtml?: string
+  metaTitle?: string
+  description?: string
+  noindex?: boolean
+  crumb?: string
+  feed?: { href: string; label: string }
+  body?: "div" | "article"
+}
+
+const {
+  title,
+  headingHtml,
+  metaTitle = title,
+  description,
+  noindex,
+  crumb,
+  feed,
+  body,
+} = Astro.props
+const Wrapper = body ?? Fragment
+const wrapperProps = body ? { "data-pagefind-body": "" } : {}
+---
+
+<Layout crumbs={crumb ? [{ label: title, href: crumb }] : undefined}>
+  <MetaPage
+    slot="head"
+    title={metaTitle}
+    description={description}
+    noindex={noindex}
+  />
+  {feed && <FeedLink slot="head" href={feed.href} title={feed.label} />}
+  <slot name="head" slot="head" />
+
+  <Wrapper {...wrapperProps}>
+    <PageHeading
+      title={headingHtml ?? title}
+      html={headingHtml !== undefined}
+      feed={feed}
+    />
+    <slot name="intro" />
+    <slot />
+  </Wrapper>
+</Layout>

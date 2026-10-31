@@ -1,0 +1,11 @@
+---
+type Props = { heading?: string; year?: boolean }
+
+const { heading, year = false } = Astro.props
+---
+
+<entry-group>
+  {heading && (year ? <h2 data-year>{heading}</h2> : <h2>{heading}</h2>)}
+  <ul data-entries><slot /></ul>
+  <slot name="after" />
+</entry-group>

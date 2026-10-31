@@ -33,8 +33,8 @@
     }
   }
 
-  prose-content a[href^='http']::after {
-    content: ' (' attr(href) ')';
+  prose-content a[href^="http"]::after {
+    content: " (" attr(href) ")";
     font-size: 0.8em;
     overflow-wrap: anywhere;
   }

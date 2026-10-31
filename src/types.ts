@@ -1,7 +1,7 @@
-import type { CollectionEntry, CollectionKey } from 'astro:content'
+import type { CollectionEntry, CollectionKey } from "astro:content"
 
 export type ContentCollection = {
-  [K in CollectionKey]: CollectionEntry<K>['data'] extends { date: Date }
+  [K in CollectionKey]: CollectionEntry<K>["data"] extends { date: Date }
     ? K
     : never
 }[CollectionKey]
