@@ -38,4 +38,8 @@ const ogImage = image ? new URL(image.src, base) : undefined
 
 <meta property="article:published_time" content={date.toISOString()}>
 <meta property="article:author" content={SITE.author}>
+<meta name="citation_title" content={title}>
+<meta name="citation_author" content={SITE.author}>
+<meta name="citation_publication_date" content={date.toISOString().slice(0, 10).replaceAll("-", "/")}>
+<meta name="citation_public_url" content={canonical}>
 {tags?.map((tag) => <meta property="article:tag" content={tag} />)}
