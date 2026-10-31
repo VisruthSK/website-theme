@@ -50,3 +50,8 @@ jobs:
           git commit -m "Release $TAG"
           git tag "release-$TAG"
           git push origin release "release-$TAG"
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release view "$TAG" > /dev/null 2>&1 || gh release create "$TAG" --verify-tag --generate-notes
