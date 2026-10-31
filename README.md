@@ -178,7 +178,7 @@ import Ledger from '@/components/Ledger.astro'
 
 The component reads the collection named after the lowercase title and is reached at `/` plus that name; pass `entries` or `href` to change either. The `description` is the page description and the line under the heading.
 
-Only `title` and `creator` are required. `rating` is a whole number from 1 to 10, or `DNF`. `published` prints what it holds as a normal date: `1962`, `Jun 1962`, `1962-06` and `19620601` all work, and anything else is printed as written. `url` makes the title a link to the work, ideally its DOI, while the rest of the card stays a permalink. `link` names an entry in the collection given as the second argument to `defineLedger`. Entries without an `ended` date are listed last under Undated, and a title read more than once gets `-01`, `-02` permalinks in the order the readings ended. Each entry is also its own search result.
+Only `title` and `creator` are required. `rating` is a whole number from 1 to 10, or `DNF`. `published` prints what it holds as a normal date: `1962`, `Jun 1962`, `1962-06` and `19620601` all work, and anything else is printed as written. `url` makes the title a link to the work, ideally its DOI, while the rest of the card stays a permalink. `link` names an entry in the collection given as the second argument to `defineLedger`. Pass `dated={false}` to `Ledger` for a plain list in file order with no year headings and no dates. Otherwise entries without an `ended` date are listed last under Undated, and a title read more than once gets `-01`, `-02` permalinks in the order the readings ended. Each entry is also its own search result.
 
 ## Overlay and shadowing
 

@@ -21,16 +21,18 @@ type Props = {
   entries?: LedgerEntry[]
   href?: string
   linkLabel?: string
+  dated?: boolean
+  dated?: boolean
 }
 
-const { title, description, linkLabel = 'Link' } = Astro.props
+const { title, description, linkLabel = 'Link', dated = true } = Astro.props
 const name = title.toLowerCase()
 const {
   entries = (await getCollection(name as never)) as LedgerEntry[],
   href = `/${name}`,
 } = Astro.props
 
-const groups = ledgerGroups(entries)
+const groups = dated ? ledgerGroups(entries) : [{ heading: '', entries }]
 const permalinks = ledgerPermalinks(entries)
 const linkHref = ({ collection, id }: { collection: string; id: string }) =>
   `${SECTIONS[COLLECTION_TO_SECTION[collection]].href}/${id}/`
@@ -49,11 +51,11 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     {
       groups.map(({ heading, entries: group }) => (
         <entry-group>
-          <h2 data-year>{heading}</h2>
+          {heading && <h2 data-year>{heading}</h2>}
           <ul data-entries>
             {group.map(({ id, data }) => {
               const permalink = permalinks.get(id)!
-              const { dates, open } = dateRange(data.started, data.ended)
+              const { dates, open } = dated ? dateRange(data.started, data.ended) : { dates: [], open: false }
               const hasDetails = Boolean(data.note || data.link)
               return (
                 <li
