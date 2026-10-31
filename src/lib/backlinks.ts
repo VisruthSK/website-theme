@@ -1,11 +1,11 @@
-import { linkedPaths, normalize } from './backlink-paths'
-import { SECTIONS, SECTION_SLUGS } from '@/consts'
-import { renderEntryContent } from '@/lib/content-render'
+import { linkedPaths, normalize } from "./backlink-paths"
+import { SECTIONS, SECTION_SLUGS } from "@/consts"
+import { renderEntryContent } from "@/lib/content-render"
 import {
   getAllPostsAndSubposts,
   getPostHref,
   type PostEntry,
-} from '@/lib/data-utils'
+} from "@/lib/data-utils"
 
 export async function buildBacklinks(site: string) {
   const posts = (

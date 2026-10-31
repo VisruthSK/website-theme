@@ -1,12 +1,12 @@
-import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
+import { COLLECTION_TO_SECTION, SECTIONS } from "@/consts"
 import {
   getParentPost,
   getPostStats,
   isSubpost,
   postStatItems,
   type PostEntry,
-} from '@/lib/data-utils'
-import { canonicalizePathSegments } from '@/lib/site-utils'
+} from "@/lib/data-utils"
+import { canonicalizePathSegments } from "@/lib/site-utils"
 
 export interface CardData {
   href: string
@@ -33,7 +33,7 @@ export async function postCard(
     href: canonicalizePathSegments(section.href, entry.id),
     title: data.title,
     eyebrow: showSectionLabel ? section.label : undefined,
-    excerpt: data.description ?? '',
+    excerpt: data.description ?? "",
     date: data.date,
     stats: postStatItems(await getPostStats(entry)),
     series: parent
@@ -42,6 +42,6 @@ export async function postCard(
           title: parent.data.title,
         }
       : undefined,
-    tags: data.draft ? ['draft', ...tags] : tags,
+    tags: data.draft ? ["draft", ...tags] : tags,
   }
 }

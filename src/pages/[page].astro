@@ -1,10 +1,10 @@
 ---
-import MarkdownPage from '@/components/MarkdownPage.astro'
-import type { CollectionEntry } from 'astro:content'
-import { getCollection } from 'astro:content'
+import MarkdownPage from "@/components/MarkdownPage.astro"
+import type { CollectionEntry } from "astro:content"
+import { getCollection } from "astro:content"
 
 export async function getStaticPaths() {
-  const entries = await getCollection('pages')
+  const entries = await getCollection("pages")
   const includeDrafts = import.meta.env.DEV
   return entries
     .filter((entry) => includeDrafts || !entry.data.draft)
@@ -14,7 +14,7 @@ export async function getStaticPaths() {
     }))
 }
 
-const entry = Astro.props.entry as CollectionEntry<'pages'>
+const entry = Astro.props.entry as CollectionEntry<"pages">
 ---
 
 <MarkdownPage entry={entry} />

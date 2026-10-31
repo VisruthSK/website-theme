@@ -5,17 +5,17 @@ import {
   withOpticalMargins,
   type Options,
   type Prepared,
-} from '@kitlangton/justice'
-import type { Constants } from './constants.ts'
-import type { Faces } from './fonts.ts'
-import type { EdgeTables } from './optical.ts'
+} from "@kitlangton/justice"
+import type { Constants } from "./constants.ts"
+import type { Faces } from "./fonts.ts"
+import type { EdgeTables } from "./optical.ts"
 import {
   ROMAN,
   Unsupported,
   type Gap as Extra,
   type Source,
   type Style,
-} from './paragraph.ts'
+} from "./paragraph.ts"
 
 export interface Band {
   from: number
@@ -39,7 +39,7 @@ const MIN_WIDTH = 540
 const MAX_WIDTH = 666
 const SOLVE_STEP = 3
 const SLACK = 0.3
-const NON_BREAKING_HYPHEN = '‑'
+const NON_BREAKING_HYPHEN = "‑"
 const TOLERANCE = { ratio: 1.75, floor: 0.03 }
 const ENDING_WEIGHT = 10
 
@@ -51,22 +51,22 @@ export function capWidth(
 ): number {
   const size = capSizeRem / ROOT_RATIO
   const gap = CAP_GAP_REM / ROOT_RATIO
-  return faces('cap', []).advance(letter.toUpperCase()) * size + gap
+  return faces("cap", []).advance(letter.toUpperCase()) * size + gap
 }
 
 function featuresFor(style: Style): string[] {
   return [
-    ...(style.face === 'mono' ? [] : ['onum', 'pnum']),
-    ...(style.smallCaps ? ['smcp'] : []),
-    '-liga',
-    '-clig',
-    '-calt',
+    ...(style.face === "mono" ? [] : ["onum", "pnum"]),
+    ...(style.smallCaps ? ["smcp"] : []),
+    "-liga",
+    "-clig",
+    "-calt",
   ]
 }
 
 function widthIn(faces: Faces) {
   return (piece: string, style: Style): number => {
-    const text = piece.replaceAll(NON_BREAKING_HYPHEN, '-')
+    const text = piece.replaceAll(NON_BREAKING_HYPHEN, "-")
     const typeface = faces(style.face, featuresFor(style))
     const [missing] = typeface.missing(text)
     if (missing) {
@@ -93,14 +93,14 @@ export function prepareSource(
   edges: EdgeTables,
 ): Prepared {
   const widthOf = widthIn(faces)
-  const space = widthOf(' ', ROMAN)
+  const space = widthOf(" ", ROMAN)
   const prepared = prepare(
     runs.map(({ text, style }) => ({
-      text: text.replaceAll('-', NON_BREAKING_HYPHEN),
+      text: text.replaceAll("-", NON_BREAKING_HYPHEN),
       style,
     })),
     (piece, style) =>
-      piece === ' ' ? space : style ? widthOf(piece, style) : 0,
+      piece === " " ? space : style ? widthOf(piece, style) : 0,
   )
 
   const extras: Extra[] = [...gaps]
@@ -111,7 +111,7 @@ export function prepareSource(
         const before = text.slice(index - 1, index)
         const after = text.slice(index + 1, index + 2)
         const width =
-          widthOf(before + ' ' + after, style) -
+          widthOf(before + " " + after, style) -
           widthOf(before, style) -
           widthOf(after, style) -
           space
@@ -129,12 +129,12 @@ export function prepareSource(
     }
   }
   const protrusion = (offset: number, char: string, side: 1 | 2) => {
-    const face = faceAt(offset) ?? 'roman'
-    if (face === 'mono') return 0
+    const face = faceAt(offset) ?? "roman"
+    if (face === "mono") return 0
     return (edges[face][char] ?? edges.roman[char])?.[side] ?? 0
   }
   return withOpticalMargins(withExtras(prepared, extras), (word, index) => {
-    const text = word.replaceAll(NON_BREAKING_HYPHEN, '-')
+    const text = word.replaceAll(NON_BREAKING_HYPHEN, "-")
     const start = prepared.starts?.[index] ?? 0
     return {
       start: protrusion(start, text[0], 1),
@@ -185,7 +185,7 @@ function strain(
     const from = line ? breaks[line - 1] : 0
     const to = line < breaks.length ? breaks[line] : words.length
     const available =
-      (typeof measure === 'number'
+      (typeof measure === "number"
         ? measure
         : measure[Math.min(line, measure.length - 1)]) +
       (endProtrusions?.[to - 1] ?? 0) +
@@ -246,7 +246,7 @@ export function planParagraph(
 
   const unique = new Map<string, number[]>()
   for (const breaks of optimal) {
-    if (breaks) unique.set(breaks.join(','), breaks)
+    if (breaks) unique.set(breaks.join(","), breaks)
   }
   const candidates = [...unique.values()]
   const best = measures.map((measure, at) => {

@@ -1,13 +1,13 @@
 ---
-import Page from '@/components/Page.astro'
-import PagefindMeta from '@/components/PagefindMeta.astro'
-import { assertNoBrokenLinks } from '@/lib/links'
-import { formatTitleAsHtml } from '@/lib/text'
-import type { CollectionEntry } from 'astro:content'
-import { render } from 'astro:content'
+import Page from "@/components/Page.astro"
+import PagefindMeta from "@/components/PagefindMeta.astro"
+import { assertNoBrokenLinks } from "@/lib/links"
+import { formatTitleAsHtml } from "@/lib/text"
+import type { CollectionEntry } from "astro:content"
+import { render } from "astro:content"
 
 interface Props {
-  entry: CollectionEntry<'pages'>
+  entry: CollectionEntry<"pages">
 }
 
 const { entry } = Astro.props

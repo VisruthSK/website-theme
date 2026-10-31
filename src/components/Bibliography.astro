@@ -1,7 +1,7 @@
 ---
-import Link from '@/components/Link.astro'
-import { PATHS } from '@/consts'
-import { formatAuthors, readBibliography } from '@/lib/bibliography'
+import Link from "@/components/Link.astro"
+import { PATHS } from "@/consts"
+import { formatAuthors, readBibliography } from "@/lib/bibliography"
 
 interface Props {
   bib: string
@@ -33,12 +33,12 @@ const warning = !bibliography
         <li id={`ref-${entry.key}`} class="bibliography-entry">
           <span class="bibliography-authors">
             {formatAuthors(entry.author, 100)}
-          </span>{' '}
-          <span class="bibliography-year">({entry.year ?? "n.d."}).</span>{' '}
+          </span>{" "}
+          <span class="bibliography-year">({entry.year ?? "n.d."}).</span>{" "}
           <span class="bibliography-title">{entry.title}.</span>
           {entry.journal && (
             <>
-              {' '}
+              {" "}
               <em class="bibliography-journal">{entry.journal}</em>
               {entry.volume && (
                 <span class="bibliography-volume">, {entry.volume}</span>
@@ -54,13 +54,13 @@ const warning = !bibliography
           )}
           {entry.publisher && !entry.journal && (
             <>
-              {' '}
+              {" "}
               <span class="bibliography-publisher">{entry.publisher}.</span>
             </>
           )}
           {entry.doi && (
             <>
-              {' '}
+              {" "}
               <Link
                 href={`https://doi.org/${entry.doi}`}
                 class="bibliography-doi"
@@ -71,7 +71,7 @@ const warning = !bibliography
           )}
           {entry.url && !entry.doi && (
             <>
-              {' '}
+              {" "}
               <Link href={entry.url} class="bibliography-url">
                 {entry.url}
               </Link>
@@ -108,7 +108,7 @@ const warning = !bibliography
   }
 
   .bibliography-entry::before {
-    content: '[' counter(bibliography-counter) ']';
+    content: "[" counter(bibliography-counter) "]";
     position: absolute;
     left: 0;
     font-weight: 500;

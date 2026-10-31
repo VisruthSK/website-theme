@@ -1,8 +1,8 @@
 ---
-import Page from '@/components/Page.astro'
-import TagChip from '@/components/TagChip.astro'
-import { SECTIONS, SECTION_SLUGS } from '@/consts'
-import { getSortedTags } from '@/lib/data-utils'
+import Page from "@/components/Page.astro"
+import TagChip from "@/components/TagChip.astro"
+import { SECTIONS, SECTION_SLUGS } from "@/consts"
+import { getSortedTags } from "@/lib/data-utils"
 
 const sortedTags = await getSortedTags(
   SECTION_SLUGS.map((slug) => SECTIONS[slug].collection),

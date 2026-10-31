@@ -1,4 +1,4 @@
-declare module '@web-alchemy/fonttools' {
+declare module "@web-alchemy/fonttools" {
   export type SubsetOptions = Record<string, string | number | boolean>
 
   export function subset(

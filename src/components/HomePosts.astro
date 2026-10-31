@@ -1,9 +1,9 @@
 ---
-import EntryGroup from '@/components/EntryGroup.astro'
-import PostCard from '@/components/PostCard.astro'
-import { FEATURED_POST_IDS, SITE } from '@/consts'
-import { withBase } from '@/lib/base'
-import { getSectionPosts, getSectionPostsChrono } from '@/lib/section-posts'
+import EntryGroup from "@/components/EntryGroup.astro"
+import PostCard from "@/components/PostCard.astro"
+import { FEATURED_POST_IDS, SITE } from "@/consts"
+import { withBase } from "@/lib/base"
+import { getSectionPosts, getSectionPostsChrono } from "@/lib/section-posts"
 
 const allPosts = await getSectionPosts()
 const featured = FEATURED_POST_IDS.map((id) =>
@@ -30,6 +30,6 @@ const recent = (await getSectionPostsChrono())
     <PostCard entry={entry} />
   ))}
   <p slot="after">
-    <a href={withBase('/recent')}>View all posts →</a>
+    <a href={withBase("/recent")}>View all posts →</a>
   </p>
 </EntryGroup>

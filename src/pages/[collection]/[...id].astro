@@ -1,17 +1,23 @@
 ---
-import Bibliography from '@/components/Bibliography.astro'
-import MetaRow from '@/components/MetaRow.astro'
-import PostMeta from '@/components/PostMeta.astro'
-import TagChip from '@/components/TagChip.astro'
-import PagefindMeta from '@/components/PagefindMeta.astro'
-import TableOfContents from '@/components/TableOfContents.astro'
-import { FEATURES, SECTIONS, SECTION_SLUGS, SITE, type SectionSlug } from '@/consts'
-import { fonts } from 'virtual:theme/assets'
-import TypesetScript from '@/components/TypesetScript.astro'
-import codeScript from '@/generated/code.js?url&no-inline'
-import codeStyles from '@/generated/code.css?url&no-inline'
-import Layout from '@/layouts/Layout.astro'
-import { assertNoBrokenLinks } from '@/lib/links'
+import Bibliography from "@/components/Bibliography.astro"
+import MetaRow from "@/components/MetaRow.astro"
+import PostMeta from "@/components/PostMeta.astro"
+import TagChip from "@/components/TagChip.astro"
+import PagefindMeta from "@/components/PagefindMeta.astro"
+import TableOfContents from "@/components/TableOfContents.astro"
+import {
+  FEATURES,
+  SECTIONS,
+  SECTION_SLUGS,
+  SITE,
+  type SectionSlug,
+} from "@/consts"
+import { fonts } from "virtual:theme/assets"
+import TypesetScript from "@/components/TypesetScript.astro"
+import codeScript from "@/generated/code.js?url&no-inline"
+import codeStyles from "@/generated/code.css?url&no-inline"
+import Layout from "@/layouts/Layout.astro"
+import { assertNoBrokenLinks } from "@/lib/links"
 import {
   withReferencesHeading,
   getAllPostsAndSubposts,
@@ -23,12 +29,12 @@ import {
   isSubpost,
   postStatItems,
   type PostEntry,
-} from '@/lib/data-utils'
-import { extractCitedKeys } from '@/lib/markdown/cite'
-import { canonicalizePathSegments, plainTitle } from '@/lib/site-utils'
-import { formatTitleAsHtml } from '@/lib/text'
-import { render } from 'astro:content'
-import { buildBacklinks } from '@/lib/backlinks'
+} from "@/lib/data-utils"
+import { extractCitedKeys } from "@/lib/markdown/cite"
+import { canonicalizePathSegments, plainTitle } from "@/lib/site-utils"
+import { formatTitleAsHtml } from "@/lib/text"
+import { render } from "astro:content"
+import { buildBacklinks } from "@/lib/backlinks"
 
 export async function getStaticPaths() {
   const paths = []
@@ -53,7 +59,7 @@ const basePath = section.href
 
 const { Content, headings, remarkPluginFrontmatter } = await render(post)
 assertNoBrokenLinks(post.id, remarkPluginFrontmatter)
-const body = post.body ?? ''
+const body = post.body ?? ""
 const { bib } = post.data
 const hasBibliography = Boolean(bib)
 const hasCode = /^\s*(```|~~~)/m.test(body)
@@ -76,7 +82,7 @@ const seriesParent = parent ?? post
 
 const stats = await getPostStats(post)
 const tags = post.data.tags ?? []
-const displayTags = post.data.draft ? ['draft', ...tags] : tags
+const displayTags = post.data.draft ? ["draft", ...tags] : tags
 const parentHref = parent && canonicalizePathSegments(basePath, parent.id)
 const crumbs = [
   ...(parent && parentHref
@@ -174,7 +180,7 @@ const crumbs = [
             <li>
               <a
                 href={getPostHref(chapter)}
-                aria-current={chapter.id === post.id ? 'page' : undefined}
+                aria-current={chapter.id === post.id ? "page" : undefined}
               >
                 {chapter.data.title}
               </a>
@@ -219,7 +225,7 @@ const crumbs = [
     margin-block-start: var(--space-2xs);
   }
 
-  nav[aria-label='Chapters'] {
+  nav[aria-label="Chapters"] {
     margin-block-end: var(--space-m);
     padding: var(--space-xs);
     border: 1px solid var(--border-subtle);
@@ -240,7 +246,7 @@ const crumbs = [
       min-block-size: 1.5rem;
       color: var(--muted-foreground);
 
-      &[aria-current='page'],
+      &[aria-current="page"],
       &:hover {
         color: var(--foreground);
       }

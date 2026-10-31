@@ -1,7 +1,7 @@
 ---
-import MoonIcon from '@/icons/moon.svg'
-import SunIcon from '@/icons/sun.svg'
-import themeToggleUrl from '@/scripts/theme-toggle.js?url&no-inline'
+import MoonIcon from "@/icons/moon.svg"
+import SunIcon from "@/icons/sun.svg"
+import themeToggleUrl from "@/scripts/theme-toggle.js?url&no-inline"
 ---
 
 <label data-theme-toggle data-icon-button>
@@ -23,11 +23,11 @@ import themeToggleUrl from '@/scripts/theme-toggle.js?url&no-inline'
 </style>
 
 <style is:global>
-  :root[data-theme='light'] {
+  :root[data-theme="light"] {
     color-scheme: light;
   }
 
-  :root[data-theme='dark'] {
+  :root[data-theme="dark"] {
     color-scheme: dark;
   }
 
@@ -35,7 +35,7 @@ import themeToggleUrl from '@/scripts/theme-toggle.js?url&no-inline'
     display: none;
   }
 
-  :root[data-theme='dark'] {
+  :root[data-theme="dark"] {
     light-icon {
       display: none;
     }

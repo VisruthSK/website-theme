@@ -25,6 +25,6 @@ export function groupByYear<T>(
       entries: compare ? entries.toSorted(compare) : entries,
     }))
   return undated.length
-    ? [...groups, { heading: 'Undated', entries: undated }]
+    ? [...groups, { heading: "Undated", entries: undated }]
     : groups
 }

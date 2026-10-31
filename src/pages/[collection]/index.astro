@@ -1,9 +1,9 @@
 ---
-import Page from '@/components/Page.astro'
-import YearGroups from '@/components/YearGroups.astro'
-import { SECTIONS, SECTION_SLUGS, type SectionSlug } from '@/consts'
-import { getAllPostsAndSubpostsChrono } from '@/lib/data-utils'
-import { canonicalizePathSegments } from '@/lib/site-utils'
+import Page from "@/components/Page.astro"
+import YearGroups from "@/components/YearGroups.astro"
+import { SECTIONS, SECTION_SLUGS, type SectionSlug } from "@/consts"
+import { getAllPostsAndSubpostsChrono } from "@/lib/data-utils"
+import { canonicalizePathSegments } from "@/lib/site-utils"
 
 export const getStaticPaths = () =>
   SECTION_SLUGS.map((collection) => ({ params: { collection } }))
@@ -11,7 +11,7 @@ export const getStaticPaths = () =>
 const section = SECTIONS[Astro.params.collection as SectionSlug]
 const posts = await getAllPostsAndSubpostsChrono(section.collection)
 const feed = {
-  href: canonicalizePathSegments(section.href, 'rss.xml'),
+  href: canonicalizePathSegments(section.href, "rss.xml"),
   label: `${section.label} RSS feed`,
 }
 ---

@@ -1,5 +1,5 @@
 ---
-import { SITE } from '@/consts'
+import { SITE } from "@/consts"
 
 type Props = {
   title: string
@@ -7,7 +7,7 @@ type Props = {
   description: string
   canonical: URL
   url: URL
-  type: 'website' | 'article'
+  type: "website" | "article"
   image?: URL
 }
 
@@ -24,11 +24,11 @@ const { title, fullTitle, description, canonical, url, type, image } =
 <meta property="og:type" content={type}>
 <meta property="og:url" content={url}>
 <meta property="og:site_name" content={SITE.title}>
-<meta property="og:locale" content={SITE.locale.replace('-', '_')}>
+<meta property="og:locale" content={SITE.locale.replace("-", "_")}>
 {image && <meta property="og:image" content={image}>}
 {image && <meta property="og:image:alt" content={title}>}
 
-<meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'}>
+<meta name="twitter:card" content={image ? "summary_large_image" : "summary"}>
 <meta name="twitter:title" content={title}>
 <meta name="twitter:description" content={description}>
 {image && <meta name="twitter:image" content={image}>}

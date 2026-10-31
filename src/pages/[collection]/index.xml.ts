@@ -1,1 +1,1 @@
-export { GET, getStaticPaths } from './rss.xml.ts'
+export { GET, getStaticPaths } from "./rss.xml.ts"
