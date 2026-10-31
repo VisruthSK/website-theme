@@ -36,7 +36,7 @@ const posts = (collection: string) =>
 export const defineLedger = (path: string, link: string) =>
   defineCollection({
     loader: file(path),
-    schema: z.object({
+    schema: z.strictObject({
       title: z.string(),
       creator: z.string(),
       published: z.union([z.number(), z.string(), z.date()]).optional(),
