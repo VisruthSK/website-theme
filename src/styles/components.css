@@ -8,8 +8,8 @@
 @feature externalLinkIcons {
   .external-link-icon {
     display: inline;
-    inline-size: 0.7em;
-    block-size: 0.7em;
+    inline-size: 0.75em;
+    block-size: 0.75em;
     margin-inline-start: 0.15em;
     color: var(--ink-faint);
     fill: none;
@@ -17,7 +17,7 @@
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
-    vertical-align: -0.05em;
+    vertical-align: 0;
   }
 
   a:hover .external-link-icon {
