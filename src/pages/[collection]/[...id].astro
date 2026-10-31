@@ -23,11 +23,8 @@ import {
   type PostEntry,
 } from '@/lib/data-utils'
 import { extractCitedKeys } from '@/lib/markdown/cite'
-import {
-  canonicalizePathSegments,
-  formatDate,
-  plainTitle,
-} from '@/lib/site-utils'
+import { formatDate } from '@/lib/dates'
+import { canonicalizePathSegments, plainTitle } from '@/lib/site-utils'
 import { formatCount, formatTitleAsHtml } from '@/lib/text'
 import { render } from 'astro:content'
 

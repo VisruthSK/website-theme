@@ -1,0 +1,37 @@
+---
+import RSS from '@/icons/rss.svg'
+import MetaPage from '@/components/MetaPage.astro'
+import YearGroups from '@/components/YearGroups.astro'
+import { SECTIONS, SECTION_SLUGS, SITE, type SectionSlug } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+import { getAllPostsAndSubpostsChrono } from '@/lib/data-utils'
+import { canonicalizePathSegments } from '@/lib/site-utils'
+
+export const getStaticPaths = () =>
+  SECTION_SLUGS.map((collection) => ({ params: { collection } }))
+
+const section = SECTIONS[Astro.params.collection as SectionSlug]
+const posts = await getAllPostsAndSubpostsChrono(section.collection)
+const feedHref = canonicalizePathSegments(section.href, 'rss.xml')
+const feedLabel = `${section.label} RSS feed`
+---
+
+<Layout>
+  <MetaPage slot="head" title={section.label} />
+  <link
+    slot="head"
+    rel="alternate"
+    type="application/rss+xml"
+    title={feedLabel}
+    href={new URL(feedHref, SITE.href).href}
+  />
+
+  <page-heading>
+    <h1>{section.label}</h1>
+    <a href={feedHref} data-icon-button aria-label={feedLabel}>
+      <RSS />
+    </a>
+  </page-heading>
+
+  <YearGroups entries={posts} />
+</Layout>

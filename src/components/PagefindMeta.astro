@@ -3,6 +3,7 @@ import { FEATURES } from '@/consts'
 
 interface Props {
   description?: string
+  entries?: boolean
   parentTitle?: string
   parentUrl?: string
   publishedAt?: string
@@ -13,6 +14,7 @@ interface Props {
 
 const {
   description,
+  entries = false,
   parentTitle,
   parentUrl,
   publishedAt,
@@ -30,6 +32,16 @@ const tagsValue = JSON.stringify(tags.filter(Boolean))
       name="pagefind:section_label"
       data-pagefind-meta="section_label[content]"
       content={sectionLabel}
+    />
+  )
+}
+
+{
+  FEATURES.search && entries && (
+    <meta
+      name="pagefind:entries"
+      data-pagefind-meta="entries[content]"
+      content="true"
     />
   )
 }

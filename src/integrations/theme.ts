@@ -45,7 +45,7 @@ const ROUTES: [
   ['/recent', 'recent.astro'],
   ['/search', 'search.astro', 'search'],
   ['/[page]', '[page].astro'],
-  ['/[collection]/[...page]', '[collection]/[...page].astro'],
+  ['/[collection]', '[collection]/index.astro'],
   ['/[collection]/[...id]', '[collection]/[...id].astro'],
   ['/[collection]/rss.xml', '[collection]/rss.xml.ts'],
   ['/[collection]/index.xml', '[collection]/index.xml.ts'],

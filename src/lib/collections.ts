@@ -1,5 +1,5 @@
-import { glob } from 'astro/loaders'
-import { defineCollection, type SchemaContext } from 'astro:content'
+import { file, glob } from 'astro/loaders'
+import { defineCollection, reference, type SchemaContext } from 'astro:content'
 import { z } from 'astro/zod'
 import theme from 'virtual:theme/config'
 
@@ -33,14 +33,32 @@ const posts = (collection: string) =>
     schema: postSchema,
   })
 
-export function defineCollections(): Record<
-  string,
-  ReturnType<typeof posts>
-> & { pages: typeof pages } {
+export const defineLedger = (path: string, link: string) =>
+  defineCollection({
+    loader: file(path),
+    schema: z.object({
+      title: z.string(),
+      creator: z.string(),
+      published: z.union([z.number(), z.string(), z.date()]).optional(),
+      rating: z.union([z.int().min(1).max(10), z.literal('DNF')]).optional(),
+      favorite: z.boolean().default(false),
+      started: z.coerce.date().optional(),
+      ended: z.coerce.date().optional(),
+      note: z.string().optional(),
+      link: reference(link).optional(),
+    }),
+  })
+
+export function defineCollections<
+  Extra extends Record<string, ReturnType<typeof defineLedger>> = {},
+>(
+  extra?: Extra,
+): Record<string, ReturnType<typeof posts>> & { pages: typeof pages } & Extra {
   return Object.assign(
     Object.fromEntries(
       theme.sections.map(({ collection }) => [collection, posts(collection)]),
     ),
     { pages },
-  )
+    extra,
+  ) as never
 }

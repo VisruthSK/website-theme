@@ -36,19 +36,8 @@ import searchScriptUrl from '@/scripts/search.js?url&no-inline'
     <p class="meta-row" data-search-status></p>
   </search-page>
 
-  <section
-    data-search-section
-    data-page-size={SITE.postsPerPage}
-    hidden
-  >
+  <section data-search-section hidden>
     <ol data-search-results data-entries aria-live="polite"></ol>
-    <nav
-      aria-label="Search results pagination"
-      class="pagination-nav"
-      data-search-pagination
-      hidden
-    >
-    </nav>
   </section>
 </Layout>
 

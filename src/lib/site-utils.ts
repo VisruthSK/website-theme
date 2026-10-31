@@ -1,14 +1,5 @@
 import { SITE } from '@/consts'
 
-export function formatDate(date: Date) {
-  return Intl.DateTimeFormat('en-US', {
-    timeZone: 'UTC',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date)
-}
-
 export function calculateWordCountFromHtml(
   html: string | null | undefined,
 ): number {
@@ -30,7 +21,7 @@ function hasFileExtension(pathname: string): boolean {
   return lastSegment.includes('.')
 }
 
-export function canonicalizePath(path: string): string {
+function canonicalizePath(path: string): string {
   const trimmed = path.trim()
   if (!trimmed) return ''
   if (trimmed === '/' || !trimmed.startsWith('/')) return trimmed
