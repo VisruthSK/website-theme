@@ -14,7 +14,7 @@ import searchScriptUrl from '@/scripts/search.js?url&no-inline'
 
   <search-page>
     <header>
-      <h1>Find something specific</h1>
+      <h1 data-page-title>Find something specific</h1>
       <p>Full-text search across everything in {SITE.title}</p>
     </header>
 
@@ -64,12 +64,6 @@ import searchScriptUrl from '@/scripts/search.js?url&no-inline'
     flex-direction: column;
     gap: var(--space-s);
     margin-block-end: var(--space-m);
-
-    h1 {
-      font-size: var(--step-3);
-      line-height: calc(var(--leading-offset) + 1em);
-      font-weight: var(--font-weight-medium);
-    }
 
     header p {
       color: var(--muted-foreground);

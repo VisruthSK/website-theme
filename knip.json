@@ -3,7 +3,7 @@
   "entry": [
     "examples/*/astro.config.ts",
     "examples/*/src/content.config.ts",
-    "examples/*/src/pages/*.astro",
+    "examples/*/src/pages/**/*.{astro,ts}",
     "src/pages/**/*.{astro,ts}",
     "src/scripts/*.js",
     "scripts/*.mjs",

@@ -81,3 +81,39 @@ test('a reading shows one date, a range, or an open range', () => {
   })
   expect(dateRange()).toEqual({ dates: [], open: false })
 })
+
+test('DNF entries use the finish date, then the start date, then Undated', () => {
+  const dnf = (id: string, started?: string, ended?: string): LedgerEntry => ({
+    id,
+    data: {
+      title: id,
+      creator: 'Someone',
+      favorite: false,
+      rating: 'DNF',
+      started: started ? day(started) : undefined,
+      ended: ended ? day(ended) : undefined,
+    },
+  })
+  const groups = ledgerGroups([
+    dnf('start-only', '2025-01-01'),
+    dnf('finished', '2024-01-01', '2026-01-01'),
+    dnf('undated'),
+    {
+      ...entry('in-progress', 'In progress'),
+      data: {
+        ...entry('in-progress', 'In progress').data,
+        started: day('2026-01-01'),
+      },
+    },
+  ])
+  expect(
+    groups.map(({ heading, entries }) => [
+      heading,
+      entries.map(({ id }) => id),
+    ]),
+  ).toEqual([
+    ['2026', ['finished']],
+    ['2025', ['start-only']],
+    ['Undated', ['undated', 'in-progress']],
+  ])
+})

@@ -17,6 +17,8 @@ test.describe('list page', () => {
       .locator('.interactive-card .card-title')
       .evaluateAll((titles) => titles.map((title) => title.id))
     expect(ids).toEqual([
+      'the-three-little-pigs-01',
+      'the-ugly-duckling-01',
       'the-gift-of-the-magi-01',
       'the-selfish-giant-02',
       'moby-dick-01',
@@ -50,6 +52,129 @@ test.describe('list page', () => {
     ).toHaveCount(2)
   })
 
+  test('shows the added date and links titles to the work', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const duckling = page.locator('.interactive-card', {
+      hasText: 'The Ugly Duckling',
+    })
+    await expect(duckling).toContainText('Added 20 October 2026')
+    await expect(duckling.locator('.card-title a')).toHaveAttribute(
+      'href',
+      'https://en.wikisource.org/wiki/The_Ugly_Duckling',
+    )
+
+    const pigs = page.locator('.interactive-card', {
+      hasText: 'The Three Little Pigs',
+    })
+    await expect(pigs.locator('.byline')).toHaveCount(0)
+    await expect(pigs.locator('.card-title a')).toHaveAttribute(
+      'href',
+      `${baseOf(site)}/essays/the-selfish-giant/`,
+    )
+  })
+
+  test('the review link and favorite share a row when there is no note', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const card = page.locator('.interactive-card', {
+      hasText: 'The Gift of the Magi',
+    })
+    await card.locator('.note').evaluate((note) => note.remove())
+    const link = await card.getByRole('link', { name: 'Essay' }).boundingBox()
+    const favorite = await card.locator('.chip').boundingBox()
+    expect(link).not.toBeNull()
+    expect(favorite).not.toBeNull()
+    expect(
+      Math.abs(
+        link!.y + link!.height / 2 - (favorite!.y + favorite!.height / 2),
+      ),
+    ).toBeLessThan(2)
+  })
+
+  test('a note and favorite share the bottom row when there is no review', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const card = page.locator('.interactive-card', {
+      hasText: 'The Gift of the Magi',
+    })
+    await card.locator('.link').evaluate((link) => link.remove())
+    const note = await card.locator('.note p').last().boundingBox()
+    const favorite = await card.locator('.chip').boundingBox()
+    expect(note).not.toBeNull()
+    expect(favorite).not.toBeNull()
+    expect(favorite!.y).toBeLessThan(note!.y + note!.height)
+    expect(favorite!.y + favorite!.height).toBeGreaterThan(note!.y)
+  })
+
+  test('favorite badges have the same typography in both positions', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const card = page.locator('.interactive-card', {
+      hasText: 'The Gift of the Magi',
+    })
+    await card.locator('.side').evaluate((side) => {
+      const badge = side.closest('.interactive-card')!.querySelector('.chip')!
+      side.appendChild(badge.cloneNode(true))
+    })
+    const badges = await card.locator('.chip').evaluateAll((elements) =>
+      elements.map((element) => {
+        const style = getComputedStyle(element)
+        const rect = element.getBoundingClientRect()
+        return {
+          family: style.fontFamily,
+          size: style.fontSize,
+          width: rect.width,
+          height: rect.height,
+        }
+      }),
+    )
+    expect(badges).toHaveLength(2)
+    expect(badges[0]).toEqual(badges[1])
+  })
+
+  test('Markdown note links use normal visible link styling and are clickable', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const card = page.locator('.interactive-card', {
+      hasText: 'The Gift of the Magi',
+    })
+    await card.locator('.note').evaluate((note) => {
+      note.insertAdjacentHTML(
+        'beforeend',
+        '<p><a href="https://example.com/">Article</a></p>',
+      )
+    })
+    const link = card.getByRole('link', { name: 'Article' })
+    await link.scrollIntoViewIfNeeded()
+    await expect(link).toHaveCSS('text-decoration-line', 'underline')
+    const color = await link.evaluate(
+      (element) => getComputedStyle(element).textDecorationColor,
+    )
+    expect(color).not.toBe('rgba(0, 0, 0, 0)')
+    expect(
+      await link.evaluate((element) => {
+        const rect = element.getBoundingClientRect()
+        return (
+          document.elementFromPoint(
+            rect.x + rect.width / 2,
+            rect.y + rect.height / 2,
+          ) === element
+        )
+      }),
+    ).toBe(true)
+  })
+
   test('a link opens in the same tab and a card links to itself', async ({
     page,
     site,
@@ -65,6 +190,44 @@ test.describe('list page', () => {
       .locator('.interactive-card', { hasText: 'Moby-Dick' })
       .click({ position: { x: 24, y: 24 } })
     await expect(page).toHaveURL(/#moby-dick-01$/)
+  })
+
+  test('the ratings chart centres each bar over its label', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const columns = await page.locator('figure svg').evaluate((svg) => {
+      const centre = (element: Element) => {
+        const box = element.getBoundingClientRect()
+        return (box.left + box.right) / 2
+      }
+      return [...svg.querySelectorAll('text.label')].map((label) => ({
+        label: label.textContent,
+        offsets: [...svg.querySelectorAll('rect.bar')]
+          .map((bar) => Math.abs(centre(bar) - centre(label)))
+          .filter((offset) => offset < 20),
+      }))
+    })
+    const drawn = columns.filter(({ offsets }) => offsets.length > 0)
+    expect(drawn.map(({ label }) => label)).toEqual(['DNF', '6', '7', '8', '9'])
+    for (const { offsets } of drawn) expect(offsets[0]).toBeLessThan(0.5)
+  })
+
+  test('the feed lists every entry with a link to its card', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const feed = await page
+      .locator('link[rel="alternate"][title="Reading RSS feed"]')
+      .getAttribute('href')
+    const xml = await (await page.request.get(new URL(feed!).pathname)).text()
+    const ids = await page
+      .locator('.interactive-card .card-title')
+      .evaluateAll((titles) => titles.map((title) => title.id))
+    for (const id of ids) expect(xml).toContain(`/reading/#${id}`)
+    expect(xml.match(/<item>/g)).toHaveLength(ids.length)
   })
 })
 

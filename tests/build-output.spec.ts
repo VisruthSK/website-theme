@@ -192,3 +192,15 @@ test('every citation in a feed has its reference in the same item', ({
   }
   expect(citations).toBeGreaterThan(0)
 })
+
+test('posts carry citation meta tags', ({ site }) => {
+  const posts = pages(site).filter((file) =>
+    readFileSync(file, 'utf8').includes('article:published_time'),
+  )
+  expect(posts.length).toBeGreaterThan(0)
+  for (const file of posts) {
+    const html = readFileSync(file, 'utf8')
+    expect(html, file).toContain('name="citation_title"')
+    expect(html, file).toContain('name="citation_publication_date"')
+  }
+})

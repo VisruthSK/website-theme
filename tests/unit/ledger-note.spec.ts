@@ -8,3 +8,9 @@ test('renders note Markdown and paragraphs', () => {
     '<p>A <em>book</em> and <strong>another</strong>.</p>\n<p>Second paragraph.</p>\n',
   )
 })
+
+test('renders Markdown hyperlinks', () => {
+  expect(
+    renderLedgerNote('Read [the article](https://example.com/).'),
+  ).toContain('<a href="https://example.com/">the article</a>')
+})
