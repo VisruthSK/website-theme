@@ -1,9 +1,8 @@
 ---
 import { getCollection } from 'astro:content'
 
-import Card from '@/components/Card.astro'
+import EntryCard from '@/components/EntryCard.astro'
 import EntryGroup from '@/components/EntryGroup.astro'
-import Time from '@/components/Time.astro'
 import { withBase } from '@/lib/base'
 import { ledgerPermalinks, type LedgerEntry } from '@/lib/ledger'
 
@@ -37,13 +36,12 @@ const items = (
   items.length > 0 && (
     <EntryGroup heading={title}>
         {items.map((item) => (
-          <Card href={item.href} label={item.title}>
-              <div class="card-eyebrow">{item.noun}</div>
-              <h3 class="card-title">{item.title}</h3>
-              <div class="meta-row">
-                <Time date={item.added} />
-              </div>
-          </Card>
+          <EntryCard
+            href={item.href}
+            title={item.title}
+            eyebrow={item.noun}
+            date={item.added}
+          />
         ))}
     </EntryGroup>
   )

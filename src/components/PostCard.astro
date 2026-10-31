@@ -1,0 +1,16 @@
+---
+import EntryCard from '@/components/EntryCard.astro'
+import { postCard } from '@/lib/card'
+import type { PostEntry } from '@/lib/data-utils'
+
+type Props = {
+  entry: PostEntry
+  showSectionLabel?: boolean
+  heading?: 'h2' | 'h3'
+}
+
+const { entry, showSectionLabel, heading } = Astro.props
+const card = await postCard(entry, showSectionLabel)
+---
+
+<EntryCard {...card} heading={heading} />

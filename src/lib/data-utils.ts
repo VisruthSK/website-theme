@@ -157,19 +157,6 @@ export async function getPostsByTag<C extends ContentCollection>(
   )
 }
 
-export function groupPostsByYear<C extends ContentCollection>(
-  posts: EntryFor<C>[],
-): Record<string, EntryFor<C>[]> {
-  return posts.reduce(
-    (groups, post) => {
-      const year = post.data.date.getFullYear().toString()
-      ;(groups[year] ??= []).push(post)
-      return groups
-    },
-    {} as Record<string, EntryFor<C>[]>,
-  )
-}
-
 export async function getPostStats(post: PostEntry) {
   const wordCount = calculateWordCountFromHtml(post.body)
   const chapters = isSubpost(post.id)

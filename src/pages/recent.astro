@@ -1,20 +1,12 @@
 ---
-import MetaPage from '@/components/MetaPage.astro'
-import PageHeading from '@/components/PageHeading.astro'
+import Page from '@/components/Page.astro'
 import YearGroups from '@/components/YearGroups.astro'
 import { PAGES } from '@/consts'
-import Layout from '@/layouts/Layout.astro'
 import { getSectionPostsChrono } from '@/lib/section-posts'
 
 const posts = await getSectionPostsChrono()
 ---
 
-<Layout crumbs={[{ label: 'Recent', href: '/recent' }]}>
-  <MetaPage
-    slot="head"
-    title="Recent"
-    description={PAGES.recent.description}
-  />
-  <PageHeading title="Recent" />
+<Page title="Recent" description={PAGES.recent.description} crumb="/recent">
   <YearGroups entries={posts} />
-</Layout>
+</Page>

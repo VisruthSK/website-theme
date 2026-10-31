@@ -1,10 +1,7 @@
 ---
-import FeedLink from '@/components/FeedLink.astro'
-import MetaPage from '@/components/MetaPage.astro'
-import PageHeading from '@/components/PageHeading.astro'
+import Page from '@/components/Page.astro'
 import YearGroups from '@/components/YearGroups.astro'
 import { SECTIONS, SECTION_SLUGS, type SectionSlug } from '@/consts'
-import Layout from '@/layouts/Layout.astro'
 import { getAllPostsAndSubpostsChrono } from '@/lib/data-utils'
 import { canonicalizePathSegments } from '@/lib/site-utils'
 
@@ -19,11 +16,6 @@ const feed = {
 }
 ---
 
-<Layout>
-  <MetaPage slot="head" title={section.label} />
-  <FeedLink slot="head" href={feed.href} title={feed.label} />
-
-  <PageHeading title={section.label} feed={feed} />
-
+<Page title={section.label} feed={feed}>
   <YearGroups entries={posts} />
-</Layout>
+</Page>
