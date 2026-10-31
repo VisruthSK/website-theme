@@ -152,6 +152,7 @@ const showCombined =
     <header>
       <h1
         id="post-title"
+        data-page-title
         data-pagefind-weight="10"
         set:html={formatTitleAsHtml(post.data.title)}
       />
@@ -230,12 +231,6 @@ const showCombined =
   }
   header {
     margin-block-end: var(--space-m);
-
-    h1 {
-      font-size: var(--step-3);
-      line-height: calc(var(--leading-offset) + 1em);
-      font-weight: var(--font-weight-medium);
-    }
   }
 
   post-meta {

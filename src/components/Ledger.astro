@@ -1,8 +1,13 @@
 ---
+import Link from '@/components/Link.astro'
 import MetaPage from '@/components/MetaPage.astro'
+import PageHeading from '@/components/PageHeading.astro'
+import PageIntro from '@/components/PageIntro.astro'
 import PagefindMeta from '@/components/PagefindMeta.astro'
+import RatingSpread from '@/components/RatingSpread.astro'
 import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
+import { withBase } from '@/lib/base'
 import { formatDate, formatLooseDate } from '@/lib/dates'
 import {
   dateRange,
@@ -15,20 +20,30 @@ import { renderLedgerNote } from '@/lib/ledger-note'
 
 type Props = {
   title: string
-  description: string
+  description?: string
   entries?: LedgerEntry[]
   href?: string
   linkLabel?: string
+  dated?: boolean
+  ratings?: boolean
+  feed?: { href: string; label: string }
 }
 
-const { title, description, linkLabel = 'Link' } = Astro.props
+const {
+  title,
+  description,
+  linkLabel = 'Link',
+  dated = true,
+  ratings = false,
+  feed,
+} = Astro.props
 const name = title.toLowerCase()
 const {
   entries = (await getCollection(name as never)) as LedgerEntry[],
   href = `/${name}`,
 } = Astro.props
 
-const groups = ledgerGroups(entries)
+const groups = dated ? ledgerGroups(entries) : [{ heading: '', entries }]
 const permalinks = ledgerPermalinks(entries)
 const linkHref = ({ collection, id }: { collection: string; id: string }) =>
   `${SECTIONS[COLLECTION_TO_SECTION[collection]].href}/${id}/`
@@ -37,21 +52,32 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
 <Layout crumbs={[{ label: title, href }]}>
   <MetaPage slot="head" title={title} description={description} />
   <PagefindMeta slot="head" sectionLabel={title} entries />
+  {
+    feed && (
+      <link
+        slot="head"
+        rel="alternate"
+        type="application/rss+xml"
+        title={feed.label}
+        href={new URL(withBase(feed.href), Astro.site ?? Astro.url.origin).href}
+      />
+    )
+  }
 
   <div data-pagefind-body>
-    <page-heading>
-      <h1>{title}</h1>
-    </page-heading>
-    <p class="intro">{description}</p>
+    <PageHeading title={title} feed={feed} />
+    {description && <PageIntro>{description}</PageIntro>}
+    {ratings && <RatingSpread entries={entries} />}
 
     {
       groups.map(({ heading, entries: group }) => (
         <entry-group>
-          <h2 data-year>{heading}</h2>
+          {heading && <h2 data-year>{heading}</h2>}
           <ul data-entries>
             {group.map(({ id, data }) => {
               const permalink = permalinks.get(id)!
-              const { dates, open } = dateRange(data.started, data.ended)
+              const { dates, open } = dated ? dateRange(data.started, data.ended) : { dates: [], open: false }
+              const hasDetails = Boolean(data.note || data.link)
               return (
                 <li
                   class="interactive-card"
@@ -65,18 +91,27 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                   <div class="card-body">
                     <div class="head">
                       <div>
-                        <h3 class="card-title" id={permalink}>
-                          {data.title}
+                        <h3 class="card-title" id={permalink} data-prose>
+                          {data.url ? <Link href={withBase(data.url)}>{data.title}</Link> : data.title}
                         </h3>
-                        <p class="byline">
-                          <span>{data.creator}</span>
-                          {data.published && (
-                            <>
-                              <span class="meta-divider" aria-hidden="true" />
-                              <span>{formatLooseDate(data.published)}</span>
-                            </>
-                          )}
-                        </p>
+                        {(data.creator || data.published) && (
+                          <p class="meta-row byline">
+                            {data.creator && <span>{data.creator}</span>}
+                            {data.published && (
+                              <>
+                                {data.creator && <span class="meta-divider" aria-hidden="true" />}
+                                <span>{formatLooseDate(data.published)}</span>
+                              </>
+                            )}
+                          </p>
+                        )}
+                        {dated && dates.length === 0 && data.added && (
+                          <p class="meta-row" data-pagefind-ignore>
+                            <span>
+                              Added <time datetime={data.added.toISOString()}>{formatDate(data.added)}</time>
+                            </span>
+                          </p>
+                        )}
                         {dates.length > 0 && (
                           <p class="meta-row" data-pagefind-ignore>
                             <span>
@@ -93,7 +128,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                           </p>
                         )}
                       </div>
-                      {(data.rating !== undefined || data.favorite) && (
+                      {(data.rating !== undefined || (data.favorite && !hasDetails)) && (
                         <div class="side" data-pagefind-ignore>
                           {data.rating === 'DNF' ? (
                             <span class="dnf">DNF</span>
@@ -102,19 +137,24 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                               <span class="score">{data.rating}</span>
                             )
                           )}
-                          {data.favorite && (
-                            <span class="chip">Favorite</span>
-                          )}
+                          {data.favorite && !hasDetails && <span class="chip">Favorite</span>}
                         </div>
                       )}
                     </div>
-                    {data.note && (
-                      <div class="note" set:html={renderLedgerNote(data.note)} />
-                    )}
-                    {data.link && (
-                      <p class="link" data-pagefind-ignore>
-                        <a href={linkHref(data.link)}>{linkLabel}</a>
-                      </p>
+                    {hasDetails && (
+                      <div class:list={['ledger-details', !data.note && 'without-note']}>
+                        <div class="details-body">
+                          {data.note && (
+                            <prose-content class="note card-excerpt" data-compact set:html={renderLedgerNote(data.note)} />
+                          )}
+                          {data.link && (
+                            <p class="link card-excerpt" data-prose data-pagefind-ignore>
+                              <a href={linkHref(data.link)}>{linkLabel}</a>
+                            </p>
+                          )}
+                        </div>
+                        {data.favorite && <span class="chip" data-pagefind-ignore>Favorite</span>}
+                      </div>
                     )}
                   </div>
                 </li>
@@ -128,11 +168,6 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
 </Layout>
 
 <style>
-  .intro {
-    margin-block-end: var(--space-m);
-    color: var(--ink-muted);
-  }
-
   .card-title {
     scroll-margin-block-start: calc(var(--space-s) + 1rem);
   }
@@ -148,18 +183,13 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     gap: var(--space-s);
   }
 
-  .byline {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    margin-block-end: 0.25rem;
-    font-size: 0.875rem;
-    color: var(--ink-subtle);
-  }
-
   .meta-row {
     margin-block-end: 0;
+  }
+
+  .byline {
+    margin-block-end: 0.25rem;
+    color: var(--ink-subtle);
   }
 
   .side {
@@ -181,7 +211,10 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     color: var(--flourish);
   }
 
-  .side .chip {
+  .side .chip,
+  .ledger-details .chip {
+    flex-shrink: 0;
+    font-family: var(--font-sans);
     border-color: color-mix(in oklab, var(--flourish) 30%, transparent);
     background: color-mix(in oklab, var(--flourish) 8%, transparent);
     color: var(--flourish);
@@ -196,38 +229,33 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
     color: var(--ink-muted);
   }
 
-  .note {
+  .ledger-details {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-xs);
     margin-block-start: var(--space-s);
   }
 
-  .note :global(p) {
-    margin-block-end: 0.5rem;
-    font-size: 0.875rem;
-    line-height: 1.5rem;
-    color: var(--ink-subtle);
-  }
-
-  .note :global(p:last-child) {
-    margin-block-end: 0;
-  }
-
-  .note :global(a) {
-    position: relative;
-    z-index: 1;
-  }
-
-  .link {
+  .ledger-details.without-note {
     margin-block-start: var(--space-2xs);
-    font-size: 0.9375rem;
+  }
+
+  .details-body {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .note,
+  .link {
+    margin: 0;
+  }
+
+  .note + .link {
+    margin-block-start: var(--space-2xs);
   }
 
   .link a {
-    --underline: var(--muted-foreground);
-    position: relative;
-    z-index: 1;
     display: inline-block;
-    padding-block: 0.25rem;
-    color: var(--foreground);
-    pointer-events: auto;
+    padding-block: 0.125rem;
   }
 </style>

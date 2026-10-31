@@ -1,0 +1,142 @@
+---
+import type { LedgerEntry } from '@/lib/ledger'
+
+type Props = { entries: LedgerEntry[] }
+
+const { entries } = Astro.props
+const ratings = ['DNF', ...Array.from({ length: 10 }, (_, index) => index + 1)]
+const columns = ratings.map((rating, index) => {
+  const rated = entries.filter(({ data }) => data.rating === rating)
+  return {
+    label: String(rating),
+    total: rated.length,
+    favorites: rated.filter(({ data }) => data.favorite).length,
+    index,
+  }
+})
+const peak = Math.max(...columns.map(({ total }) => total))
+
+const width = 640
+const height = 170
+const margin = 12
+const top = 22
+const base = 132
+const slot = 56
+const barWidth = 36
+const unit = Math.max(1, Math.floor((base - top) / peak))
+const description = columns
+  .map(({ label, total }) => `${label}: ${total}`)
+  .join(', ')
+---
+
+<figure data-pagefind-ignore>
+  <svg
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-labelledby="spread-title spread-desc"
+  >
+    <title id="spread-title">How I have rated {entries.length} entries</title>
+    <desc id="spread-desc">{description}</desc>
+    <line
+      class="axis"
+      x1={margin}
+      x2={margin + slot * columns.length}
+      y1={base + 0.5}
+      y2={base + 0.5}
+    />
+    {
+      columns.map(({ label, total, favorites, index }) => {
+        const x = margin + slot * index + (slot - barWidth) / 2
+        const favoriteHeight = favorites * unit
+        const regularHeight = (total - favorites) * unit
+        return (
+          <g>
+            {total > favorites && (
+              <rect
+                class="bar"
+                x={x}
+                y={base - regularHeight - favoriteHeight}
+                width={barWidth}
+                height={regularHeight}
+              />
+            )}
+            {favorites > 0 && (
+              <rect
+                class="bar favorite"
+                x={x}
+                y={base - favoriteHeight}
+                width={barWidth}
+                height={favoriteHeight}
+              />
+            )}
+            {total > 0 && (
+              <text
+                class="count"
+                x={x + barWidth / 2}
+                y={base - total * unit - 6}
+                text-anchor="middle"
+              >{total}</text>
+            )}
+            <text
+              class="label"
+              x={x + barWidth / 2}
+              y={base + 18}
+              text-anchor="middle">{label}</text>
+          </g>
+        )
+      })
+    }
+  </svg>
+  <figcaption class="card-excerpt">
+    Ratings. <span class="swatch"></span> Favorites.
+  </figcaption>
+</figure>
+
+<style>
+  figure {
+    margin: 0 0 var(--space-m);
+  }
+
+  svg {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    max-inline-size: 40rem;
+    font-family: var(--font-sans);
+  }
+
+  .axis {
+    stroke: var(--border);
+  }
+
+  .bar {
+    fill: var(--ink-faint);
+  }
+
+  .bar.favorite {
+    fill: var(--flourish);
+  }
+
+  .count {
+    fill: var(--ink-muted);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .label {
+    fill: var(--ink-subtle);
+    font-size: 11px;
+  }
+
+  figcaption {
+    margin-block: var(--space-2xs) 0;
+  }
+
+  .swatch {
+    display: inline-block;
+    inline-size: 0.75em;
+    block-size: 0.75em;
+    margin-inline: 0.25em;
+    background: var(--flourish);
+  }
+</style>

@@ -8,8 +8,8 @@
 @feature externalLinkIcons {
   .external-link-icon {
     display: inline;
-    inline-size: 0.7em;
-    block-size: 0.7em;
+    inline-size: 0.75em;
+    block-size: 0.75em;
     margin-inline-start: 0.15em;
     color: var(--ink-faint);
     fill: none;
@@ -17,7 +17,7 @@
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
-    vertical-align: -0.05em;
+    vertical-align: 0;
   }
 
   a:hover .external-link-icon {
@@ -42,6 +42,13 @@
     transform: translateY(-2px);
   }
 
+  @supports (-moz-appearance: none) {
+    transition:
+      background-color var(--duration-fast) ease,
+      transform var(--duration-fast)
+        linear(0, 0 17%, 0.5 17%, 0.5 43%, 1 43%, 1);
+  }
+
   &:has(.card-overlay:focus-visible) {
     outline: var(--focus-ring);
     outline-offset: var(--focus-ring-offset);
@@ -62,6 +69,12 @@
 .card-body {
   position: relative;
   pointer-events: none;
+
+  a {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+  }
 }
 
 .card-eyebrow {
@@ -230,12 +243,13 @@ page-heading {
   justify-content: space-between;
   gap: 1rem;
   margin-block-end: 1.5rem;
+}
 
-  h1 {
-    font-size: var(--step-3);
-    font-weight: var(--font-weight-medium);
-    line-height: calc(var(--leading-offset) + 1em);
-  }
+page-heading h1,
+h1[data-page-title] {
+  font-size: var(--step-3);
+  font-weight: var(--font-weight-medium);
+  line-height: calc(var(--leading-offset) + 1em);
 }
 
 page-toc toc-title[aria-hidden] {

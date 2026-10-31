@@ -23,7 +23,7 @@ const recentPosts = (await getSectionPostsChrono())
   <MetaPage slot="head" title="Home" />
 
   <header>
-    <h1>{SITE.title}</h1>
+    <h1 data-page-title>{SITE.title}</h1>
     <p>{SITE.description}</p>
   </header>
 
@@ -54,12 +54,6 @@ const recentPosts = (await getSectionPostsChrono())
 <style>
   header {
     margin-block-end: var(--space-m);
-
-    h1 {
-      font-size: var(--step-3);
-      font-weight: var(--font-weight-medium);
-      line-height: calc(var(--leading-offset) + 1em);
-    }
 
     p {
       margin-block-start: var(--space-3xs);

@@ -83,6 +83,8 @@ and a `theme.json`, described below. Because `theme/` is a workspace package, `p
 
 `themeConfig` takes a second argument, an Astro config merged over the theme's, for site-only settings such as the dev server port.
 
+The build fails on any internal link in the built pages whose page or file does not exist, or whose `#anchor` matches no element `id` on the target page.
+
 HTML files in `public/`, such as slide decks, are copied through untouched and left out of the theme's link check, font subsetting and style rewriting.
 
 Content goes in `src/content/<collection>/` for each section and `src/content/pages/` for standalone pages, fonts in `src/assets/fonts/`, and bibliographies in `src/data/bibliographies/`. The build writes generated files to `src/generated/`, which should be ignored by git.
@@ -178,7 +180,11 @@ import Ledger from '@/components/Ledger.astro'
 
 The component reads the collection named after the lowercase title and is reached at `/` plus that name; pass `entries` or `href` to change either. The `description` is the page description and the line under the heading.
 
-Only `title` and `creator` are required. `rating` is a whole number from 1 to 10, or `DNF`. `published` prints what it holds as a normal date: `1962`, `Jun 1962`, `1962-06` and `19620601` all work, and anything else is printed as written. `link` names an entry in the collection given as the second argument to `defineLedger`. Entries without an `ended` date are listed last under Undated, and a title read more than once gets `-01`, `-02` permalinks in the order the readings ended. Each entry is also its own search result.
+Only `title` is required. `creator` is optional and the byline is left out without it. `added` is the date an entry was added to the library: entries are grouped by the year of `ended`, the `started` date of a DNF, or `added`, in that order, and an entry with only `added` shows "Added" and the date. `url` is a full URL or a path on the site. `rating` is a whole number from 1 to 10, or `DNF`. `published` prints what it holds as a normal date: `1962`, `Jun 1962`, `1962-06` and `19620601` all work, and anything else is printed as written. `url` makes the title a link to the work, ideally its DOI, while the rest of the card stays a permalink. `link` names an entry in the collection given as the second argument to `defineLedger`. Pass `dated={false}` to `Ledger` for a plain list in file order with no year headings and no dates. Otherwise entries without an `ended` date are listed last under Undated, and a title read more than once gets `-01`, `-02` permalinks in the order the readings ended. Each entry is also its own search result.
+
+To give ledgers a feed, add an endpoint that returns `renderLedgerFeed(context, sources, { title, description })`, where each source is `{ collection, href, noun }` for a ledger and the page it is shown on. Items are dated by `ended`, then `added`, and link to the entry's card. Pass `feed={{ href, label }}`, with `href` a path on the site, to `Ledger` to show the RSS button and advertise the feed in the page head.
+
+Pass `ratings` to `Ledger` to show a bar chart of how many entries have each rating, with favorites highlighted, between the description and the list. It is inline SVG drawn at build time in the theme colours.
 
 ## Overlay and shadowing
 

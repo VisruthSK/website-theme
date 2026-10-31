@@ -1,0 +1,22 @@
+---
+import RSS from '@/icons/rss.svg'
+import { withBase } from '@/lib/base'
+
+type Props = {
+  title: string
+  feed?: { href: string; label: string }
+}
+
+const { title, feed } = Astro.props
+---
+
+<page-heading>
+  <h1>{title}</h1>
+  {
+    feed && (
+      <a href={withBase(feed.href)} data-icon-button aria-label={feed.label}>
+        <RSS />
+      </a>
+    )
+  }
+</page-heading>
