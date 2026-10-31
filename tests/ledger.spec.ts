@@ -70,6 +70,40 @@ test.describe('list page', () => {
     ).toBeLessThan(2)
   })
 
+  test('Markdown note links use normal visible link styling and are clickable', async ({
+    page,
+    site,
+  }) => {
+    await page.goto(site.ledger!.path)
+    const card = page.locator('.interactive-card', {
+      hasText: 'The Gift of the Magi',
+    })
+    await card.locator('.note').evaluate((note) => {
+      note.insertAdjacentHTML(
+        'beforeend',
+        '<p><a href="https://example.com/">Article</a></p>',
+      )
+    })
+    const link = card.getByRole('link', { name: 'Article' })
+    await link.scrollIntoViewIfNeeded()
+    await expect(link).toHaveCSS('text-decoration-line', 'underline')
+    const color = await link.evaluate(
+      (element) => getComputedStyle(element).textDecorationColor,
+    )
+    expect(color).not.toBe('rgba(0, 0, 0, 0)')
+    expect(
+      await link.evaluate((element) => {
+        const rect = element.getBoundingClientRect()
+        return (
+          document.elementFromPoint(
+            rect.x + rect.width / 2,
+            rect.y + rect.height / 2,
+          ) === element
+        )
+      }),
+    ).toBe(true)
+  })
+
   test('a link opens in the same tab and a card links to itself', async ({
     page,
     site,

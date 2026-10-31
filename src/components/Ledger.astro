@@ -106,7 +106,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
                       )}
                     </div>
                     {data.note && (
-                      <div class="note" set:html={renderLedgerNote(data.note)} />
+                      <prose-content class="note" data-compact set:html={renderLedgerNote(data.note)} />
                     )}
                     {(data.link || data.favorite) && (
                       <div class="ledger-footer" data-pagefind-ignore>
@@ -215,6 +215,7 @@ const linkHref = ({ collection, id }: { collection: string; id: string }) =>
   }
 
   .note :global(a) {
+    pointer-events: auto;
     position: relative;
     z-index: 1;
   }
