@@ -87,6 +87,8 @@ HTML files in `public/`, such as slide decks, are copied through untouched and l
 
 Content goes in `src/content/<collection>/` for each section and `src/content/pages/` for standalone pages, fonts in `src/assets/fonts/`, and bibliographies in `src/data/bibliographies/`. The build writes generated files to `src/generated/`, which should be ignored by git.
 
+Set `rss: false` in a post's frontmatter to leave it out of every feed and the home page's recent list; it stays on the site, in listings and in search.
+
 ### Updating
 
 Pull the newest release with `git submodule update --remote theme` and commit the new pointer. To have GitHub do it, add Dependabot to the site:

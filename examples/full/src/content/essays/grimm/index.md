@@ -4,6 +4,7 @@ date: 2026-10-08
 description: 'The first of three Grimm tales, in the public domain.'
 tags: ['story', 'grimm', 'series']
 order: ['rumpelstiltskin', 'shoemaker']
+rss: false
 ---
 
 Story text from Project Gutenberg in the translation by Edgar Taylor and Marian Edwardes, in the public domain.
