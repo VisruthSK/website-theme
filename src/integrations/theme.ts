@@ -109,13 +109,13 @@ function virtualModules(theme: Theme, root: URL) {
   const present = Object.entries(fonts).filter(
     (entry): entry is [string, string] => entry[1] !== undefined,
   )
-  const icons = [...new Set(theme.socials.map(({ icon }) => icon))]
+  const icons = [...new Set(theme.footer.links.map(({ icon }) => icon))]
   const modules: Record<string, string> = {
-    'virtual:erudite/config': [
+    'virtual:theme/config': [
       `export default ${JSON.stringify(theme)}`,
       `export const paths = ${JSON.stringify(paths)}`,
     ].join('\n'),
-    'virtual:erudite/assets': [
+    'virtual:theme/assets': [
       ...present.map(([name, file]) => `import ${name} from ${fontUrl(file)}`),
       ...icons.map(
         (name, index) =>
@@ -143,6 +143,7 @@ export async function themeConfig(
 ): Promise<AstroUserConfig> {
   const theme = await loadTheme(new URL('theme.json', root))
   const bibliographies = fileURLToPath(new URL(theme.bibliographies, root))
+  const publicDir = fileURLToPath(new URL('public/', root))
   const { features } = theme
   const { origin, pathname } = new URL(theme.site.href)
   const base = pathname.replace(/\/$/, '')
@@ -166,11 +167,11 @@ export async function themeConfig(
     integrations: [
       routes(theme),
       generatedAssets(theme),
-      inlineStyles(theme.prebuilt, base),
+      inlineStyles(publicDir, base),
       bundleCss(base),
       sitemap(),
       ...(features.search ? [pagefindSearch()] : []),
-      linkCheck(theme.prebuilt, base),
+      linkCheck(publicDir, base),
       earlyHints(theme, base),
       ...(features.typeset ? [typeset(theme, root)] : []),
       fontSubset(theme, root),
