@@ -23,6 +23,7 @@ export interface Site {
   code?: string
   tag: string
   unfeeded?: string
+  ledger?: { path: string; query: string; permalinks: string[] }
   visual: string[]
 }
 
@@ -49,9 +50,15 @@ export const SITES = {
     code: '/notes/everything/',
     tag: '/tags/story/',
     unfeeded: '/essays/grimm/',
+    ledger: {
+      path: '/reading/',
+      query: 'Wilde',
+      permalinks: ['the-selfish-giant-01', 'the-selfish-giant-02'],
+    },
     visual: [
       '/',
       '/essays/',
+      '/reading/',
       '/notes/everything/',
       '/essays/the-selfish-giant/',
       '/essays/the-gift-of-the-magi/',

@@ -111,7 +111,7 @@ Each pull request moves `theme/` to the latest release, and the site's own tests
 
 | Key              | Contents                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `site`           | `title`, `description`, `href`, `author`, `locale`, `dir`, `postsPerPage`, `featuredPostCount` and `featured` post ids.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `site`           | `title`, `description`, `href`, `author`, `locale`, `dir`, `featuredPostCount` and `featured` post ids.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `pages`          | Wording for the generated pages: `recent.description` and `search.placeholder`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `sections`       | `slug`, `label` and content `collection` for each section, in display order. `pages` is reserved.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `navigation`     | Sidebar links: `{ "section": slug }` or `{ "href", "label" }`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -133,6 +133,50 @@ Two font settings exist because browsers render some fonts differently from how 
 - `fonts.stripHinting` (default `false`) removes hinting instructions when fonts are subset. Without them, Chromium on Linux auto-hints some fonts and widens their glyphs, so keep it off unless you have checked your fonts.
 - `fonts.dropCap.size` (default `5.9rem`) is the drop cap's font size. Browsers that support `initial-letter` size the cap themselves; pick the size at which the fallback matches them, or drop-cap paragraphs fall back to native justification.
 - `fonts.dropCap.tolerance` (default `0.35`) is how far, in em, a browser's own sizing of the initial letter may differ from the plan before the paragraph keeps native justification. Browsers differ from each other and from letter to letter, so a site whose drop-cap paragraphs fall back can raise it; line verification still catches overflow.
+
+## Lists
+
+A list is a page of dated entries, such as books read or films seen, grouped under year headings with the newest first. It is not part of `theme.json`: the site owns the data file, the collection and the page.
+
+```yaml
+# src/data/reading.yaml
+pale-fire:
+  title: Pale Fire
+  creator: Vladimir Nabokov
+  published: Jun 1962
+  rating: 7
+  favorite: true
+  started: 2026-08-14
+  ended: 2026-09-03
+  note: A book that seems designed to be read twice.
+  link: 20250809-01
+```
+
+```ts
+// src/content.config.ts
+import { defineCollections, defineLedger } from '@/lib/collections'
+
+export const collections = defineCollections({
+  reading: defineLedger('src/data/reading.yaml', 'reviews'),
+})
+```
+
+```astro
+---
+// src/pages/reading.astro
+import Ledger from '@/components/Ledger.astro'
+---
+
+<Ledger
+  title="Reading"
+  description="Books I have read."
+  linkLabel="Review"
+/>
+```
+
+The component reads the collection named after the lowercase title and is reached at `/` plus that name; pass `entries` or `href` to change either. The `description` is the page description and the line under the heading.
+
+Only `title` and `creator` are required. `rating` is a whole number from 1 to 10, or `DNF`. `published` prints what it holds as a normal date: `1962`, `Jun 1962`, `1962-06` and `19620601` all work, and anything else is printed as written. `link` names an entry in the collection given as the second argument to `defineLedger`. Entries without an `ended` date are listed last under Undated, and a title read more than once gets `-01`, `-02` permalinks in the order the readings ended. Each entry is also its own search result.
 
 ## Overlay and shadowing
 

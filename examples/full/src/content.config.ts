@@ -1,3 +1,5 @@
-import { defineCollections } from '@/lib/collections'
+import { defineCollections, defineLedger } from '@/lib/collections'
 
-export const collections = defineCollections()
+export const collections = defineCollections({
+  reading: defineLedger('src/data/reading.yaml', 'essays'),
+})

@@ -1,0 +1,227 @@
+---
+import MetaPage from '@/components/MetaPage.astro'
+import PagefindMeta from '@/components/PagefindMeta.astro'
+import { COLLECTION_TO_SECTION, SECTIONS } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+import { formatDate, formatLooseDate } from '@/lib/dates'
+import {
+  dateRange,
+  ledgerGroups,
+  ledgerPermalinks,
+  type LedgerEntry,
+} from '@/lib/ledger'
+import { getCollection } from 'astro:content'
+
+type Props = {
+  title: string
+  description: string
+  entries?: LedgerEntry[]
+  href?: string
+  linkLabel?: string
+}
+
+const { title, description, linkLabel = 'Link' } = Astro.props
+const name = title.toLowerCase()
+const {
+  entries = (await getCollection(name as never)) as LedgerEntry[],
+  href = `/${name}`,
+} = Astro.props
+
+const groups = ledgerGroups(entries)
+const permalinks = ledgerPermalinks(entries)
+const linkHref = ({ collection, id }: { collection: string; id: string }) =>
+  `${SECTIONS[COLLECTION_TO_SECTION[collection]].href}/${id}/`
+---
+
+<Layout crumbs={[{ label: title, href }]}>
+  <MetaPage slot="head" title={title} description={description} />
+  <PagefindMeta slot="head" sectionLabel={title} entries />
+
+  <div data-pagefind-body>
+    <page-heading>
+      <h1>{title}</h1>
+    </page-heading>
+    <p class="intro">{description}</p>
+
+    {
+      groups.map(({ heading, entries: group }) => (
+        <entry-group>
+          <h2 data-year>{heading}</h2>
+          <ul data-entries>
+            {group.map(({ id, data }) => {
+              const permalink = permalinks.get(id)!
+              const { dates, open } = dateRange(data.started, data.ended)
+              return (
+                <li
+                  class="interactive-card"
+                  data-favorite={data.favorite || undefined}
+                >
+                  <a
+                    class="card-overlay"
+                    href={`#${permalink}`}
+                    aria-label={`${data.title}, permalink`}
+                  />
+                  <div class="card-body">
+                    <div class="head">
+                      <div>
+                        <h3 class="card-title" id={permalink}>
+                          {data.title}
+                        </h3>
+                        <p class="byline">
+                          <span>{data.creator}</span>
+                          {data.published && (
+                            <>
+                              <span class="meta-divider" aria-hidden="true" />
+                              <span>{formatLooseDate(data.published)}</span>
+                            </>
+                          )}
+                        </p>
+                        {dates.length > 0 && (
+                          <p class="meta-row" data-pagefind-ignore>
+                            <span>
+                              {dates.map((date, index) => (
+                                <>
+                                  {index > 0 && ' – '}
+                                  <time datetime={date.toISOString()}>
+                                    {formatDate(date)}
+                                  </time>
+                                </>
+                              ))}
+                              {open && ' –'}
+                            </span>
+                          </p>
+                        )}
+                      </div>
+                      {(data.rating !== undefined || data.favorite) && (
+                        <div class="side" data-pagefind-ignore>
+                          {data.rating === 'DNF' ? (
+                            <span class="dnf">DNF</span>
+                          ) : (
+                            data.rating !== undefined && (
+                              <span class="score">{data.rating}</span>
+                            )
+                          )}
+                          {data.favorite && (
+                            <span class="chip">Favorite</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {data.note && (
+                      <div class="note">
+                        {data.note
+                          .trim()
+                          .split(/\n{2,}/)
+                          .map((paragraph) => (
+                            <p class="card-excerpt">{paragraph}</p>
+                          ))}
+                      </div>
+                    )}
+                    {data.link && (
+                      <p class="link" data-pagefind-ignore>
+                        <a href={linkHref(data.link)}>{linkLabel}</a>
+                      </p>
+                    )}
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </entry-group>
+      ))
+    }
+  </div>
+</Layout>
+
+<style>
+  .intro {
+    margin-block-end: var(--space-m);
+    color: var(--ink-muted);
+  }
+
+  .card-title {
+    scroll-margin-block-start: calc(var(--space-s) + 1rem);
+  }
+
+  li:has(:target) {
+    border-color: var(--flourish);
+  }
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-s);
+  }
+
+  .byline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block-end: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--ink-subtle);
+  }
+
+  .meta-row {
+    margin-block-end: 0;
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    font-family: var(--font-sans);
+  }
+
+  .score {
+    font-size: 3rem;
+    line-height: 0.9;
+    font-weight: 900;
+  }
+
+  [data-favorite] .score {
+    color: var(--flourish);
+  }
+
+  .side .chip {
+    border-color: color-mix(in oklab, var(--flourish) 30%, transparent);
+    background: color-mix(in oklab, var(--flourish) 8%, transparent);
+    color: var(--flourish);
+    pointer-events: none;
+    transform: none;
+  }
+
+  .dnf {
+    font-size: 2.125rem;
+    line-height: 1;
+    font-weight: 900;
+    color: var(--ink-muted);
+  }
+
+  .note {
+    margin-block-start: var(--space-s);
+  }
+
+  .note .card-excerpt:last-child {
+    margin-block-end: 0;
+  }
+
+  .link {
+    margin-block-start: var(--space-2xs);
+    font-size: 0.9375rem;
+  }
+
+  .link a {
+    --underline: var(--muted-foreground);
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    padding-block: 0.25rem;
+    color: var(--foreground);
+    pointer-events: auto;
+  }
+</style>

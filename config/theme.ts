@@ -238,7 +238,6 @@ export const themeSchema = z
       author: nonEmpty,
       locale: nonEmpty.default('en-US'),
       dir: z.enum(['ltr', 'rtl']).default('ltr'),
-      postsPerPage: z.int().positive().default(10),
       featuredPostCount: z.int().nonnegative().default(3),
       featured: z.array(z.string()).default([]),
     }),

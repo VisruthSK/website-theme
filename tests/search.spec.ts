@@ -24,7 +24,7 @@ test.describe('search', () => {
     test.skip(!site.theme.features.search, 'search is switched off')
   })
 
-  test('works under the strict policy and pages through results', async ({
+  test('works under the strict policy and lists every result on one page', async ({
     page,
     site,
   }) => {
@@ -44,12 +44,31 @@ test.describe('search', () => {
     )
 
     await search(page, 'story')
-    const first = page.locator('[data-title]').first()
-    const before = await first.textContent()
-    await page.getByRole('button', { name: 'Go to page 2' }).click()
-    await expect(page).toHaveURL(/[?&]page=2\b/)
-    await expect(first).not.toHaveText(before ?? '')
+    const rows = await page.locator('.search-result__card').count()
+    expect(rows).toBeGreaterThan(1)
+    await expect(page.locator('[data-search-status]')).toHaveText(
+      `Showing ${rows} matches.`,
+    )
+    expect(new URL(page.url()).searchParams.has('page')).toBe(false)
     expect(failures).toEqual([])
+  })
+
+  test('a list page returns one result per entry, linked to its permalink', async ({
+    page,
+    site,
+  }) => {
+    const { ledger } = site
+    test.skip(!ledger, 'the site has no list page')
+    await open(page, site)
+    await search(page, ledger!.query)
+    const links = await page
+      .locator('.search-result__card a.card-overlay')
+      .evaluateAll((anchors) => anchors.map((a) => a.getAttribute('href')))
+    const entries = links.filter((href) => href?.includes(`${ledger!.path}#`))
+    expect(entries).toHaveLength(ledger!.permalinks.length)
+    for (const permalink of ledger!.permalinks) {
+      expect(entries.some((href) => href?.endsWith(`#${permalink}`))).toBe(true)
+    }
   })
 
   test('pages have no date and cards open their page', async ({
