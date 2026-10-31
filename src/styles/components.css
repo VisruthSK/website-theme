@@ -42,6 +42,13 @@
     transform: translateY(-2px);
   }
 
+  @supports (-moz-appearance: none) {
+    transition:
+      background-color var(--duration-fast) ease,
+      transform var(--duration-fast)
+        linear(0, 0 17%, 0.5 17%, 0.5 43%, 1 43%, 1);
+  }
+
   &:has(.card-overlay:focus-visible) {
     outline: var(--focus-ring);
     outline-offset: var(--focus-ring-offset);
