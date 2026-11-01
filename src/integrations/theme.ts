@@ -105,10 +105,16 @@ function virtualModules(
     heading: heading.faces[0].file,
     mono: mono?.faces[0].file,
     dropCap: theme.features.dropCap ? dropCap?.file : undefined,
+    math: theme.features.math ? theme.fonts.math?.file : undefined,
   }
   const present = Object.entries(fonts).filter(
     (entry): entry is [string, string] => entry[1] !== undefined,
   )
+  const bundledMath = theme.features.math && !theme.fonts.math
+  const fontNames = [
+    ...present.map(([name]) => name),
+    ...(bundledMath ? ["math"] : []),
+  ]
   const icons = [...new Set(theme.footer.links.map(({ icon }) => icon))]
   const modules: Record<string, string> = {
     "virtual:theme/config": [
@@ -117,6 +123,11 @@ function virtualModules(
     ].join("\n"),
     "virtual:theme/assets": [
       ...present.map(([name, file]) => `import ${name} from ${fontUrl(file)}`),
+      ...(bundledMath
+        ? [
+            "import math from '@/assets/fonts/STIXTwoMath-Regular.woff2?url&no-inline'",
+          ]
+        : []),
       ...icons.map(
         (name, index) =>
           `import icon${index} from ${JSON.stringify(iconPath(name, srcDir))}`,
@@ -125,7 +136,7 @@ function virtualModules(
         ? ["import typesetScript from '@/generated/typeset.js?url&no-inline'"]
         : ["const typesetScript = undefined"]),
       "export { typesetScript }",
-      `export const fonts = { ${present.map(([name]) => name).join(", ")} }`,
+      `export const fonts = { ${fontNames.join(", ")} }`,
       `export const icons = { ${icons.map((name, index) => `${JSON.stringify(name)}: icon${index}`).join(", ")} }`,
     ].join("\n"),
   }

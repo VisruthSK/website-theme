@@ -67,6 +67,8 @@ const hasBibliography = Boolean(bib)
 const hasCode = /^\s*(```|~~~)/m.test(body)
 const usesMono =
   hasCode || [post.data.title, body].some((text) => /`[^`\n]+`/.test(text))
+const usesMath =
+  FEATURES.math && /\$\$|(?<![\\$])\$(?=\S)[^$\n]*\S\$(?!\d)/.test(body)
 const citedKeys = hasBibliography ? extractCitedKeys(body) : []
 
 const tocHeadings = withReferencesHeading(headings, hasBibliography).filter(
@@ -102,10 +104,12 @@ const crumbs = [
   <Fragment slot="head">
     {fonts.bodyItalic && <FontPreload href={fonts.bodyItalic} />}
     {usesMono && fonts.mono && <FontPreload href={fonts.mono} />}
+    {usesMath && fonts.math && <FontPreload href={fonts.math} />}
     {
-      remarkPluginFrontmatter.dropCap && fonts.dropCap && (
-        <FontPreload href={fonts.dropCap} />
-      )
+      remarkPluginFrontmatter.dropCap &&
+        fonts.dropCap &&
+        fonts.dropCap !== fonts.heading &&
+        fonts.dropCap !== fonts.body && <FontPreload href={fonts.dropCap} />
     }
   </Fragment>
   <PagefindMeta
