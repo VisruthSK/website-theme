@@ -11,6 +11,7 @@ declare module "virtual:theme/assets" {
     heading: string
     mono?: string
     dropCap?: string
+    math?: string
   }
   export const icons: Record<string, import("astro/types").SvgComponent>
   export const typesetScript: string | undefined
