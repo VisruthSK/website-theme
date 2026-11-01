@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 408" role="img" aria-labelledby="t d">
+  <title id="t">Bytes sent per page</title>
+  <desc id="d">Kilobytes transferred for each of nine pages, astro-erudite against this theme. The theme sends less on every page.</desc>
+  <style>
+    text { font-family: system-ui, sans-serif; fill: #6b6b6b }
+    .label { font-size: 13px }
+    .value { font-size: 12px }
+    .head { font-size: 14px; font-weight: 600 }
+    @media (prefers-color-scheme: dark) { text { fill: #b4b4b4 } }
+  </style>
+  <rect x="150" y="18" width="12" height="12" fill="#8a8a8a"/>
+  <text x="168" y="28.5" class="head">astro-erudite</text>
+  <rect x="280" y="18" width="12" height="12" fill="#1f9d8b"/>
+  <text x="298" y="28.5" class="head">this theme</text>
+  <g>
+    <text x="140" y="71" text-anchor="end" class="label">Home</text>
+    <rect x="150" y="55" width="184.7" height="14" fill="#8a8a8a"/>
+    <text x="340.7" y="66.5" class="value">211 kB</text>
+    <rect x="150" y="71" width="39.6" height="14" fill="#1f9d8b"/>
+    <text x="195.6" y="82.5" class="value">45 kB</text>
+    <text x="140" y="109" text-anchor="end" class="label">Listing</text>
+    <rect x="150" y="93" width="134.8" height="14" fill="#8a8a8a"/>
+    <text x="290.8" y="104.5" class="value">154 kB</text>
+    <rect x="150" y="109" width="39.3" height="14" fill="#1f9d8b"/>
+    <text x="195.3" y="120.5" class="value">45 kB</text>
+    <text x="140" y="147" text-anchor="end" class="label">Essay (maths, code)</text>
+    <rect x="150" y="131" width="407.8" height="14" fill="#8a8a8a"/>
+    <text x="563.8" y="142.5" class="value">466 kB</text>
+    <rect x="150" y="147" width="76.3" height="14" fill="#1f9d8b"/>
+    <text x="232.3" y="158.5" class="value">87 kB</text>
+    <text x="140" y="185" text-anchor="end" class="label">Note (maths, code)</text>
+    <rect x="150" y="169" width="407.3" height="14" fill="#8a8a8a"/>
+    <text x="563.3" y="180.5" class="value">465 kB</text>
+    <rect x="150" y="185" width="75.9" height="14" fill="#1f9d8b"/>
+    <text x="231.9" y="196.5" class="value">87 kB</text>
+    <text x="140" y="223" text-anchor="end" class="label">Story</text>
+    <rect x="150" y="207" width="140.6" height="14" fill="#8a8a8a"/>
+    <text x="296.6" y="218.5" class="value">161 kB</text>
+    <rect x="150" y="223" width="50.4" height="14" fill="#1f9d8b"/>
+    <text x="206.4" y="234.5" class="value">58 kB</text>
+    <text x="140" y="261" text-anchor="end" class="label">Second story</text>
+    <rect x="150" y="245" width="142.0" height="14" fill="#8a8a8a"/>
+    <text x="298.0" y="256.5" class="value">162 kB</text>
+    <rect x="150" y="261" width="51.9" height="14" fill="#1f9d8b"/>
+    <text x="207.9" y="272.5" class="value">59 kB</text>
+    <text x="140" y="299" text-anchor="end" class="label">Series index</text>
+    <rect x="150" y="283" width="143.5" height="14" fill="#8a8a8a"/>
+    <text x="299.5" y="294.5" class="value">164 kB</text>
+    <rect x="150" y="299" width="47.5" height="14" fill="#1f9d8b"/>
+    <text x="203.5" y="310.5" class="value">54 kB</text>
+    <text x="140" y="337" text-anchor="end" class="label">Series part 1</text>
+    <rect x="150" y="321" width="143.6" height="14" fill="#8a8a8a"/>
+    <text x="299.6" y="332.5" class="value">164 kB</text>
+    <rect x="150" y="337" width="47.6" height="14" fill="#1f9d8b"/>
+    <text x="203.6" y="348.5" class="value">54 kB</text>
+    <text x="140" y="375" text-anchor="end" class="label">Series part 2</text>
+    <rect x="150" y="359" width="143.6" height="14" fill="#8a8a8a"/>
+    <text x="299.6" y="370.5" class="value">164 kB</text>
+    <rect x="150" y="375" width="46.8" height="14" fill="#1f9d8b"/>
+    <text x="202.8" y="386.5" class="value">54 kB</text>
+  </g>
+</svg>
