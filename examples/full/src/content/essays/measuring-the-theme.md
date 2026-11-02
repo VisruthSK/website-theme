@@ -1,107 +1,124 @@
 ---
 title: 'Measuring the theme against astro-erudite'
-date: 2026-11-01
-description: 'The same nine pages built with astro-erudite and with this theme: a third of the bytes, an earlier largest paint, and a later first paint on a really slow link.'
+date: 2026-11-02
+description: 'Fifteen pages of the same content built with astro-erudite and with this theme: an eighth of the bytes and a faster largest paint everywhere, a slower first paint on a really slow link for three pages.'
 tags: ['performance', 'accessibility', 'typography']
 bib: example
 ---
 
 THIS CONTENT IS ENTIRELY LLM WRITTEN
 
-This theme is built on astro-erudite and adds a build-time line breaker, margin notes and citations. I built the same nine pages with both and compared what a browser downloads, how soon it paints and what Lighthouse scores.[^scope]
+This theme is built on astro-erudite and adds a build-time line breaker, margin notes and citations. To see what that costs and buys, both themes build the same fifteen pages here, and the comparison covers what a browser downloads, how soon it paints and what Lighthouse scores.[^scope]
+
+## The same content on both
+
+Comparing one theme's demo site with another's says nothing, because the demos hold different posts. So every page below is the same markdown rendered by each theme. The fifteen pages are this example site's nine pages, plus the long v2 announcement and the v1 series, an index and four posts, that ship as astro-erudite's own demo content. That second set matters because it has images and long code blocks, which this site's own pages lack.
+
+The posts were changed only where one theme cannot render them:
+
+- Citations are stripped, since astro-erudite has none.
+- The banner image in each astro-erudite post's front matter is dropped, since this theme has no banner. That makes astro-erudite slightly lighter than it ships.
+- Version tags such as `v1.6.0` are dropped on both sites, and links between posts point at each site's own routes.
+- astro-erudite keeps its required author byline, which this theme removes.
+
+Both sites use IBM Plex Sans, which astro-erudite ships as variable font files and this theme as static instances subset to the glyphs the site uses. Everything else that differs is the theme, and is part of the answer.
 
 ## Summary
 
+Medians across the fifteen pages, on Lighthouse's simulated phone:
+
 | Measure | astro-erudite | This theme | Difference |
 | --- | ---: | ---: | --- |
-| Bytes sent, median page | 164 kB | 54 kB | 3.0 times smaller |
-| Bytes sent, page with maths and code | 466 kB | 87 kB | 5.3 times smaller |
-| Fonts sent, median page | 142 kB | 34 kB | 4.2 times smaller |
-| Every file in the build, Brotli | 2,134 kB | 329 kB | 6.5 times smaller |
-| Largest paint, median page, simulated phone | 1.95 s | 1.35 s | 1.4 times faster |
-| Largest paint, page with maths and code | 3.75 s | 1.65 s | 2.3 times faster |
-| First paint, page with maths and code | 2.78 s | 1.13 s | 2.5 times faster |
-| Performance score, median page | 99 | 100 | 1 point higher |
-| Accessibility score, median page | 96 | 100 | 4 points higher |
-| First paint, story, really throttled | 1.58 s | 2.01 s | 0.43 s slower |
+| Bytes sent per page | 465 kB | 60 kB | 7.8 times smaller |
+| Fonts sent per page | 442 kB | 35 kB | 12.7 times smaller |
+| All fifteen pages, each loaded cold | 5,233 kB | 1,176 kB | 4.4 times smaller |
+| First paint | 2.78 s | 1.05 s | 2.6 times faster |
+| Largest paint | 3.75 s | 1.35 s | 2.8 times faster |
+| Performance score | 84 | 100 | 16 points higher |
+| Accessibility score | 96 | 100 | 4 points higher |
 
-The theme sends less on every page and paints its largest element sooner on every page on a simulated phone. When the browser is really throttled to a slow connection, it paints first content 0.4 to 0.6 s later on three of the five pages tested.
+The theme sends fewer bytes and paints its largest element sooner on all fifteen pages. It is not faster in every measurement. When the browser is really throttled it paints first content later on three of six pages, it blocks the main thread for 35 to 80 ms on five pages where astro-erudite blocks for none on the simulated phone, and it makes more requests on eight pages.
 
 ## Page weight
 
-![Kilobytes sent for each of nine pages, astro-erudite against this theme: the theme sends less on every page, about a fifth as much on the two pages with maths and code](/measure-weight.svg)
+![Kilobytes sent for each of fifteen pages built from the same content, astro-erudite against this theme: the theme sends less on every page, between a half and a tenth as much](/measure-weight.svg)
 
-The two pages with maths and code are the heaviest in both builds, since they also load the code stylesheet and a maths font. The theme sends 87 kB for them against astro-erudite's 466 kB, and fonts are nearly all of the gap: 71 kB against 442 kB.
+The theme sends 46 to 194 kB per page and astro-erudite 154 to 604 kB. Fonts are most of the gap: 142 to 484 kB on astro-erudite against 35 to 59 kB. The two sites send about the same images (114 kB against 117 kB across all fifteen pages), so images do not explain it.
 
 ## Largest paint
 
-![Seconds until the largest element is painted on a simulated phone, nine pages: the theme is faster on every page, most of all on the two pages with maths and code](/measure-lcp.svg)
+![Seconds until the largest element is painted on a simulated phone, fifteen pages: the theme is faster on every page, most of all on the illustrated v1 posts and the pages with maths and code](/measure-lcp.svg)
 
-Largest paint comes 2.1 s sooner on the two pages with maths and code, 1.05 s sooner on the home page and 0.6 s sooner on the other six. First paint is level or earlier on the theme everywhere except the listing, where astro-erudite is ahead by 0.15 s (0.90 s against 1.05 s).
+The largest paint arrives 0.6 to 1.05 s sooner on the plain pages and 2.1 to 2.8 s sooner on the illustrated posts and the pages with maths and code. First paint is earlier on twelve pages, level on two and later on one, the listing, by 0.15 s.
 
 ## Lighthouse scores
 
-Medians of 11 runs per page across the nine pages:
+Medians of 11 runs per page and site:
 
 | Category | astro-erudite | This theme |
 | --- | --- | --- |
-| Performance | 84 to 100, median 99 | 100 on every page |
-| Accessibility | 95 or 96 | 100 on every page |
-| Best practices | 100 on eight pages, 96 on one | 100 on every page |
-| SEO | 100 on six pages, 92 on three | 100 on every page |
-| Blocking time | 0 ms | 0 ms |
-| Layout shift | 0.000 | 0.000 |
+| Performance | 76 to 100, below 90 on eight pages | 100 on thirteen pages, 99 and 98 on two |
+| Accessibility | 95 or 96 on ten pages, 100 on five | 100 on fourteen pages, 96 on one |
+| Best practices | 100 on fourteen pages, 96 on one | 100 on every page |
+| SEO | 100 on eleven pages, 92 on four | 100 on every page |
+| Layout shift | 0.041 on one page, 0 on the rest | 0 on every page |
 
-The scores are whole numbers and most are identical across the 11 runs, so a median says more than an interval would. On a desktop every page scores 100 on both themes except the note, where astro-erudite scores 99. The theme paints the two maths pages in 0.28 s against 0.60 s.
+The scores are whole numbers and most are identical across the 11 runs, so a median says more than an interval would. The two pages where the theme falls short of 100 are the long v2 post (98, with a largest paint of 2.06 s) and the static blogs post (99).
 
-## Real throttling
+## Where the theme is slower
 
-Lighthouse's default mobile score uses simulated throttling, which models the page load instead of slowing the browser. Applied throttling slows a real browser to the same 1.6 Mbps link and 150 ms round trips. I audited five pages 7 times each this way.
+Three things go against the theme.
 
-![Seconds until first paint with the browser really slowed, five pages: the theme is up to a tenth of a second faster on the home page and listing and four tenths to six tenths slower on the essay, the note and the story](/measure-real.svg)
+On the simulated phone it records 35 to 80 ms of blocking time on five pages (the long post and four of the illustrated posts) where astro-erudite records none. I did not isolate the cause.
 
-The two methods agree on the home page and the listing. On the essay, the note and the story the theme paints 0.4 to 0.6 s later. It scores 1 to 3 points lower on the note and the story, and 1 point higher on the essay, where astro-erudite shifts its layout (0.113 against 0).
+It makes more requests on eight pages, such as 21 for the essay against 13, because the line breaker, margin notes and citations bring their own scripts and styles.
 
-The font preloads cause the delay. With them removed, the story's first paint under applied throttling dropped from 2.01 s to 1.56 s, level with astro-erudite's 1.58 s. Under simulated throttling the same change made it 0.45 s slower, from 1.05 s to 1.50 s. A preload starts a font as soon as the HTML arrives, which the simulation rewards because it charges for every round trip. On a real 1.6 Mbps link the roughly 50 kB of fonts compete with the stylesheets for bandwidth. Switching `font-display` from `block` to `swap` changed nothing (2.01 s against 2.02 s), so the invisible text is not the cost.
+On the listing, astro-erudite paints first content earlier, 0.90 s against 1.05 s.
+
+### Real throttling
+
+Lighthouse's default mobile score models the page load instead of slowing the browser. Applied throttling slows a real browser to the same 1.6 Mbps link and 150 ms round trips. I audited six of the pages 5 times each this way.
+
+![Seconds until first paint with the browser really slowed, six pages: the theme is faster on the listing, the home page and one illustrated post, and slower on the story, the essay and the long post](/measure-real.svg)
+
+| Page | Performance | First paint | Blocking time |
+| --- | --- | --- | --- |
+| Story | 97 against 96 | 1.98 s against 2.25 s | 124 ms against 0 |
+| Listing | 98 against 99 | 1.81 s against 1.66 s | 83 ms against 0 |
+| Home | 98 against 99 | 1.80 s against 1.71 s | 61 ms against 0 |
+| Essay | 85 against 88 | 2.27 s against 3.12 s | 342 ms against 0 |
+| Long post | 67 against 68 | 3.09 s against 5.85 s | 964 ms against 27 ms |
+| v1 rehype patch | 65 against 91 | 3.13 s against 2.84 s | 655 ms against 0 |
+
+In each cell the astro-erudite figure comes first. Under real throttling the theme scores higher on five of the six pages, because astro-erudite blocks the main thread for 61 to 964 ms and the theme for 27 ms at most. It paints first content later on the story, the essay and the long post. The long post is the worst case, 2.8 s later.
+
+The font preloads explain at least the story. In a separate test with them removed, its first paint under applied throttling fell from 2.01 s to 1.56 s, while under the simulated model the same change made it 0.45 s slower. A preload starts a font as soon as the HTML arrives, which the simulation rewards because it charges for every round trip. On a real 1.6 Mbps link the roughly 50 kB of fonts compete with the stylesheets for bandwidth. Switching `font-display` from `block` to `swap` changed nothing, so invisible text is not the cost. I did not trace the long post.
 
 The theme keeps `block` and the preloads because the line breaker measures paragraphs with the real font files, and text set in a fallback face would not fit its breaks.
 
-## Whole-site size
+## Reading every page
 
-Every file in each build:
+A reader who opens all fifteen pages downloads each shared file once. That is 344 kB across 41 files on the theme and 946 kB across 34 files on astro-erudite.
 
-| Measure | astro-erudite | This theme |
+| Files loaded once across the fifteen pages | astro-erudite | This theme |
 | --- | ---: | ---: |
-| Files | 72 | 90 (203 with search) |
-| On disk | 2,548 kB | 1,283 kB (2,126 kB with search) |
-| Over the wire, gzip | 2,162 kB | 382 kB (1,185 kB with search) |
-| Over the wire, Brotli | 2,134 kB | 329 kB (1,130 kB with search) |
+| HTML | 305.4 kB | 141.8 kB |
+| Fonts | 513.9 kB | 58.5 kB |
+| CSS | 7.8 kB | 19.1 kB |
+| JavaScript | 3.8 kB | 7.1 kB |
+| Images | 114.2 kB | 117.2 kB |
 
-By type, over the wire with Brotli:
+The theme is smaller in HTML and fonts, and larger in CSS and JavaScript.
 
-| Files | astro-erudite | This theme |
-| --- | ---: | ---: |
-| HTML | 130.0 kB | 91.7 kB |
-| CSS | 7.4 kB | 17.3 kB |
-| JavaScript | 2.9 kB | 8.2 kB |
-| Fonts | 545.5 kB | 55.3 kB |
-| Images | 1,447.3 kB | 1.9 kB |
-| Everything else | 1.1 kB | 154.6 kB |
-| Search index | none | 801.1 kB |
+## How it was measured
 
-The search index is the theme's largest part, though a search downloads only the index fragments it needs. astro-erudite's total is mostly the images in its demo posts, so that row compares the demo content, not the themes. The theme is smaller in HTML and fonts and larger in CSS and JavaScript.
-
-## Method
-
-The posts of this example site were copied into an unmodified astro-erudite 2.0.1 with only their front matter changed and their citations removed, since astro-erudite has no citations. Both sites were built with `astro build` on Astro 7.4 and use IBM Plex Sans, which astro-erudite ships as variable font files and this theme as static instances subset to the glyphs the site uses. Nine pages exist in both builds: the home page, the listing, an essay with maths and code, a note with maths and code, two stories and a three page series.
-
-Everything here is lab data, since an example site has no visitors to collect field data from. Following Google's advice on variability, conditions were held fixed and each result is a median of several runs [@lighthouse-variability].
+Everything is lab data, since an example site has no visitors to collect field data from. Following Google's advice on variability, conditions were held fixed and each result is a median of several runs [@lighthouse-variability].
 
 - Lighthouse 13.5.0 drove headless Chromium with a fresh browser for every audit, so each starts cold.
-- Each page was audited 11 times per site on the default mobile profile. Within a round the 18 audits ran in shuffled order so that drift in the machine hits both sites alike, and one warm-up round was discarded.
-- The mobile profile uses simulated throttling: a 4x slower CPU and a 1.6 Mbps link with 150 ms round trips. The desktop profile covered all nine pages, 11 times each.
+- Each page was audited 11 times per site on the default mobile profile. Within a round the audits ran in shuffled order so that drift in the machine hits both sites alike, and one warm-up round was discarded. The runs came in two batches of 5 and 6 rounds, on the same builds and settings.
+- The mobile profile uses simulated throttling: a 4x slower CPU and a 1.6 Mbps link with 150 ms round trips. The real-throttling check used the same link and CPU slowdown applied to the browser.
 - Both builds were served by the same static server, which compresses text with Brotli and sends `Cache-Control: max-age=0`.
-- Sizes are bytes on the wire after Brotli. The whole-site totals also give gzip, since not every host serves Brotli.
+- Sizes are bytes on the wire after Brotli, from Lighthouse's network log.
 
 ## The line breaker
 
@@ -126,7 +143,7 @@ Normal text needs a ratio of at least $4.5$, and large text and interface compon
 | Focus ring in astro-erudite | 1.9 | 3.0 | 3 |
 | Focus ring in this theme | 3.7 | 4.5 | 3 |
 
-Lighthouse scored astro-erudite 95 or 96 for accessibility on all nine pages and the theme 100. On the essay it flagged the tag links under the title for low contrast. Separately, astro-erudite's focus ring measures 1.9:1 in light mode against the 3:1 WCAG asks for, and the theme darkens it.
+Lighthouse scored astro-erudite 95 or 96 for accessibility on ten pages and 100 on five, and the theme 100 on fourteen. On the essay it flagged astro-erudite's tag links under the title for low contrast. Separately, astro-erudite's focus ring measures 1.9:1 in light mode against the 3:1 WCAG asks for, and the theme darkens it.
 
 Justified text can open wide gaps between words. The theme measures the whole paragraph before choosing breaks to keep them small, and if its script is blocked the page falls back to the browser's own layout.
 
@@ -160,7 +177,7 @@ Run it against each site's `dist` directory and compare the totals. For the timi
 
 ## Limits
 
-The theme gives up some things for those numbers. It sends more CSS and JavaScript than astro-erudite, because the line breaker, margin notes and citations bring their own rules and code. On a really slow link its font preloads delay first paint on content pages by 0.4 to 0.6 s.
+The theme gives up some things for those numbers. It sends more CSS and JavaScript than astro-erudite, it makes more requests, and on a really slow link its first paint is later on some pages, by 2.8 s on the long post.
 
 This is one machine, one set of posts and lab conditions. Differences of a point or two are noise. The numbers describe how the two themes treat the same markdown, not what a given site built on them will score.
 
