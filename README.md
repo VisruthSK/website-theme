@@ -252,3 +252,19 @@ pnpm dev
 ### Updating astro-erudite
 
 `astro-erudite/` is a submodule pinned to a commit of astro-erudite. To move to a new release, check out its tag inside the submodule (`git -C astro-erudite fetch --tags && git -C astro-erudite checkout v2.1.0`), commit the new pointer and run the suite.
+
+## Standard.site
+
+The theme can publish the master RSS feed to [Standard.site](https://standard.site/). Each feed item becomes a document in one publication; drafts, future posts and `rss: false` posts stay out. The record contains the feed's title, description, date, tags, rendered HTML and plain text. Removing an item from the feed does not delete its existing record; remove it from the PDS yourself if needed.
+
+Choose a publication TID and set `STANDARD_SITE_PUBLICATION` to its AT URI, for example `at://did:plc:.../site.standard.publication/3abc...`. Set it only for production builds. The build writes the publication verification endpoint and links the feed's pages to deterministic document records. Keep the URI and canonical URLs stable: changing either changes the verification or document identities.
+
+After a successful production deployment, run `node theme/scripts/sync-standard-site.mjs` with these environment variables:
+
+- `STANDARD_SITE_URL`: the site's `site.href` from `theme.json`.
+- `STANDARD_SITE_PUBLICATION`: the same publication AT URI used by the build.
+- `ATPROTO_IDENTIFIER` and `ATPROTO_PASSWORD`: the account handle and a revocable app password, stored as CI secrets.
+
+The script reads the deployed RSS and verifies every page before contacting the PDS. It creates missing records, updates changed records and leaves unchanged records alone. It never deletes records. Run it serially, and retry a failed run: writes completed before a failure are safe to repeat. Do not expose the app password to the build output or preview builds. The AT URI is public and contains no credentials.
+
+The example site's Pages workflow publishes production to `gh-pages` and labelled pull requests to `pr/<number>/`, with preview URLs and `noindex`. After merging the workflow, set the repository's GitHub Pages source to the root of the `gh-pages` branch. Apply the `build-website` label to a same-repository pull request to build its preview; closing it removes the preview.

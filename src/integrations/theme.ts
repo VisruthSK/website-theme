@@ -30,6 +30,7 @@ import { inlineStyles } from "./inline-styles"
 import { linkCheck } from "./link-check"
 import { pagefindSearch } from "./pagefind"
 import { themeCss } from "./theme-css"
+import { standardSite } from "./standard-site"
 import { typeset } from "./typeset"
 
 const THEME_PAGES = new URL("../pages/", import.meta.url)
@@ -179,6 +180,7 @@ export async function themeConfig(
     },
     integrations: [
       routes(theme),
+      standardSite(theme.site.href),
       generatedAssets(theme),
       inlineStyles(paths.public, base),
       bundleCss(base),
