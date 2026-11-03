@@ -1,0 +1,1 @@
+try{const e=localStorage.theme;"light"!==e&&"dark"!==e||(document.documentElement.dataset.theme=e,document.querySelector('meta[name="color-scheme"]').content=e)}catch{}

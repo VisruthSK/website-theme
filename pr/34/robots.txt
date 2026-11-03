@@ -1,0 +1,5 @@
+
+User-agent: *
+Allow: /
+
+Sitemap: https://visruthsk.github.io/website-theme/pr/34/sitemap-index.xml
