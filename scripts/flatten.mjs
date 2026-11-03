@@ -45,6 +45,11 @@ for (const entry of [
   })
 }
 
+mkdirSync(join(out, "scripts"), { recursive: true })
+for (const file of ["standard-site.mjs", "sync-standard-site.mjs"]) {
+  cpSync(join(theme, "scripts", file), join(out, "scripts", file))
+}
+
 const BUNDLED_ASSETS = ["assets/fonts/STIXTwoMath-Regular.woff2"]
 for (const asset of BUNDLED_ASSETS) {
   mkdirSync(dirname(join(out, "src", asset)), { recursive: true })

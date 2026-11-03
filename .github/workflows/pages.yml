@@ -3,25 +3,37 @@ name: Pages
 on:
   push:
     branches: [main]
-    paths: ["examples/full/**", "src/**", "config/**", "astro-erudite"]
+    paths:
+      [
+        "examples/full/**",
+        "src/**",
+        "config/**",
+        "scripts/**",
+        "astro-erudite",
+        ".github/workflows/pages.yml",
+      ]
+  pull_request:
+    types: [opened, reopened, synchronize, labeled, closed]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
+  pull-requests: write
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
+    if: >-
+      (github.event_name != 'pull_request' && github.ref == 'refs/heads/main') ||
+      (github.event.action != 'closed' &&
+       contains(github.event.pull_request.labels.*.name, 'build-website') &&
+       (github.event.action != 'labeled' || github.event.label.name == 'build-website') &&
+       github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -34,9 +46,48 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - if: github.event_name == 'pull_request'
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node scripts/preview.mjs configure "$PR_NUMBER"
       - run: node scripts/build.mjs examples/full
-      - uses: actions/upload-pages-artifact@v5
+      - if: github.event_name == 'pull_request'
+        run: node scripts/preview.mjs noindex
+      - uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: examples/full/dist
-      - id: deployment
-        uses: actions/deploy-pages@v5
+          branch: gh-pages
+          folder: examples/full/dist
+          target-folder: ${{ github.event_name == 'pull_request' && format('pr/{0}', github.event.pull_request.number) || '' }}
+          clean: ${{ github.event_name == 'pull_request' }}
+          force: false
+      - name: Comment preview link
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          message: |
+            Preview: https://visruthsk.github.io/website-theme/pr/${{ github.event.pull_request.number }}/
+            Built from ${{ github.event.pull_request.head.sha }}
+
+  cleanup:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: gh-pages
+      - name: Remove preview
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -r --ignore-unmatch "pr/$PR_NUMBER"
+          if ! git diff --cached --quiet; then
+            git commit -m "Remove preview for PR #$PR_NUMBER"
+            git pull --rebase origin gh-pages
+            git push origin HEAD:gh-pages
+          fi
+      - uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          hide: true
+          hide_classify: OUTDATED
