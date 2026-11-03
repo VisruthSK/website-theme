@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises"
+import { join } from "node:path"
 import { fromHtml } from "hast-util-from-html"
 import { selectAll } from "hast-util-select"
 import { documentUri, parseFeed, publicationParts } from "./standard-site.mjs"
@@ -13,12 +15,26 @@ if (!site || !publication || !identifier || !password)
     "Set STANDARD_SITE_URL, STANDARD_SITE_PUBLICATION, ATPROTO_IDENTIFIER and ATPROTO_PASSWORD",
   )
 const { did, rkey } = publicationParts(publication)
+const base = new URL(site)
+const dist = process.env.STANDARD_SITE_DIST
 const fetchText = async (url) => {
+  url = new URL(url)
+  if (dist && url.origin === base.origin) {
+    const pathname = decodeURIComponent(url.pathname)
+    const path = pathname.startsWith("/.well-known/")
+      ? pathname.slice(1)
+      : pathname
+          .slice(base.pathname.replace(/\/$/, "").length)
+          .replace(/^\/+/, "")
+    return readFile(
+      join(dist, path.endsWith("/") ? `${path}index.html` : path),
+      "utf8",
+    )
+  }
   const response = await fetch(url, { redirect: "error" })
   if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`)
   return response.text()
 }
-const base = new URL(site)
 const verification = new URL(
   `/.well-known/site.standard.publication${base.pathname.replace(/\/$/, "")}`,
   base,

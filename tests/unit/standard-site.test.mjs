@@ -1,5 +1,8 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 import { documentUri, parseFeed } from "../../scripts/standard-site.mjs"
 
 const site = "https://example.com/"
@@ -19,7 +22,8 @@ test("sync creates, skips unchanged, updates in place and rejects unverified pag
   })
   let xml = feed(),
     verified = true,
-    writes = 0
+    writes = 0,
+    failNext = false
   const stored = new Map()
   const record = () => parseFeed(xml, site, publication).records[0]
   globalThis.fetch = async (input, options = {}) => {
@@ -54,6 +58,10 @@ test("sync creates, skips unchanged, updates in place and rejects unverified pag
         ),
       })
     if (method === "com.atproto.repo.putRecord") {
+      if (failNext) {
+        failNext = false
+        return new Response("", { status: 503 })
+      }
       const body = JSON.parse(options.body)
       const uri = `at://${body.repo}/${body.collection}/${body.rkey}`
       stored.set(uri, { uri, cid: `cid${++writes}`, value: body.record })
@@ -77,6 +85,42 @@ test("sync creates, skips unchanged, updates in place and rejects unverified pag
       /verification does not match/,
     )
     assert.equal(writes, 3)
+    const dist = mkdtempSync(join(tmpdir(), "standard-site-"))
+    try {
+      process.env.STANDARD_SITE_DIST = dist
+      mkdirSync(join(dist, ".well-known"))
+      mkdirSync(join(dist, "blog", "first"), { recursive: true })
+      writeFileSync(
+        join(dist, ".well-known", "site.standard.publication"),
+        publication,
+      )
+      writeFileSync(join(dist, "rss.xml"), xml)
+      writeFileSync(
+        join(dist, "blog", "first", "index.html"),
+        `<head><link rel="site.standard.document" href="${documentUri(publication, key)}"></head>`,
+      )
+      await import(`../../scripts/sync-standard-site.mjs?local-repeat`)
+      assert.equal(writes, 3)
+      xml = feed("Local edit")
+      writeFileSync(join(dist, "rss.xml"), xml)
+      failNext = true
+      await assert.rejects(
+        import(`../../scripts/sync-standard-site.mjs?local-error`),
+        /HTTP 503/,
+      )
+      assert.equal(writes, 3)
+      await import(`../../scripts/sync-standard-site.mjs?local-edit`)
+      assert.equal(writes, 4)
+      writeFileSync(join(dist, "blog", "first", "index.html"), "<head></head>")
+      await assert.rejects(
+        import(`../../scripts/sync-standard-site.mjs?local-failure`),
+        /verification does not match/,
+      )
+      assert.equal(writes, 4)
+    } finally {
+      delete process.env.STANDARD_SITE_DIST
+      rmSync(dist, { recursive: true, force: true })
+    }
     assert.equal(record().record.textContent, "Hello world.")
     assert.throws(
       () =>
