@@ -1,0 +1,294 @@
+<!DOCTYPE html><html lang="en-US" dir="ltr"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"><meta name="color-scheme" content="light dark"><meta name="generator" content="Astro v7.4.4"><meta name="HandheldFriendly" content="True"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Example Site"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no"><meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fcfcfc" media="(prefers-color-scheme: light)"><link rel="icon" href="data:;base64,="><link rel="manifest" href="/website-theme/pr/33/site.webmanifest"><link rel="sitemap" href="/website-theme/pr/33/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Example Site" href="https://visruthsk.github.io/website-theme/pr/33/rss.xml"><link rel="preload" href="/website-theme/pr/33/_astro/plex-sans-600-normal.CFEVNYnd.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/website-theme/pr/33/_astro/plex-sans-400-normal.E1rVpEYa.woff2" as="font" type="font/woff2" crossorigin><script src="/website-theme/pr/33/_astro/theme.wVc672i-.js"></script> <title>Measuring the theme against astro-erudite | Example Site</title> <meta name="description" content="Fifteen pages of the same content built with astro-erudite and with this theme: an eighth of the bytes and a faster largest paint everywhere, a slower first paint on a really slow link for three pages."> <link rel="canonical" href="https://visruthsk.github.io/website-theme/pr/33/essays/measuring-the-theme/"> <meta property="og:title" content="Measuring the theme against astro-erudite"> <meta property="og:description" content="Fifteen pages of the same content built with astro-erudite and with this theme: an eighth of the bytes and a faster largest paint everywhere, a slower first paint on a really slow link for three pages."> <meta property="og:type" content="article"> <meta property="og:url" content="https://visruthsk.github.io/website-theme/pr/33/essays/measuring-the-theme/"> <meta property="og:site_name" content="Example Site"> <meta property="og:locale" content="en_US">   <meta name="twitter:card" content="summary"> <meta name="twitter:title" content="Measuring the theme against astro-erudite"> <meta name="twitter:description" content="Fifteen pages of the same content built with astro-erudite and with this theme: an eighth of the bytes and a faster largest paint everywhere, a slower first paint on a really slow link for three pages.">   <meta property="article:published_time" content="2026-11-02T00:00:00.000Z"> <meta property="article:author" content="Example Author"> <meta name="citation_title" content="Measuring the theme against astro-erudite"> <meta name="citation_author" content="Example Author"> <meta name="citation_publication_date" content="2026/11/02"> <meta name="citation_public_url" content="https://visruthsk.github.io/website-theme/pr/33/essays/measuring-the-theme/"> <meta property="article:tag" content="performance"><meta property="article:tag" content="accessibility"><meta property="article:tag" content="typography"><script defer src="/website-theme/pr/33/_astro/typeset.Bmmg-nwZ.js" blocking="render"></script><link rel="preload" href="/website-theme/pr/33/_astro/plex-sans-400-italic.ChYXe-G_.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/website-theme/pr/33/_astro/plex-mono-400-normal.DMJ8VG8y.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/website-theme/pr/33/_astro/STIXTwoMath-Regular.BJu8nNzt.woff2" as="font" type="font/woff2" crossorigin><meta name="pagefind:section_label" data-pagefind-meta="section_label[content]" content="Essays"><meta name="pagefind:description" data-pagefind-meta="description[content]" content="Fifteen pages of the same content built with astro-erudite and with this theme: an eighth of the bytes and a faster largest paint everywhere, a slower first paint on a really slow link for three pages."><meta name="pagefind:published_at" data-pagefind-meta="published_at[content]" data-pagefind-sort="published_at[content]" content="2026-11-02T00:00:00.000Z"><meta name="pagefind:word_count" data-pagefind-meta="word_count[content]" content="2220"><meta name="pagefind:tags" data-pagefind-meta="tags[content]" content="[&quot;performance&quot;,&quot;accessibility&quot;,&quot;typography&quot;]"> <link rel="stylesheet" href="/website-theme/pr/33/_astro/pre.7e01b269.css"><link rel="stylesheet" href="/website-theme/pr/33/_astro/base.37c4f845.css"><link rel="stylesheet" href="/website-theme/pr/33/_astro/article.0f736d7b.css"><link rel="stylesheet" href="/website-theme/pr/33/_astro/math.0138528f.css"><link rel="stylesheet" href="/website-theme/pr/33/_astro/route.9d103089.css"> <script type="module" src="/website-theme/pr/33/_astro/code.rvjunxqc.js"></script> <meta name="robots" content="noindex, nofollow"></head> <body> <span id="external-link-new-tab-description" hidden> Opens in new tab </span> <svg class="external-link-sprite" width="0" height="0" aria-hidden="true" focusable="false"> <symbol id="external-link-icon-symbol" viewBox="0 0 24 24"> <path d="M15 3h6v6"></path> <path d="M10 14 21 3"></path> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path> </symbol> </svg> <script type="module" src="/website-theme/pr/33/_astro/TableOfContents.astro_astro_type_script_index_0_lang.BYDbikDR.js"></script><page-grid> <page-header> <header data-bar data-astro-cid-akqvpu3b> <input type="checkbox" id="menu-toggle" class="menu-toggle sr-only" aria-controls="site-nav" data-astro-cid-akqvpu3b> <a href="/website-theme/pr/33/" data-brand data-astro-cid-akqvpu3b> <span data-astro-cid-akqvpu3b>Example Site</span>  </a> <sidebar-controls data-astro-cid-akqvpu3b="true"> <label data-theme-toggle data-icon-button data-astro-cid-ow2j55tw> <input type="checkbox" class="theme-flip sr-only" data-astro-cid-ow2j55tw> <light-icon data-astro-cid-ow2j55tw="true"> <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-ow2j55tw="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg> </light-icon> <dark-icon data-astro-cid-ow2j55tw="true"> <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-ow2j55tw="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg> </dark-icon> <span class="sr-only" data-astro-cid-ow2j55tw>Dark mode</span> </label>   <script type="module" src="/website-theme/pr/33/_astro/theme-toggle.Cu8WRWRI.js"></script> <label for="menu-toggle" data-icon-button data-menu-button data-astro-cid-akqvpu3b> <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-akqvpu3b="true"><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></svg> <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-akqvpu3b="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg> <span class="sr-only" data-astro-cid-akqvpu3b>Menu</span> </label> </sidebar-controls> <nav id="site-nav" aria-label="Primary" data-astro-cid-akqvpu3b> <ul data-astro-cid-akqvpu3b> <li data-astro-cid-akqvpu3b> <a href="/website-theme/pr/33/essays" class="astro-akqvpu3b" data-astro-cid-akqvpu3b> Essays </a> <ul data-astro-cid-akqvpu3b> <li> <a href="/website-theme/pr/33/essays/measuring-the-theme/" aria-current="page"> Measuring the theme against astro-erudite </a> </li> </ul> </li><li data-astro-cid-akqvpu3b> <a href="/website-theme/pr/33/notes" class="astro-akqvpu3b" data-astro-cid-akqvpu3b> Notes </a>  </li><li data-astro-cid-akqvpu3b> <a href="/website-theme/pr/33/reading" class="astro-akqvpu3b" data-astro-cid-akqvpu3b> Reading </a>  </li><li data-astro-cid-akqvpu3b> <a href="/website-theme/pr/33/tags" class="astro-akqvpu3b" data-astro-cid-akqvpu3b> Tags </a>  </li><li data-astro-cid-akqvpu3b> <a href="/website-theme/pr/33/about" class="astro-akqvpu3b" data-astro-cid-akqvpu3b> About </a>  </li><li data-astro-cid-akqvpu3b> <a href="https://example.org/" target="_blank" rel="noopener noreferrer" aria-describedby="external-link-new-tab-description" class="astro-akqvpu3b" data-astro-cid-akqvpu3b> Elsewhere </a>  </li><li data-astro-cid-akqvpu3b> <a href="/website-theme/pr/33/search" class="astro-akqvpu3b" data-astro-cid-akqvpu3b> Search </a>  </li>  </ul> </nav> </header> <page-toc> <nav aria-label="Table of contents" data-astro-cid-zuo6mr4f> <toc-title aria-hidden="true" data-astro-cid-zuo6mr4f="true"><span data-astro-cid-zuo6mr4f>Table of Contents</span></toc-title> <label data-bar data-astro-cid-zuo6mr4f> <input type="checkbox" aria-label="Toggle table of contents" data-astro-cid-zuo6mr4f> <svg viewBox="0 0 16 16" aria-hidden="true" data-astro-cid-zuo6mr4f> <circle cx="8" cy="8" r="6.5" data-astro-cid-zuo6mr4f></circle> <circle cx="8" cy="8" r="6.5" transform="rotate(-90 8 8)" data-astro-cid-zuo6mr4f></circle> </svg> <toc-current data-astro-cid-zuo6mr4f="true">Table of Contents</toc-current> <svg width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-zuo6mr4f="true"><path fill="currentColor" d="m12.37 15.835l6.43-6.63C19.201 8.79 18.958 8 18.43 8H5.57c-.528 0-.771.79-.37 1.205l6.43 6.63c.213.22.527.22.74 0" /></svg> </label> <ul data-bar data-astro-cid-zuo6mr4f> <li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#the-same-content-on-both" data-astro-cid-zuo6mr4f>The same content on both</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#summary" data-astro-cid-zuo6mr4f>Summary</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#page-weight" data-astro-cid-zuo6mr4f>Page weight</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#largest-paint" data-astro-cid-zuo6mr4f>Largest paint</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#lighthouse-scores" data-astro-cid-zuo6mr4f>Lighthouse scores</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#where-the-theme-is-slower" data-astro-cid-zuo6mr4f>Where the theme is slower</a> </li><li data-depth="3" data-astro-cid-zuo6mr4f> <a href="#real-throttling" data-astro-cid-zuo6mr4f>Real throttling</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#reading-every-page" data-astro-cid-zuo6mr4f>Reading every page</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#how-it-was-measured" data-astro-cid-zuo6mr4f>How it was measured</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#the-line-breaker" data-astro-cid-zuo6mr4f>The line breaker</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#accessibility" data-astro-cid-zuo6mr4f>Accessibility</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#reproducing-it" data-astro-cid-zuo6mr4f>Reproducing it</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#limits" data-astro-cid-zuo6mr4f>Limits</a> </li><li data-depth="2" data-astro-cid-zuo6mr4f> <a href="#references" data-astro-cid-zuo6mr4f>References</a> </li> </ul> </nav> </page-toc> </page-header> <page-content> <main>      <article data-pagefind-body data-astro-cid-fswkrw7o> <header data-astro-cid-fswkrw7o> <h1 id="post-title" data-page-title data-pagefind-weight="10" data-astro-cid-fswkrw7o>Measuring the theme against astro-erudite</h1> <div class="meta-row" data-pagefind-ignore="true" data-astro-cid-fswkrw7o="true"> <span><time datetime="2026-11-02T00:00:00.000Z">2 November 2026</time></span>  <span class="meta-divider" aria-hidden="true"></span> <span>2,220 words</span>  <span class="meta-divider" aria-hidden="true"></span> <span>11 min read</span>  </div> <div class="chip-list" data-pagefind-ignore data-astro-cid-fswkrw7o> <a href="/website-theme/pr/33/tags/performance/" class="chip">
+#performance </a><a href="/website-theme/pr/33/tags/accessibility/" class="chip">
+#accessibility </a><a href="/website-theme/pr/33/tags/typography/" class="chip">
+#typography </a> </div> </header>  <prose-content data-astro-cid-fswkrw7o="true"> <p>THIS CONTENT IS ENTIRELY LLM WRITTEN</p>
+<p data-j=1b.0.14;f0!baab;f!bbbb;1f~;3!ccb;u!cdc;r!ddc><span class="drop-cap">T</span><span class="opening-words">his theme</span> is built on astro-erudite and adds a build-time line breaker, margin notes and citations. <span class="footnote-sentence">To see what that costs and buys, both themes build the same fifteen pages here, and the comparison covers what a browser downloads, how soon it paints and what Lighthouse scores.<sup><a href="#user-content-fn-scope" id="user-content-fnref-scope" data-footnote-ref aria-describedby="footnotes" class="footnote-ref">1</a></sup><side-note role="note" aria-label="Footnote 1" data-pagefind-ignore><a href="#user-content-fnref-scope" aria-label="Back to reference 1">1</a> The comparison says how the two themes treat the same markdown, not how every site built on them will behave.</side-note></span></p>
+<h2 id="the-same-content-on-both">The same content on both<a data-heading-anchor="" href="#the-same-content-on-both" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p data-j=23.0.0;f0!9bbbcb;c!acbdbc;r!adcdbc;9!addeb;l!bcdfb;f!bdeec;u!cdfee>Comparing one theme’s demo site with another’s says nothing, because the demos hold different posts. So every page below is the same markdown rendered by each theme. The fifteen pages are this example site’s nine pages, plus the long v2 announcement and the v1 series, an index and four posts, that ship as astro-erudite’s own demo content. That second set matters because it has images and long code blocks, which this site’s own pages lack.</p>
+<p data-j=b.1.0;f0!a;6~>The posts were changed only where one theme cannot render them:</p>
+<ul>
+<li>Citations are stripped, since astro-erudite has none.</li>
+<li>The banner image in each astro-erudite post’s front matter is dropped, since this theme has no banner. That makes astro-erudite slightly lighter than it ships.</li>
+<li>Version tags such as <code>v1.6.0</code> are dropped on both sites, and links between posts point at each site’s own routes.</li>
+<li>astro-erudite keeps its required author byline, which this theme removes.</li>
+</ul>
+<p data-j=13.0.0;f0!bcc;6!cd;l!ce;19!de;o!ee>Both sites use IBM Plex Sans, which astro-erudite ships as variable font files and this theme as static instances subset to the glyphs the site uses. Everything else that differs is the theme, and is part of the answer.</p>
+<h2 id="summary">Summary<a data-heading-anchor="" href="#summary" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p>Medians across the fifteen pages, on Lighthouse’s simulated phone:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th class="s8b424f07">astro-erudite</th>
+<th class="s8b424f07">This theme</th>
+<th>Difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bytes sent per page</td>
+<td class="s8b424f07">465 kB</td>
+<td class="s8b424f07">60 kB</td>
+<td>7.8 times smaller</td>
+</tr>
+<tr>
+<td>Fonts sent per page</td>
+<td class="s8b424f07">442 kB</td>
+<td class="s8b424f07">35 kB</td>
+<td>12.7 times smaller</td>
+</tr>
+<tr>
+<td>All fifteen pages, each loaded cold</td>
+<td class="s8b424f07">5,233 kB</td>
+<td class="s8b424f07">1,176 kB</td>
+<td>4.4 times smaller</td>
+</tr>
+<tr>
+<td>First paint</td>
+<td class="s8b424f07">2.78 s</td>
+<td class="s8b424f07">1.05 s</td>
+<td>2.6 times faster</td>
+</tr>
+<tr>
+<td>Largest paint</td>
+<td class="s8b424f07">3.75 s</td>
+<td class="s8b424f07">1.35 s</td>
+<td>2.8 times faster</td>
+</tr>
+<tr>
+<td>Performance score</td>
+<td class="s8b424f07">84</td>
+<td class="s8b424f07">100</td>
+<td>16 points higher</td>
+</tr>
+<tr>
+<td>Accessibility score</td>
+<td class="s8b424f07">96</td>
+<td class="s8b424f07">100</td>
+<td>4 points higher</td>
+</tr>
+</tbody>
+</table>
+<p data-j=1w.0.0;f0!bddfb;10!ddfe;10!deff;f!eeie>The theme sends fewer bytes and paints its largest element sooner on all fifteen pages. It is not faster in every measurement. When the browser is really throttled it paints first content later on three of six pages, it blocks the main thread for 35 to 80 ms on five pages where astro-erudite blocks for none on the simulated phone, and it makes more requests on eight pages.</p>
+<h2 id="page-weight">Page weight<a data-heading-anchor="" href="#page-weight" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p><img src="/website-theme/pr/33/measure-weight.svg" alt="Kilobytes sent for each of fifteen pages built from the same content, astro-erudite against this theme: the theme sends less on every page, between a half and a tenth as much"></p>
+<p data-j=1j.1.0;f0!dee;r!eff;16!fgf;10!gif>The theme sends 46 to 194 kB per page and astro-erudite 154 to 604 kB. Fonts are most of the gap: 142 to 484 kB on astro-erudite against 35 to 59 kB. The two sites send about the same images (114 kB against 117 kB across all fifteen pages), so images do not explain it.</p>
+<h2 id="largest-paint">Largest paint<a data-heading-anchor="" href="#largest-paint" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p><img src="/website-theme/pr/33/measure-lcp.svg" alt="Seconds until the largest element is painted on a simulated phone, fifteen pages: the theme is faster on every page, most of all on the illustrated v1 posts and the pages with maths and code"></p>
+<p data-j=1d.1.0;f0!eee;23!hf;18!hg>The largest paint arrives 0.6 to 1.05 s sooner on the plain pages and 2.1 to 2.8 s sooner on the illustrated posts and the pages with maths and code. First paint is earlier on twelve pages, level on two and later on one, the listing, by 0.15 s.</p>
+<h2 id="lighthouse-scores">Lighthouse scores<a data-heading-anchor="" href="#lighthouse-scores" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p>Medians of 11 runs per page and site:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>astro-erudite</th>
+<th>This theme</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Performance</td>
+<td>76 to 100, below 90 on eight pages</td>
+<td>100 on thirteen pages, 99 and 98 on two</td>
+</tr>
+<tr>
+<td>Accessibility</td>
+<td>95 or 96 on ten pages, 100 on five</td>
+<td>100 on fourteen pages, 96 on one</td>
+</tr>
+<tr>
+<td>Best practices</td>
+<td>100 on fourteen pages, 96 on one</td>
+<td>100 on every page</td>
+</tr>
+<tr>
+<td>SEO</td>
+<td>100 on eleven pages, 92 on four</td>
+<td>100 on every page</td>
+</tr>
+<tr>
+<td>Layout shift</td>
+<td>0.041 on one page, 0 on the rest</td>
+<td>0 on every page</td>
+</tr>
+</tbody>
+</table>
+<p data-j=1f.0.0;f0!cdf;o!deg;10!eei;1i!gg>The scores are whole numbers and most are identical across the 11 runs, so a median says more than an interval would. The two pages where the theme falls short of 100 are the long v2 post (98, with a largest paint of 2.06 s) and the static blogs post (99).</p>
+<h2 id="where-the-theme-is-slower">Where the theme is slower<a data-heading-anchor="" href="#where-the-theme-is-slower" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p>Three things go against the theme.</p>
+<p data-j=z.1.0;f0!dd;u!fc;1f!gd>On the simulated phone it records 35 to 80 ms of blocking time on five pages (the long post and four of the illustrated posts) where astro-erudite records none. I did not isolate the cause.</p>
+<p data-j=t.1.0;f0!db;1o!ec;16!fc;c!f>It makes more requests on eight pages, such as 21 for the essay against 13, because the line breaker, margin notes and citations bring their own scripts and styles.</p>
+<p data-j=d.1.0;f0!a;x!b;r~>On the listing, astro-erudite paints first content earlier, 0.90 s against 1.05 s.</p>
+<h3 id="real-throttling">Real throttling<a data-heading-anchor="" href="#real-throttling" aria-label="Link to this section" tabindex="-1"></a></h3>
+<p data-j=15.0.0;f0!abf;10!bd;16!ce>Lighthouse’s default mobile score models the page load instead of slowing the browser. Applied throttling slows a real browser to the same 1.6 Mbps link and 150 ms round trips. I audited six of the pages 5 times each this way.</p>
+<p><img src="/website-theme/pr/33/measure-real.svg" alt="Seconds until first paint with the browser really slowed, six pages: the theme is faster on the listing, the home page and one illustrated post, and slower on the story, the essay and the long post"></p>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Performance</th>
+<th>First paint</th>
+<th>Blocking time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Story</td>
+<td>97 against 96</td>
+<td>1.98 s against 2.25 s</td>
+<td>124 ms against 0</td>
+</tr>
+<tr>
+<td>Listing</td>
+<td>98 against 99</td>
+<td>1.81 s against 1.66 s</td>
+<td>83 ms against 0</td>
+</tr>
+<tr>
+<td>Home</td>
+<td>98 against 99</td>
+<td>1.80 s against 1.71 s</td>
+<td>61 ms against 0</td>
+</tr>
+<tr>
+<td>Essay</td>
+<td>85 against 88</td>
+<td>2.27 s against 3.12 s</td>
+<td>342 ms against 0</td>
+</tr>
+<tr>
+<td>Long post</td>
+<td>67 against 68</td>
+<td>3.09 s against 5.85 s</td>
+<td>964 ms against 27 ms</td>
+</tr>
+<tr>
+<td>v1 rehype patch</td>
+<td>65 against 91</td>
+<td>3.13 s against 2.84 s</td>
+<td>655 ms against 0</td>
+</tr>
+</tbody>
+</table>
+<p data-j=1s.0.0;f0!bcge;x!cche;i!ccif;19!dej>In each cell the astro-erudite figure comes first. Under real throttling the theme scores higher on five of the six pages, because astro-erudite blocks the main thread for 61 to 964 ms and the theme for 27 ms at most. It paints first content later on the story, the essay and the long post. The long post is the worst case, 2.8 s later.</p>
+<p data-j=2v.1.0;f0!dccfae8e;9!dddfcd9;i!dddfdd9;i!eedeeca;f!eedefcc;10!efeeib;9!fgfehb>The font preloads explain at least the story. In a separate test with them removed, its first paint under applied throttling fell from 2.01 s to 1.56 s, while under the simulated model the same change made it 0.45 s slower. A preload starts a font as soon as the HTML arrives, which the simulation rewards because it charges for every round trip. On a real 1.6 Mbps link the roughly 50 kB of fonts compete with the stylesheets for bandwidth. Switching <code>font-display</code> from <code>block</code> to <code>swap</code> changed nothing, so invisible text is not the cost. I did not trace the long post.</p>
+<p data-j=u.1.0;f0!bd;20~;3!cg;19~;1!c>The theme keeps <code>block</code> and the preloads because the line breaker measures paragraphs with the real font files, and text set in a fallback face would not fit its breaks.</p>
+<h2 id="reading-every-page">Reading every page<a data-heading-anchor="" href="#reading-every-page" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p data-j=u.0.0;f0!cg;1x!e;13!f>A reader who opens all fifteen pages downloads each shared file once. That is 344 kB across 41 files on the theme and 946 kB across 34 files on astro-erudite.</p>
+<table>
+<thead>
+<tr>
+<th>Files loaded once across the fifteen pages</th>
+<th class="s8b424f07">astro-erudite</th>
+<th class="s8b424f07">This theme</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTML</td>
+<td class="s8b424f07">305.4 kB</td>
+<td class="s8b424f07">141.8 kB</td>
+</tr>
+<tr>
+<td>Fonts</td>
+<td class="s8b424f07">513.9 kB</td>
+<td class="s8b424f07">58.5 kB</td>
+</tr>
+<tr>
+<td>CSS</td>
+<td class="s8b424f07">7.8 kB</td>
+<td class="s8b424f07">19.1 kB</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td class="s8b424f07">3.8 kB</td>
+<td class="s8b424f07">7.1 kB</td>
+</tr>
+<tr>
+<td>Images</td>
+<td class="s8b424f07">114.2 kB</td>
+<td class="s8b424f07">117.2 kB</td>
+</tr>
+</tbody>
+</table>
+<p data-j=e.0.0;f0!d;f~>The theme is smaller in HTML and fonts, and larger in CSS and JavaScript.</p>
+<h2 id="how-it-was-measured">How it was measured<a data-heading-anchor="" href="#how-it-was-measured" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p data-j=z.0.0;f0!d9;l!ea;19!fb;10!gc>Everything is lab data, since an example site has no visitors to collect field data from. Following Google’s advice on variability, conditions were held fixed and each result is a median of several runs <span class="citation">[<a href="#ref-lighthouse-variability" class="citation-link" aria-label="1. Google Chrome Team, 2020. Lighthouse variability" data-citation-preview="Google Chrome Team (2020). Lighthouse variability. GitHub.">1</a>]</span>.</p>
+<ul>
+<li>Lighthouse 13.5.0 drove headless Chromium with a fresh browser for every audit, so each starts cold.</li>
+<li>Each page was audited 11 times per site on the default mobile profile. Within a round the audits ran in shuffled order so that drift in the machine hits both sites alike, and one warm-up round was discarded. The runs came in two batches of 5 and 6 rounds, on the same builds and settings.</li>
+<li>The mobile profile uses simulated throttling: a 4x slower CPU and a 1.6 Mbps link with 150 ms round trips. The real-throttling check used the same link and CPU slowdown applied to the browser.</li>
+<li>Both builds were served by the same static server, which compresses text with Brotli and sends <code>Cache-Control: max-age=0</code>.</li>
+<li>Sizes are bytes on the wire after Brotli, from Lighthouse’s network log.</li>
+</ul>
+<h2 id="the-line-breaker">The line breaker<a data-heading-anchor="" href="#the-line-breaker" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p data-j=25.0.0;f0!cbdcdb;9!dddfc;h!deefd;1d!eeehd;r!fgfg>The line breaker runs when the site is built. For every justified paragraph it measures the text with the real font files, chooses the breaks and writes them into the page as a compact plan. <span class="footnote-sentence">The browser only applies the plan, which keeps the script to about 4 kB on the wire.<sup><a href="#user-content-fn-plan" id="user-content-fnref-plan" data-footnote-ref aria-describedby="footnotes" class="footnote-ref">2</a></sup><side-note role="note" aria-label="Footnote 2" data-pagefind-ignore><a href="#user-content-fnref-plan" aria-label="Back to reference 2">2</a> A paragraph’s plan is a list of numbers, one per line, encoded as text in an attribute on the paragraph. The browser reads it, sets each line’s spacing and finishes.</side-note></span> Doing the same work in the browser would mean shipping the font metrics and the algorithm to every reader and moving text after first paint.</p>
+<p data-j=w.1.0;f0!db;1r!ed;1i!f>The break search follows Knuth and Plass <span class="citation">[<a href="#ref-knuth1981" class="citation-link" aria-label="2. Knuth, Donald E., Plass, Michael F., 1981. Breaking Paragraphs into Lines" data-citation-preview="Knuth, Donald E. &amp; Plass, Michael F. (1981). Breaking Paragraphs into Lines. Software: Practice and Experience, 11(11), 1119–1184.">2</a>]</span>: it chooses all of a paragraph’s breaks together to minimise the total looseness of its lines, instead of filling one line at a time.</p>
+<h2 id="accessibility">Accessibility<a data-heading-anchor="" href="#accessibility" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p data-j=18.0.0;f0!cdb;i!ddd;x!eed;1l!ff>The theme’s test suite runs an automated audit on every page of the example sites, in light and dark mode, and fails on any violation. Contrast is checked against WCAG 2.2 <span class="citation">[<a href="#ref-wcag22" class="citation-link" aria-label="3. World Wide Web Consortium, 2023. Web Content Accessibility Guidelines (WCAG) 2.2" data-citation-preview="World Wide Web Consortium (2023). Web Content Accessibility Guidelines (WCAG) 2.2. W3C.">3</a>]</span>, which defines the contrast ratio of two colours from their relative luminances:</p>
+<math-display><math display="block" class="tml-display s87aa9fdc"><mrow><mtext>ratio</mtext><mo>=</mo><mfrac><mrow><msub><mi>L</mi><mn>1</mn></msub><mo>+</mo><mn>0.05</mn></mrow><mrow><msub><mi>L</mi><mn>2</mn></msub><mo>+</mo><mn>0.05</mn></mrow></mfrac><mo separator="true">,</mo><mspace width="2em"></mspace><mi>L</mi><mo>=</mo><mn>0.2126</mn><mspace width="0.1667em"></mspace><mi>R</mi><mo>+</mo><mn>0.7152</mn><mspace width="0.1667em"></mspace><mi>G</mi><mo>+</mo><mn>0.0722</mn><mspace width="0.1667em"></mspace><mi>B</mi></mrow></math></math-display>
+<p>Normal text needs a ratio of at least <math><mn>4.5</mn></math>, and large text and interface components at least <math><mn>3</mn></math>. The example uses astro-erudite’s palette, so the contrast figures are the same for both sites:</p>
+<table>
+<thead>
+<tr>
+<th>Pair</th>
+<th class="s8b424f07">Light</th>
+<th class="s8b424f07">Dark</th>
+<th class="s8b424f07">Needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Body text on the page</td>
+<td class="s8b424f07">15.9</td>
+<td class="s8b424f07">16.3</td>
+<td class="s8b424f07">4.5</td>
+</tr>
+<tr>
+<td>Muted text and the flourish colour</td>
+<td class="s8b424f07">5.8</td>
+<td class="s8b424f07">9.1</td>
+<td class="s8b424f07">4.5</td>
+</tr>
+<tr>
+<td>Focus ring in astro-erudite</td>
+<td class="s8b424f07">1.9</td>
+<td class="s8b424f07">3.0</td>
+<td class="s8b424f07">3</td>
+</tr>
+<tr>
+<td>Focus ring in this theme</td>
+<td class="s8b424f07">3.7</td>
+<td class="s8b424f07">4.5</td>
+<td class="s8b424f07">3</td>
+</tr>
+</tbody>
+</table>
+<p data-j=1j.0.0;f0!aeb9;9!bfab;r!bfac;u!debf;i!dec;u!efc>Lighthouse scored astro-erudite 95 or 96 for accessibility on ten pages and 100 on five, and the theme 100 on fourteen. On the essay it flagged astro-erudite’s tag links under the title for low contrast. Separately, astro-erudite’s focus ring measures 1.9 in light mode against the 3 WCAG asks for, and the theme darkens it.</p>
+<p data-j=10.1.0;f0!aae;x!bd;19!ce;19!de>Justified text can open wide gaps between words. The theme measures the whole paragraph before choosing breaks to keep them small, and if its script is blocked the page falls back to the browser’s own layout.</p>
+<h2 id="reproducing-it">Reproducing it<a data-heading-anchor="" href="#reproducing-it" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p data-j=m.0.0;f0!d;o!e;1x!f>The sizes come from a short script that builds nothing. It reads an output directory and reports Brotli sizes by file type:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="js" class="wrap sfa5ab551"><code><div class="ec-line"><div class="gutter"><div class="ln" aria-hidden="true">1</div></div><div class="code"><span class="s17a05fd1">import</span><span class="s9008416b"> { brotliCompressSync } </span><span class="s17a05fd1">from</span><span class="s9008416b"> </span><span class="s9d3b88f7">'node:zlib'</span></div></div><div class="ec-line"><div class="gutter"><div class="ln" aria-hidden="true">2</div></div><div class="code"><span class="s17a05fd1">import</span><span class="s9008416b"> { readdirSync, readFileSync, statSync } </span><span class="s17a05fd1">from</span><span class="s9008416b"> </span><span class="s9d3b88f7">'node:fs'</span></div></div><div class="ec-line"><div class="gutter"><div class="ln" aria-hidden="true">3</div></div><div class="code"><span class="s17a05fd1">import</span><span class="s9008416b"> { extname, join } </span><span class="s17a05fd1">from</span><span class="s9008416b"> </span><span class="s9d3b88f7">'node:path'</span></div></div><div class="ec-line"><div class="gutter"><div class="ln" aria-hidden="true">4</div></div><div class="code">
+</div></div><div class="ec-line"><div class="gutter"><div class="ln" aria-hidden="true">5</div></div><div class="code"><span class="s17a05fd1">function</span><span class="s9008416b"> </span><span class="sd5693bf8">sizes</span><span class="s9008416b">(</span><span class="s8ecd9b90">directory</span><span class="s9008416b">, </span><span class="s8ecd9b90">totals</span><span class="s9008416b"> </span><span class="s17a05fd1">=</span><span class="s9008416b"> {}) {</span></div></div><div class="ec-line sdf6c0e6e"><div class="gutter"><div class="ln" aria-hidden="true">6</div></div><div class="code"><span class="indent">  </span><span class="s17a05fd1">for</span><span class="s9008416b"> (</span><span class="s17a05fd1">const</span><span class="s9008416b"> </span><span class="s14ce11c2">name</span><span class="s9008416b"> </span><span class="s17a05fd1">of</span><span class="s9008416b"> </span><span class="sd5693bf8">readdirSync</span><span class="s9008416b">(directory)) {</span></div></div><div class="ec-line sb78ad029"><div class="gutter"><div class="ln" aria-hidden="true">7</div></div><div class="code"><span class="indent">    </span><span class="s17a05fd1">const</span><span class="s9008416b"> </span><span class="s14ce11c2">path</span><span class="s9008416b"> </span><span class="s17a05fd1">=</span><span class="s9008416b"> </span><span class="sd5693bf8">join</span><span class="s9008416b">(directory, name)</span></div></div><div class="ec-line sb78ad029"><div class="gutter"><div class="ln" aria-hidden="true">8</div></div><div class="code"><span class="indent">    </span><span class="s17a05fd1">if</span><span class="s9008416b"> (</span><span class="sd5693bf8">statSync</span><span class="s9008416b">(path).</span><span class="sd5693bf8">isDirectory</span><span class="s9008416b">()) {</span></div></div><div class="ec-line sfa1ebe9b"><div class="gutter"><div class="ln" aria-hidden="true">9</div></div><div class="code"><span class="indent">      </span><span class="sd5693bf8">sizes</span><span class="s9008416b">(path, totals)</span></div></div><div class="ec-line sfa1ebe9b"><div class="gutter"><div class="ln" aria-hidden="true">10</div></div><div class="code"><span class="indent">      </span><span class="s17a05fd1">continue</span></div></div><div class="ec-line sb78ad029"><div class="gutter"><div class="ln" aria-hidden="true">11</div></div><div class="code"><span class="indent"><span class="s9008416b">    </span></span><span class="s9008416b">}</span></div></div><div class="ec-line sb78ad029"><div class="gutter"><div class="ln" aria-hidden="true">12</div></div><div class="code"><span class="indent">    </span><span class="s17a05fd1">const</span><span class="s9008416b"> </span><span class="s14ce11c2">kind</span><span class="s9008416b"> </span><span class="s17a05fd1">=</span><span class="s9008416b"> </span><span class="sd5693bf8">extname</span><span class="s9008416b">(name)</span></div></div><div class="ec-line sb78ad029"><div class="gutter"><div class="ln" aria-hidden="true">13</div></div><div class="code"><span class="indent"><span class="s9008416b">    </span></span><span class="s9008416b">totals[kind] </span><span class="s17a05fd1">=</span></div></div><div class="ec-line sfa1ebe9b"><div class="gutter"><div class="ln" aria-hidden="true">14</div></div><div class="code"><span class="indent"><span class="s9008416b">      </span></span><span class="s9008416b">(totals[kind] </span><span class="s17a05fd1">??</span><span class="s9008416b"> </span><span class="s14ce11c2">0</span><span class="s9008416b">) </span><span class="s17a05fd1">+</span><span class="s9008416b"> </span><span class="sd5693bf8">brotliCompressSync</span><span class="s9008416b">(</span><span class="sd5693bf8">readFileSync</span><span class="s9008416b">(path)).</span><span class="s14ce11c2">length</span></div></div><div class="ec-line sdf6c0e6e"><div class="gutter"><div class="ln" aria-hidden="true">15</div></div><div class="code"><span class="indent"><span class="s9008416b">  </span></span><span class="s9008416b">}</span></div></div><div class="ec-line sdf6c0e6e"><div class="gutter"><div class="ln" aria-hidden="true">16</div></div><div class="code"><span class="indent">  </span><span class="s17a05fd1">return</span><span class="s9008416b"> totals</span></div></div><div class="ec-line"><div class="gutter"><div class="ln" aria-hidden="true">17</div></div><div class="code"><span class="s9008416b">}</span></div></div><div class="ec-line"><div class="gutter"><div class="ln" aria-hidden="true">18</div></div><div class="code">
+</div></div><div class="ec-line"><div class="gutter"><div class="ln" aria-hidden="true">19</div></div><div class="code"><span class="s9008416b">console.</span><span class="sd5693bf8">log</span><span class="s9008416b">(</span><span class="sd5693bf8">sizes</span><span class="s9008416b">(</span><span class="s9d3b88f7">'dist'</span><span class="s9008416b">))</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="import { brotliCompressSync } from &#x27;node:zlib&#x27;import { readdirSync, readFileSync, statSync } from &#x27;node:fs&#x27;import { extname, join } from &#x27;node:path&#x27;function sizes(directory, totals = {}) {  for (const name of readdirSync(directory)) {    const path = join(directory, name)    if (statSync(path).isDirectory()) {      sizes(path, totals)      continue    }    const kind = extname(name)    totals[kind] =      (totals[kind] ?? 0) + brotliCompressSync(readFileSync(path)).length  }  return totals}console.log(sizes(&#x27;dist&#x27;))"><div></div></button></div></figure></div>
+<p data-j=11.0.0;f0!bca;6!de;1r!ee;10!ef>Run it against each site’s <code>dist</code> directory and compare the totals. For the timings, serve each build with a Brotli static server and audit it with the Lighthouse command line, repeating each page and taking the median.</p>
+<h2 id="limits">Limits<a data-heading-anchor="" href="#limits" aria-label="Link to this section" tabindex="-1"></a></h2>
+<p data-j=16.0.0;f0!caf;o!dc;u!ec;z!ed;s!ff>The theme gives up some things for those numbers. It sends more CSS and JavaScript than astro-erudite, it makes more requests, and on a really slow link its first paint is later on some pages, by 2.8 s on the long post.</p>
+<p data-j=14.1.0;f0!bbc;6!ce;13!ee;1j!fe;e!ge>This is one machine, one set of posts and lab conditions. Differences of a point or two are noise. The numbers describe how the two themes treat the same markdown, not what a given site built on them will score.</p>
+<section data-footnotes class="footnotes"><h2 id="footnotes">Footnotes<a data-heading-anchor="" href="#footnotes" aria-label="Link to this section" tabindex="-1"></a></h2>
+<ol>
+<li id="user-content-fn-scope">
+<p>The comparison says how the two themes treat the same markdown, not how every site built on them will behave. <a href="#user-content-fnref-scope" data-footnote-backref="" aria-label="Back to reference 1" class="data-footnote-backref footnote-backref"><span class="sr-only">Back to reference 1</span><svg class="footnote-backref-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 4v7a4 4 0 0 1-4 4H4"></path><polyline points="9 10 4 15 9 20"></polyline></svg></a></p>
+</li>
+<li id="user-content-fn-plan">
+<p>A paragraph’s plan is a list of numbers, one per line, encoded as text in an attribute on the paragraph. The browser reads it, sets each line’s spacing and finishes. <a href="#user-content-fnref-plan" data-footnote-backref="" aria-label="Back to reference 2" class="data-footnote-backref footnote-backref"><span class="sr-only">Back to reference 2</span><svg class="footnote-backref-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 4v7a4 4 0 0 1-4 4H4"></path><polyline points="9 10 4 15 9 20"></polyline></svg></a></p>
+</li>
+</ol>
+</section>
+ <section class="bibliography" aria-label="References" data-astro-cid-qh6uglb7> <h2 id="references" data-astro-cid-qh6uglb7>References</h2> <ol class="bibliography-list" data-astro-cid-qh6uglb7> <li id="ref-lighthouse-variability" class="bibliography-entry" data-astro-cid-qh6uglb7> <span class="bibliography-authors" data-astro-cid-qh6uglb7> Google Chrome Team </span>  <span class="bibliography-year" data-astro-cid-qh6uglb7>(2020).</span>  <span class="bibliography-title" data-astro-cid-qh6uglb7>Lighthouse variability.</span>     <span class="bibliography-publisher" data-astro-cid-qh6uglb7>GitHub.</span>      <a class="bibliography-url" data-astro-cid-qh6uglb7="true" href="https://github.com/GoogleChrome/lighthouse/blob/main/docs/variability.md" target="_blank" rel="noopener noreferrer" aria-describedby="external-link-new-tab-description" data-external>https://github.com/GoogleChrome/lighthouse/blob/main/docs/variability.md<span class="external-link-icon-wrap">⁠<svg class="external-link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#external-link-icon-symbol"></use></svg></span></a>  </li><li id="ref-knuth1981" class="bibliography-entry" data-astro-cid-qh6uglb7> <span class="bibliography-authors" data-astro-cid-qh6uglb7> Knuth, Donald E. &amp; Plass, Michael F. </span>  <span class="bibliography-year" data-astro-cid-qh6uglb7>(1981).</span>  <span class="bibliography-title" data-astro-cid-qh6uglb7>Breaking Paragraphs into Lines.</span>    <em class="bibliography-journal" data-astro-cid-qh6uglb7>Software: Practice and Experience</em> <span class="bibliography-volume" data-astro-cid-qh6uglb7>, 11</span> <span class="bibliography-issue" data-astro-cid-qh6uglb7>(11)</span> <span class="bibliography-pages" data-astro-cid-qh6uglb7>, 1119–1184</span>
+.
+     <a class="bibliography-doi" data-astro-cid-qh6uglb7="true" href="https://doi.org/10.1002/spe.4380111102" target="_blank" rel="noopener noreferrer" aria-describedby="external-link-new-tab-description" data-external>
+doi:10.1002/spe.4380111102<span class="external-link-icon-wrap">⁠<svg class="external-link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#external-link-icon-symbol"></use></svg></span></a>   </li><li id="ref-wcag22" class="bibliography-entry" data-astro-cid-qh6uglb7> <span class="bibliography-authors" data-astro-cid-qh6uglb7> World Wide Web Consortium </span>  <span class="bibliography-year" data-astro-cid-qh6uglb7>(2023).</span>  <span class="bibliography-title" data-astro-cid-qh6uglb7>Web Content Accessibility Guidelines (WCAG) 2.2.</span>     <span class="bibliography-publisher" data-astro-cid-qh6uglb7>W3C.</span>      <a class="bibliography-url" data-astro-cid-qh6uglb7="true" href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer" aria-describedby="external-link-new-tab-description" data-external>https://www.w3.org/TR/WCAG22/<span class="external-link-icon-wrap">⁠<svg class="external-link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#external-link-icon-symbol"></use></svg></span></a>  </li> </ol> </section> </prose-content>  </article>  </main> <page-footer> <footer data-astro-cid-ivsm4aio> <p data-astro-cid-ivsm4aio><em data-astro-cid-ivsm4aio>Story text from Project Gutenberg, in the public domain.</em></p> <ul data-astro-cid-szuuiugm> <li data-astro-cid-szuuiugm> <a href="/website-theme/pr/33/rss.xml" data-icon-button class="astro-szuuiugm" aria-label="RSS" title="RSS" data-astro-cid-szuuiugm> <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-szuuiugm="true"><path d="M4 11a9 9 0 0 1 9 9" /><path d="M4 4a16 16 0 0 1 16 16" /><circle cx="5" cy="19" r="1" /></svg> </a> </li><li data-astro-cid-szuuiugm> <a href="https://github.com/example" data-icon-button target="_blank" rel="noopener noreferrer" aria-describedby="external-link-new-tab-description" class="astro-szuuiugm" aria-label="GitHub" title="GitHub" data-astro-cid-szuuiugm> <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" data-astro-cid-szuuiugm="true">
+  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+</svg> </a> </li><li data-astro-cid-szuuiugm> <a href="mailto:author@example.com" data-icon-button class="astro-szuuiugm" aria-label="Email" title="Email" data-astro-cid-szuuiugm> <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-szuuiugm="true"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /><rect x="2" y="4" width="20" height="16" rx="2" /></svg> </a> </li> </ul> </footer> </page-footer> </page-content> </page-grid> </body> </html>
