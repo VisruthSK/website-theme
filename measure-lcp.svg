@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 408" role="img" aria-labelledby="t d">
+  <title id="t">Largest contentful paint on a simulated phone</title>
+  <desc id="d">Seconds until the largest element is painted, nine pages, astro-erudite against this theme. The theme is faster on every page.</desc>
+  <style>
+    text { font-family: system-ui, sans-serif; fill: #6b6b6b }
+    .label { font-size: 13px }
+    .value { font-size: 12px }
+    .head { font-size: 14px; font-weight: 600 }
+    @media (prefers-color-scheme: dark) { text { fill: #b4b4b4 } }
+  </style>
+  <rect x="150" y="18" width="12" height="12" fill="#8a8a8a"/>
+  <text x="168" y="28.5" class="head">astro-erudite</text>
+  <rect x="280" y="18" width="12" height="12" fill="#1f9d8b"/>
+  <text x="298" y="28.5" class="head">this theme</text>
+  <g>
+    <text x="140" y="71" text-anchor="end" class="label">Home</text>
+    <rect x="150" y="55" width="242.4" height="14" fill="#8a8a8a"/>
+    <text x="398.4" y="66.5" class="value">2.25 s</text>
+    <rect x="150" y="71" width="129.4" height="14" fill="#1f9d8b"/>
+    <text x="285.4" y="82.5" class="value">1.20 s</text>
+    <text x="140" y="109" text-anchor="end" class="label">Listing</text>
+    <rect x="150" y="93" width="193.9" height="14" fill="#8a8a8a"/>
+    <text x="349.9" y="104.5" class="value">1.80 s</text>
+    <rect x="150" y="109" width="129.4" height="14" fill="#1f9d8b"/>
+    <text x="285.4" y="120.5" class="value">1.20 s</text>
+    <text x="140" y="147" text-anchor="end" class="label">Essay (maths, code)</text>
+    <rect x="150" y="131" width="404.0" height="14" fill="#8a8a8a"/>
+    <text x="560.0" y="142.5" class="value">3.75 s</text>
+    <rect x="150" y="147" width="178.0" height="14" fill="#1f9d8b"/>
+    <text x="334.0" y="158.5" class="value">1.65 s</text>
+    <text x="140" y="185" text-anchor="end" class="label">Note (maths, code)</text>
+    <rect x="150" y="169" width="404.0" height="14" fill="#8a8a8a"/>
+    <text x="560.0" y="180.5" class="value">3.75 s</text>
+    <rect x="150" y="185" width="178.0" height="14" fill="#1f9d8b"/>
+    <text x="334.0" y="196.5" class="value">1.65 s</text>
+    <text x="140" y="223" text-anchor="end" class="label">Story</text>
+    <rect x="150" y="207" width="210.1" height="14" fill="#8a8a8a"/>
+    <text x="366.1" y="218.5" class="value">1.95 s</text>
+    <rect x="150" y="223" width="145.5" height="14" fill="#1f9d8b"/>
+    <text x="301.5" y="234.5" class="value">1.35 s</text>
+    <text x="140" y="261" text-anchor="end" class="label">Second story</text>
+    <rect x="150" y="245" width="210.1" height="14" fill="#8a8a8a"/>
+    <text x="366.1" y="256.5" class="value">1.95 s</text>
+    <rect x="150" y="261" width="145.6" height="14" fill="#1f9d8b"/>
+    <text x="301.6" y="272.5" class="value">1.35 s</text>
+    <text x="140" y="299" text-anchor="end" class="label">Series index</text>
+    <rect x="150" y="283" width="210.1" height="14" fill="#8a8a8a"/>
+    <text x="366.1" y="294.5" class="value">1.95 s</text>
+    <rect x="150" y="299" width="145.6" height="14" fill="#1f9d8b"/>
+    <text x="301.6" y="310.5" class="value">1.35 s</text>
+    <text x="140" y="337" text-anchor="end" class="label">Series part 1</text>
+    <rect x="150" y="321" width="210.1" height="14" fill="#8a8a8a"/>
+    <text x="366.1" y="332.5" class="value">1.95 s</text>
+    <rect x="150" y="337" width="145.6" height="14" fill="#1f9d8b"/>
+    <text x="301.6" y="348.5" class="value">1.35 s</text>
+    <text x="140" y="375" text-anchor="end" class="label">Series part 2</text>
+    <rect x="150" y="359" width="210.1" height="14" fill="#8a8a8a"/>
+    <text x="366.1" y="370.5" class="value">1.95 s</text>
+    <rect x="150" y="375" width="145.5" height="14" fill="#1f9d8b"/>
+    <text x="301.5" y="386.5" class="value">1.35 s</text>
+  </g>
+</svg>
