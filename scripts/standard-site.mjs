@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto"
-import { XMLParser, XMLValidator } from "fast-xml-parser"
+import { XMLParser } from "fast-xml-parser"
+import { SyntaxValidator } from "fast-xml-validator"
 import { fromHtml } from "hast-util-from-html"
 import { toText } from "hast-util-to-text"
 
@@ -35,7 +36,7 @@ export function documentKey(url) {
 }
 
 export function parseFeed(xml, site, publication) {
-  if (XMLValidator.validate(xml) !== true) throw new Error("Invalid RSS XML")
+  if (SyntaxValidator.validate(xml) !== true) throw new Error("Invalid RSS XML")
   const channel = parser.parse(xml)?.rss?.channel
   if (!channel || !channel.title || !channel.description)
     throw new Error("Invalid RSS channel")

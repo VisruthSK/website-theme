@@ -33,6 +33,7 @@
     "entities": "^9.0.0",
     "esbuild": "0.28.2",
     "fast-xml-parser": "5.11.2",
+    "fast-xml-validator": "^1.4.2",
     "github-slugger": "^2.0.0",
     "harfbuzzjs": "^1.6.3",
     "hast-util-from-html": "^2.0.3",
