@@ -252,3 +252,11 @@ pnpm dev
 ### Updating astro-erudite
 
 `astro-erudite/` is a submodule pinned to a commit of astro-erudite. To move to a new release, check out its tag inside the submodule (`git -C astro-erudite fetch --tags && git -C astro-erudite checkout v2.1.0`), commit the new pointer and run the suite.
+
+## Standard.site
+
+The theme supports publishing the master RSS feed to [Standard.site](https://standard.site/).
+
+## Example previews
+
+The example site's Pages workflow publishes production to `gh-pages` and labelled pull requests to `pr/<number>/`, with preview URLs and `noindex`. After merging the workflow, set the repository's GitHub Pages source to the root of the `gh-pages` branch. Apply the `build-website` label to a same-repository pull request to build its preview; closing it removes the preview.
