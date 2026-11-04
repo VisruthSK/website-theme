@@ -13,7 +13,8 @@
     "format:write": "prettier --write . && node tools/format-astro.mjs --write",
     "knip": "knip",
     "schema": "node scripts/schema.mjs",
-    "flatten": "node scripts/flatten.mjs"
+    "flatten": "node scripts/flatten.mjs",
+    "test:standard": "node --test tests/unit/standard-site.test.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.6",
@@ -31,11 +32,14 @@
     "astro": "^7.4.4",
     "entities": "^9.0.0",
     "esbuild": "0.28.2",
+    "fast-xml-parser": "5.11.2",
+    "fast-xml-validator": "^1.4.2",
     "github-slugger": "^2.0.0",
     "harfbuzzjs": "^1.6.3",
     "hast-util-from-html": "^2.0.3",
     "hast-util-select": "^6.0.4",
     "hast-util-to-html": "^9.0.5",
+    "hast-util-to-text": "4.0.2",
     "hastscript": "^9.0.1",
     "mdast-util-to-hast": "^13.2.1",
     "pagefind": "^1.5.2",

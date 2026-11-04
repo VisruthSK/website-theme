@@ -45,6 +45,11 @@ for (const entry of [
   })
 }
 
+mkdirSync(join(out, "scripts"), { recursive: true })
+for (const file of ["standard-site.mjs", "sync-standard-site.mjs"]) {
+  cpSync(join(theme, "scripts", file), join(out, "scripts", file))
+}
+
 const BUNDLED_ASSETS = ["assets/fonts/STIXTwoMath-Regular.woff2"]
 for (const asset of BUNDLED_ASSETS) {
   mkdirSync(dirname(join(out, "src", asset)), { recursive: true })
@@ -128,9 +133,8 @@ writeFileSync(
   `${readFileSync(join(theme, "NOTICE"), "utf8").trimEnd()}\n\nThis release includes files from astro-erudite at commit ${commit}.\n`,
 )
 writeFileSync(join(out, ".gitignore"), "node_modules/\n")
-const { name, description, license, type, dependencies } = JSON.parse(
-  readFileSync(join(theme, "package.json"), "utf8"),
-)
+const { name, description, license, type, dependencies, devDependencies } =
+  JSON.parse(readFileSync(join(theme, "package.json"), "utf8"))
 const { astro, ...runtime } = dependencies
 writeFileSync(
   join(out, "package.json"),
@@ -227,6 +231,10 @@ if (process.argv.includes("--check")) {
       dependencies: {
         astro: dependencies.astro,
         "website-theme": "workspace:*",
+      },
+      devDependencies: {
+        "@astrojs/check": devDependencies["@astrojs/check"],
+        typescript: devDependencies.typescript,
       },
     }),
   )
