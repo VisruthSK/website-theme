@@ -58,10 +58,14 @@ test("stylesheets carry only the rules each page uses", ({ site }) => {
   }
 })
 
-test("no page carries an inline script or style", ({ site }) => {
+test("no page carries an inline script (application/ld+json excepted) or style", ({
+  site,
+}) => {
   for (const file of pages(site)) {
     const html = readFileSync(file, "utf8")
-    expect(html, file).not.toMatch(/<script(?![^>]*\bsrc=)[^>]*>\s*\S/)
+    expect(html, file).not.toMatch(
+      /<script(?![^>]*\bsrc=)(?![^>]*\btype="application\/ld\+json")[^>]*>\s*\S/,
+    )
     expect(html, file).not.toMatch(/<style[\s>]/)
     expect(html, file).not.toMatch(/\sstyle="/)
   }
@@ -203,5 +207,43 @@ test("posts carry citation meta tags", ({ site }) => {
     const html = readFileSync(file, "utf8")
     expect(html, file).toContain('name="citation_title"')
     expect(html, file).toContain('name="citation_publication_date"')
+  }
+})
+
+test("the JSON feed parses and matches the RSS feed", ({ site }) => {
+  const file = join(distOf(site), "feed.json")
+  expect(existsSync(file), file).toBe(true)
+  const feed = JSON.parse(readFileSync(file, "utf8"))
+  expect(feed.version).toBe("https://jsonfeed.org/version/1.1")
+  expect(feed.items.length).toBe(feedItems(site, "rss.xml").length)
+  expect(feed.items.length).toBeGreaterThan(0)
+  for (const item of feed.items) {
+    expect(item.id, "feed entry id").toBe(item.url)
+    expect(item.url).toMatch(/^https?:\/\//)
+    expect(item.title).toBeTruthy()
+    expect(item.content_html).toBeTruthy()
+  }
+})
+
+test("posts carry microformats2 and JSON-LD markup", ({ site }) => {
+  const posts = pages(site).filter((file) =>
+    readFileSync(file, "utf8").includes("article:published_time"),
+  )
+  expect(posts.length).toBeGreaterThan(0)
+  for (const file of posts) {
+    const html = readFileSync(file, "utf8")
+    expect(html, file).toContain('class="h-entry"')
+    expect(html, file).toContain('class="p-name"')
+    expect(html, file).toContain('class="dt-published"')
+    expect(html, file).toContain('class="e-content"')
+    expect(html, file).toContain('class="u-url"')
+    const match = html.match(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
+    )
+    expect(match, file).not.toBeNull()
+    const data = JSON.parse(match![1])
+    expect(data["@type"]).toBe("ScholarlyArticle")
+    expect(data.headline).toBeTruthy()
+    expect(data.mainEntityOfPage).toMatch(/^https?:\/\//)
   }
 })
