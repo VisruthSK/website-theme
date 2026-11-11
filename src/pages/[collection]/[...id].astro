@@ -62,14 +62,13 @@ const basePath = section.href
 const { Content, headings, remarkPluginFrontmatter } = await render(post)
 assertNoBrokenLinks(post.id, remarkPluginFrontmatter)
 const body = post.body ?? ""
-const { bib } = post.data
-const hasBibliography = Boolean(bib)
 const hasCode = /^\s*(```|~~~)/m.test(body)
 const usesMono =
   hasCode || [post.data.title, body].some((text) => /`[^`\n]+`/.test(text))
 const usesMath =
   FEATURES.math && /\$\$|(?<![\\$])\$(?=\S)[^$\n]*\S\$(?!\d)/.test(body)
-const citedKeys = hasBibliography ? extractCitedKeys(body) : []
+const citedKeys = FEATURES.citations ? extractCitedKeys(body) : []
+const hasBibliography = citedKeys.length > 0
 
 const tocHeadings = withReferencesHeading(headings, hasBibliography).filter(
   ({ depth, text }) => depth >= 2 && depth <= 4 && text.trim(),
@@ -180,9 +179,7 @@ const crumbs = [
 
     <prose-content data-compact={stats.wordCount < 500 || undefined}>
       <Content />
-      {FEATURES.citations && bib && citedKeys.length > 0 && (
-        <Bibliography bib={bib} citedKeys={citedKeys} />
-      )}
+      {hasBibliography && <Bibliography citedKeys={citedKeys} />}
     </prose-content>
     {backlinks.length > 0 && (
       <aside class="backlinks" data-pagefind-ignore>

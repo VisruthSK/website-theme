@@ -4,18 +4,18 @@ import { PATHS } from "@/consts"
 import { formatAuthors, readBibliography } from "@/lib/bibliography"
 
 interface Props {
-  bib: string
   citedKeys: string[]
 }
 
-const { bib, citedKeys } = Astro.props
-const bibliography = readBibliography(PATHS.bibliographies, bib)
+const { citedKeys } = Astro.props
+const name = PATHS.bibliography.split(/[\\/]/).at(-1) ?? PATHS.bibliography
+const bibliography = readBibliography(PATHS.bibliography)
 const entries = citedKeys.flatMap((key) => bibliography?.[key] ?? [])
 
 const warning = !bibliography
-  ? `Bibliography file not found: ${bib}.bib`
+  ? `Bibliography file not found: ${name}`
   : entries.length === 0
-    ? `Bibliography is empty: ${bib}.bib`
+    ? `None of the cited keys were found in ${name}`
     : null
 ---
 

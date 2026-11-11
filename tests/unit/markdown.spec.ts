@@ -17,7 +17,7 @@ const astro = (frontmatter: Record<string, unknown> = {}) => ({
   },
 })
 
-const citations = cite("examples/full/src/data/bibliographies")
+const citations = cite("examples/full/src/data/references.bib")
 
 const render = (
   source: string,
@@ -25,8 +25,7 @@ const render = (
   frontmatter: Record<string, unknown> = {},
 ) => markdownToHtml(source, { ...options, data: astro(frontmatter) }).html
 
-const cited = (source: string) =>
-  render(source, { mdastPlugins: [citations] }, { bib: "example" })
+const cited = (source: string) => render(source, { mdastPlugins: [citations] })
 
 const numbers = (html: string) =>
   [...html.matchAll(/class="citation-link"[^>]*>(\d+)</g)].map(([, n]) => n)
@@ -63,10 +62,8 @@ test.describe("citations", () => {
     expect(cited("Unknown @nokey here.")).toContain("citation-missing")
   })
 
-  test("posts without a bibliography are untouched", () => {
-    expect(
-      render("As @knuth1981 says.", { mdastPlugins: [citations] }),
-    ).not.toContain("citation")
+  test("without the cite plugin keys are left as text", () => {
+    expect(render("As @knuth1981 says.")).not.toContain("citation")
   })
 
   test("cited keys are extracted in order of first use", () => {
