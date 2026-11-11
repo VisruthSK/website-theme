@@ -8,22 +8,24 @@ import { footnoteSentences } from "../../src/lib/markdown/footnote-sentences.ts"
 import { footnotes } from "../../src/lib/markdown/footnotes.ts"
 import { opening } from "../../src/lib/markdown/opening.ts"
 
-const astro = (frontmatter: Record<string, unknown> = {}) => ({
-  astro: {
-    frontmatter,
-    headings: [],
-    localImagePaths: new Set<string>(),
-    remoteImagePaths: new Set<string>(),
-  },
-})
-
 const citations = cite("examples/full/src/data/references.bib")
 
 const render = (
   source: string,
   options: Omit<Parameters<typeof markdownToHtml>[1], "data"> = {},
   frontmatter: Record<string, unknown> = {},
-) => markdownToHtml(source, { ...options, data: astro(frontmatter) }).html
+) =>
+  markdownToHtml(source, {
+    ...options,
+    data: {
+      astro: {
+        frontmatter,
+        headings: [],
+        localImagePaths: new Set<string>(),
+        remoteImagePaths: new Set<string>(),
+      },
+    },
+  }).html
 
 const cited = (source: string) => render(source, { mdastPlugins: [citations] })
 
