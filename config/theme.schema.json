@@ -1635,6 +1635,21 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 9007199254740991
+        },
+        "citations": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "style": {
+              "default": "numeric",
+              "type": "string",
+              "enum": [
+                "numeric",
+                "author-year"
+              ]
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
