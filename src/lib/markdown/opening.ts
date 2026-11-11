@@ -65,7 +65,9 @@ export const opening = (dropCaps: boolean, minWords = 500) =>
         }
       }
 
-      const dropcap = ctx.data.astro?.frontmatter.dropcap
+      const astro = ctx.data.astro as
+        { frontmatter: Record<string, unknown> } | undefined
+      const dropcap = astro?.frontmatter.dropcap
       if (!dropCaps || dropcap === false) return
 
       const flourish = (paragraph: Element, stripMarker: boolean) => {
@@ -89,7 +91,7 @@ export const opening = (dropCaps: boolean, minWords = 500) =>
         ]
         if (remainder) replacement.push({ type: "text", value: remainder })
         ctx.replaceNode(leading, replacement)
-        if (ctx.data.astro) ctx.data.astro.frontmatter.dropCap = true
+        if (astro) astro.frontmatter.dropCap = true
       }
 
       const marked = all.filter((block) => {
