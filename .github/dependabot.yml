@@ -13,6 +13,14 @@ updates:
     ignore:
       - dependency-name: typescript
         versions: [">=7.0.0"]
+      # The markdown toolchain is pinned together in pnpm-workspace.yaml
+      # (satteri 0.11.6 and expressive-code 0.44.3 overrides). Bump it
+      # by hand in one commit, never piecemeal in a grouped PR.
+      - dependency-name: satteri
+      - dependency-name: "@astrojs/markdown-satteri"
+      - dependency-name: satteri-expressive-code
+      - dependency-name: satteri-validate-links
+      - dependency-name: expressive-code
     groups:
       npm:
         patterns: ["*"]
