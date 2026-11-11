@@ -19,12 +19,13 @@ const {
   heading: Heading = "h3",
   class: className,
 } = Astro.props
+const cardClass = className ? `h-entry ${className}` : "h-entry"
 ---
 
-<Card href={href} label={title} class={className}>
+<Card href={href} label={title} class={cardClass}>
   {eyebrow && <div class="card-eyebrow">{eyebrow}</div>}
-  <Heading class="card-title" set:html={formatTitleAsHtml(title)} />
-  {excerpt !== undefined && <p class="card-excerpt">{excerpt}</p>}
+  <Heading class="card-title p-name" set:html={formatTitleAsHtml(title)} />
+  {excerpt !== undefined && <p class="card-excerpt p-summary">{excerpt}</p>}
   <MetaRow date={date} items={stats} />
   {
     (series || tags.length > 0) && (

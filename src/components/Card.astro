@@ -1,12 +1,23 @@
 ---
 import type { HTMLAttributes } from "astro/types"
 
-type Props = HTMLAttributes<"li"> & { href: string; label: string }
+type Props = HTMLAttributes<"li"> & {
+  href: string
+  label: string
+  urlClass?: string | undefined
+}
 
-const { href, label, class: className, ...attributes } = Astro.props
+const {
+  href,
+  label,
+  class: className,
+  urlClass = "u-url",
+  ...attributes
+} = Astro.props
+const overlayClasses = ["card-overlay", urlClass].filter(Boolean)
 ---
 
 <li class:list={["interactive-card", className]} {...attributes}>
-  <a class="card-overlay" href={href} aria-label={label}></a>
+  <a class:list={overlayClasses} href={href} aria-label={label}></a>
   <div class="card-body"><slot /></div>
 </li>
