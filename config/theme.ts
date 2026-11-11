@@ -280,6 +280,11 @@ export const themeSchema = z
         lineHeight: remLength.default("1.75rem"),
         indent: emLength.default("1.35em"),
         dropCapMinWords: z.int().nonnegative().default(500),
+        citations: z
+          .strictObject({
+            style: z.enum(["numeric", "author-year"]).default("numeric"),
+          })
+          .prefault({}),
       })
       .prefault({}),
     features: features.default({
