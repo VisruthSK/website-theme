@@ -13,6 +13,7 @@
     "format:write": "prettier --write . && node tools/format-astro.mjs --write",
     "knip": "knip",
     "schema": "node scripts/schema.mjs",
+    "schema:check": "node scripts/schema.mjs && git diff --exit-code -- config/theme.schema.json",
     "flatten": "node scripts/flatten.mjs",
     "test:standard": "node --test tests/unit/standard-site.test.mjs"
   },
