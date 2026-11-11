@@ -31,8 +31,18 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # The build caches the optical-margin tables, line-break plans and
+      # font subsets in node_modules/.astro/website-theme, keyed on the
+      # font bytes and the source that produces them. Restore it so
+      # unchanged inputs are not recomputed.
+      - uses: actions/cache@v6
+        with:
+          path: node_modules/.astro/website-theme
+          key: website-theme-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'config/**', 'src/**', 'examples/**') }}
+          restore-keys: website-theme-${{ runner.os }}-
       - run: pnpm schema:check
       - run: pnpm check
+      - run: pnpm typecheck
       - run: pnpm test:standard
       - run: pnpm knip
       - run: pnpm format
@@ -57,6 +67,13 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Restore the build cache (optical margins, line-break plans, font
+      # subsets) so unchanged inputs are not recomputed.
+      - uses: actions/cache@v6
+        with:
+          path: node_modules/.astro/website-theme
+          key: website-theme-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'config/**', 'src/**', 'examples/**') }}
+          restore-keys: website-theme-${{ runner.os }}-
       - id: playwright
         run: echo "version=$(pnpm exec playwright --version)" >> "$GITHUB_OUTPUT"
       # Key the browser cache on the runner image too: a browser saved on
@@ -94,6 +111,13 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Restore the build cache so the unchanged parts of the build are
+      # not recomputed.
+      - uses: actions/cache@v6
+        with:
+          path: node_modules/.astro/website-theme
+          key: website-theme-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'config/**', 'src/**', 'examples/**') }}
+          restore-keys: website-theme-${{ runner.os }}-
       - run: node scripts/build.mjs examples/minimal
       - run: pnpm exec astro preview --root examples/minimal --host 127.0.0.1 --port 4173 &
       - run: curl -sf --retry 30 --retry-connrefused --retry-delay 1 -o /dev/null http://127.0.0.1:4173/
