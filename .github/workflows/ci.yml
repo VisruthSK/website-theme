@@ -31,6 +31,7 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm schema:check
       - run: pnpm check
       - run: pnpm test:standard
       - run: pnpm knip
@@ -58,10 +59,13 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - id: playwright
         run: echo "version=$(pnpm exec playwright --version)" >> "$GITHUB_OUTPUT"
+      # Key the browser cache on the runner image too: a browser saved on
+      # one Ubuntu release fails to launch on the next (e.g. WebKit from
+      # 24.04 needs libicudata.so.74, gone on 26.04).
       - uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-${{ steps.playwright.outputs.version }}-${{ matrix.browser }}
+          key: ${{ runner.os }}-${{ env.ImageOS || 'unknown' }}-${{ steps.playwright.outputs.version }}-${{ matrix.browser }}
       - run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
       - run: >-
           pnpm exec playwright test

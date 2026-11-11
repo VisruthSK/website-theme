@@ -3,7 +3,6 @@ title: 'The Selfish Giant'
 date: 2026-10-20
 description: 'Oscar Wilde’s story of a garden, in the public domain.'
 tags: ['story', 'wilde']
-bib: example
 ---
 
 Story text by Oscar Wilde [@wilde1888] from Project Gutenberg, in the public domain. The notes are LLM written.

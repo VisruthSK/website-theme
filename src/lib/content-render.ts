@@ -110,14 +110,12 @@ function sanitizeHtml(html: string, baseUrl: string): string {
 async function renderUncached(entry: RenderableEntry, baseUrl: string) {
   const rendering = await (container ??= createContainer())
   const { Content } = await render(entry)
-  const bib =
-    FEATURES.citations && "bib" in entry.data ? entry.data.bib : undefined
-  const citedKeys = bib ? extractCitedKeys(entry.body) : []
+  const citedKeys = FEATURES.citations ? extractCitedKeys(entry.body) : []
   const pages = [await rendering.renderToString(Content, { params: {} })]
-  if (bib && citedKeys.length > 0) {
+  if (citedKeys.length > 0) {
     pages.push(
       await rendering.renderToString(Bibliography, {
-        props: { bib, citedKeys },
+        props: { citedKeys },
       }),
     )
   }

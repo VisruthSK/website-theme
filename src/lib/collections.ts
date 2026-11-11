@@ -12,7 +12,6 @@ const postSchema = ({ image }: SchemaContext) =>
     order: z.array(z.string()).optional(),
     image: image().optional(),
     tags: z.array(z.string()).optional(),
-    bib: z.string().optional(),
     rss: z.boolean().optional(),
     dropcap: z.boolean().optional(),
   })

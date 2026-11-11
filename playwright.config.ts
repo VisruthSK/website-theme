@@ -25,6 +25,12 @@ export default defineConfig({
       Object.entries(browsers).map(([browser, device]) => ({
         name: `${site.name}-${browser}`,
         testIgnore: "unit/**",
+        // Only run this site's visual snapshot tests; the other site's
+        // are excluded by title. (The match is a substring of the full
+        // grep title, which includes the file and project names.)
+        grepInvert: new RegExp(
+          site.name === "example" ? "minimal visual:" : "example visual:",
+        ),
         metadata: { site: site.name },
         use: { ...device, baseURL: `http://127.0.0.1:${site.port}` },
       })),

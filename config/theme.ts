@@ -292,7 +292,6 @@ export const themeSchema = z
       search: true,
       externalLinkIcons: true,
     }),
-    bibliographies: nonEmpty.default("src/data/bibliographies"),
     unhinted: z
       .array(z.string().startsWith("/"))
       .default(["/_astro/*", "/pagefind/*"]),
