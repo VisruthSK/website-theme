@@ -87,7 +87,7 @@ function renderLink(
   const safeKey = escapeHtml(key)
   const entry = bibliography?.[key]
   if (!entry) {
-    return `<span class="citation-missing" title="Citation key not found: ${safeKey}">${safeKey}?</span>`
+    return `<span class="citation-missing" data-citation-missing="${safeKey}" title="Citation key not found: ${safeKey}">${safeKey}?</span>`
   }
   const label = escapeHtml(
     `${number}. ${entry.author.join(", ")}, ${entry.year ?? "n.d."}. ${entry.title}`,

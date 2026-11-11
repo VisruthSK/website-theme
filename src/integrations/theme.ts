@@ -22,6 +22,7 @@ import {
   temmlMath,
 } from "../lib/markdown/astro-erudite"
 import { localHeadersPlugin } from "../lib/local-headers"
+import { citationCheck } from "./citation-check"
 import { bundleCss } from "./bundle-css"
 import { earlyHints } from "./early-hints"
 import { fontSubset } from "./font-subset"
@@ -187,6 +188,7 @@ export async function themeConfig(
       sitemap(),
       ...(features.search ? [pagefindSearch()] : []),
       linkCheck(paths.public, base),
+      ...(features.citations ? [citationCheck(paths.public)] : []),
       earlyHints(theme, base),
       ...(features.typeset ? [typeset(theme, root)] : []),
       fontSubset(theme, root),
