@@ -83,7 +83,7 @@ and a `theme.json`, described below. Because `theme/` is a workspace package, `p
 
 `themeConfig` takes a second argument, an Astro config merged over the theme's, for site-only settings such as the dev server port.
 
-The build fails on any internal link in the built pages whose page or file does not exist, or whose `#anchor` matches no element `id` on the target page.
+The build fails on any internal link in the built pages whose page or file does not exist, or whose `#anchor` matches no element `id` on the target page. It also fails on any citation whose key is not in `src/data/references.bib`, reporting every unknown key and the pages it appears on.
 
 HTML files in `public/`, such as slide decks, are copied through untouched and left out of the theme's link check, font subsetting and style rewriting.
 
