@@ -15,7 +15,11 @@ const parts = items.filter((item): item is string => Boolean(item))
 {
   (date || parts.length > 0) && (
     <div class:list={["meta-row", className]} {...attributes}>
-      {date && <span><Time date={date} /></span>}
+      {date && (
+        <span>
+          <Time date={date} class="dt-published" />
+        </span>
+      )}
       {parts.map((part, index) => (
         <>
           {(date || index > 0) && <span class="meta-divider" aria-hidden="true" />}
