@@ -3,13 +3,15 @@ import type { HTMLAttributes } from "astro/types"
 
 import Time from "@/components/Time.astro"
 
+type Item = { text: string; class?: string } | string
+
 type Props = HTMLAttributes<"div"> & {
   date?: Date
-  items?: (string | false | undefined)[]
+  items?: (Item | false | null | undefined)[]
 }
 
 const { date, items = [], class: className, ...attributes } = Astro.props
-const parts = items.filter((item): item is string => Boolean(item))
+const parts = items.filter((item): item is Item => Boolean(item))
 ---
 
 {
@@ -23,7 +25,11 @@ const parts = items.filter((item): item is string => Boolean(item))
       {parts.map((part, index) => (
         <>
           {(date || index > 0) && <span class="meta-divider" aria-hidden="true" />}
-          <span>{part}</span>
+          {typeof part === "string" ? (
+            <span>{part}</span>
+          ) : (
+            <span class={part.class}>{part.text}</span>
+          )}
         </>
       ))}
     </div>
