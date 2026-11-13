@@ -74,7 +74,10 @@ prose-content {
         initial-letter: 3 3;
         margin-inline-end: 1rem;
         color: var(--flourish);
-        font-family: var(--font-drop-cap, var(--font-accent, var(--font-serif)));
+        font-family: var(
+          --font-drop-cap,
+          var(--font-accent, var(--font-serif))
+        );
         font-weight: var(--drop-cap-weight, 900);
         text-transform: uppercase;
       }
