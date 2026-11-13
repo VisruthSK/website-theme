@@ -41,7 +41,7 @@ export interface LedgerOptions {
   required?: readonly Exclude<keyof LedgerEntry["data"], "link">[]
 }
 
-export function defineLedgerSchema() {
+function defineLedgerSchema() {
   return z.strictObject({
     title: z.string(),
     creator: z.string().optional(),
