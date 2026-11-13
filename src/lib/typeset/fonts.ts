@@ -11,6 +11,7 @@ export function typefaceFiles({
   body,
   mono,
   accent,
+  dropCap,
 }: Theme["fonts"]): Partial<Record<FaceName, string>> {
   const find = (weight: (value: number) => boolean, style: string) =>
     body.faces.find((face) => weight(face.weight) && face.style === style)?.file
@@ -20,7 +21,7 @@ export function typefaceFiles({
     italic: find((weight) => weight === 400, "italic") ?? roman,
     bold: find((weight) => weight >= 600, "normal") ?? roman,
     mono: mono?.faces.find(({ style }) => style === "normal")?.file,
-    cap: accent?.faces[0].file,
+    cap: (dropCap ?? accent?.faces[0])?.file,
   }
 }
 

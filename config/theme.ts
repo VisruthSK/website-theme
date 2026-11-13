@@ -202,6 +202,13 @@ const fonts = z.strictObject({
       tolerance: z.number().positive().default(0.35),
     })
     .optional(),
+  dropCap: face
+    .extend({
+      family: nonEmpty,
+      size: remLength.default("5.9rem"),
+      tolerance: z.number().positive().default(0.35),
+    })
+    .optional(),
   mono: family([
     "ui-monospace",
     "SFMono-Regular",
@@ -321,8 +328,11 @@ export const themeSchema = z
           `unknown section ${item.section}`,
         )
     })
-    if (theme.features.dropCap && !theme.fonts.accent)
-      issue(["fonts", "accent"], "required while features.dropCap is true")
+    if (theme.features.dropCap && !theme.fonts.accent && !theme.fonts.dropCap)
+      issue(
+        ["fonts", "accent"],
+        "required while features.dropCap is true (or set fonts.dropCap)",
+      )
     if (theme.features.typeset) {
       const { faces } = theme.fonts.body
       if (

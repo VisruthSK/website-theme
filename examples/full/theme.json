@@ -112,6 +112,13 @@
       ],
       "size": "6.1rem",
       "tolerance": 1
+    },
+    "dropCap": {
+      "family": "IBM Plex Sans",
+      "file": "plex-sans-600-normal.woff2",
+      "size": "6.1rem",
+      "tolerance": 1,
+      "weight": 600
     }
   }
 }
