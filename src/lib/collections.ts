@@ -85,9 +85,7 @@ export const defineLedger = (
   options: LedgerOptions = {},
 ) => {
   const base = withRequired(defineLedgerSchema(), options.required ?? [])
-  const schema = link
-    ? base.extend({ link: reference(link).optional() })
-    : base
+  const schema = link ? base.extend({ link: reference(link).optional() }) : base
   return defineCollection({ loader: file(path), schema })
 }
 
