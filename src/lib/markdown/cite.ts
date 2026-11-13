@@ -17,7 +17,7 @@ const CITE_ITEM_PATTERN = new RegExp(
 )
 
 // Citations are a prose feature; code and HTML comments are ignored.
-export function stripCode(markdown: string): string {
+function stripCode(markdown: string): string {
   return markdown
     .replace(/\r?\n(```|~~~)[\s\S]*?\n\1(?=\r?\n|$)/g, "\n")
     .replace(/`[^`\n]*`/g, "")
