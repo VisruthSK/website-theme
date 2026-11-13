@@ -89,7 +89,9 @@ export function themeStylesheet(theme: Theme, file: URL, root: URL) {
   const faces = [
     ...fonts.body.faces.map((face) => fontFace(fonts.body.family, face)),
     ...fonts.heading.faces.map((face) => fontFace(fonts.heading.family, face)),
-    ...(fonts.accent ? fonts.accent.faces.map((face) => fontFace(fonts.accent!.family, face)) : []),
+    ...(fonts.accent
+      ? fonts.accent.faces.map((face) => fontFace(fonts.accent!.family, face))
+      : []),
     ...(features.dropCap && fonts.dropCap
       ? [fontFace(fonts.dropCap.family, fonts.dropCap)]
       : []),
