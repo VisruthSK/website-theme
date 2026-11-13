@@ -11,6 +11,6 @@ const href = canonicalizePathSegments(
 )
 ---
 
-<a {href} class:list={["chip", tag === "draft" && "chip-draft"]}>
+<a {href} class:list={["chip", "p-category", tag === "draft" && "chip-draft"]}>
   #{tag}{count !== undefined && <> <span>({count})</span></>}
 </a>
