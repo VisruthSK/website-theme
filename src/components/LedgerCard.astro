@@ -109,7 +109,7 @@ const linkHref =
     {sideMode === "links" && (
       <div class="side side-links" data-pagefind-ignore>
         {data.url && (
-          <a href={data.url} aria-label="Website" title="Website">
+          <a href={withBase(data.url)} aria-label="Website" title="Website">
             <GlobeIcon aria-hidden="true" />
           </a>
         )}
