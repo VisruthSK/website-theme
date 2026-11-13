@@ -28,7 +28,6 @@ const isExternal = externalTo(SITE.href)
   <a href={withBase("/")} data-brand>
     <span>{SITE.title}</span>
     {import.meta.env.DEV && <dev-badge>dev</dev-badge>}
-    {SITE.monogram && <span class="monogram" aria-hidden="true">{SITE.monogram}</span>}
   </a>
   <sidebar-controls>
     <ThemeToggle />
@@ -91,24 +90,7 @@ const isExternal = externalTo(SITE.href)
 
     @media (width >= 64rem) {
       margin-block-end: var(--space-2xs);
-      inline-size: 100%;
       font-size: 20pt;
-    }
-  }
-
-  .monogram {
-    display: none;
-
-    @media (width >= 64rem) {
-      display: inline-flex;
-      align-items: center;
-      margin-inline-start: auto;
-      color: var(--flourish);
-      font-family: var(--font-accent, var(--font-serif));
-      font-size: 1.125rem;
-      letter-spacing: 0.12em;
-      line-height: 1;
-      user-select: none;
     }
   }
 
@@ -199,7 +181,6 @@ const isExternal = externalTo(SITE.href)
 
   nav ul :global(a) {
     display: block;
-    font-family: var(--font-accent, var(--font-sans));
     font-size: 1.0625rem;
     color: var(--ink-muted);
     text-decoration-line: none;
