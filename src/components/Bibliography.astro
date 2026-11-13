@@ -1,16 +1,23 @@
 ---
 import Link from "@/components/Link.astro"
-import { PATHS } from "@/consts"
-import { formatAuthors, readBibliography } from "@/lib/bibliography"
+import { PATHS, PROSE } from "@/consts"
+import {
+  formatAuthors,
+  readBibliography,
+  sortEntriesByAuthorYear,
+} from "@/lib/bibliography"
 
 interface Props {
   citedKeys: string[]
 }
 
 const { citedKeys } = Astro.props
+const style = PROSE.citations.style
+const authorYear = style === "author-year"
 const name = PATHS.bibliography.split(/[\\/]/).at(-1) ?? PATHS.bibliography
 const bibliography = readBibliography(PATHS.bibliography)
 const entries = citedKeys.flatMap((key) => bibliography?.[key] ?? [])
+const sorted = authorYear ? sortEntriesByAuthorYear(entries) : entries
 
 const warning = !bibliography
   ? `Bibliography file not found: ${name}`
@@ -26,10 +33,13 @@ const warning = !bibliography
     </p>
   </div>
 ) : (
-  <section class="bibliography" aria-label="References">
+  <section
+    class:list={["bibliography", { "bibliography--author-year": authorYear }]}
+    aria-label="References"
+  >
     <h2 id="references">References</h2>
     <ol class="bibliography-list">
-      {entries.map((entry) => (
+      {sorted.map((entry) => (
         <li id={`ref-${entry.key}`} class="bibliography-entry">
           <span class="bibliography-authors">
             {formatAuthors(entry.author, 100)}
@@ -112,6 +122,20 @@ const warning = !bibliography
     position: absolute;
     left: 0;
     font-weight: 500;
+  }
+
+  .bibliography--author-year .bibliography-list {
+    counter-reset: none;
+  }
+
+  .bibliography--author-year .bibliography-entry {
+    counter-increment: none;
+    padding-left: 2rem;
+    text-indent: -2rem;
+  }
+
+  .bibliography--author-year .bibliography-entry::before {
+    content: none;
   }
 
   .bibliography-authors {

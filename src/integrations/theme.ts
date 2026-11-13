@@ -57,6 +57,7 @@ const ROUTES: [
   ["/tags/[tag]/index.xml", "tags/[tag]/index.xml.ts"],
   ["/rss.xml", "rss.xml.ts"],
   ["/index.xml", "index.xml.ts"],
+  ["/feed.json", "feed.json.ts"],
   ["/robots.txt", "robots.txt.ts"],
   ["/site.webmanifest", "site.webmanifest.ts"],
 ]
@@ -228,7 +229,9 @@ export async function themeConfig(
           dashes,
           ...(features.callouts ? [calloutDirective] : []),
           inlineExpressiveCode,
-          ...(features.citations ? [cite(paths.bibliography)] : []),
+          ...(features.citations
+            ? [cite(paths.bibliography, theme.prose.citations.style)]
+            : []),
           ...(features.marginNotes ? [footnoteSentences] : []),
           ...(features.math ? [temmlMath] : []),
         ],

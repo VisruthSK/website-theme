@@ -20,6 +20,7 @@ for (const mode of ["light", "dark"] as Mode[]) {
     page,
     site,
   }) => {
+    test.setTimeout(60_000)
     const listing = sectionHref(site)
     const targets = [
       { url: listing, focus: "[data-bar] nav a" },

@@ -1,7 +1,8 @@
 import { getCollection, type CollectionEntry } from "astro:content"
 
+import { calculateWordCount } from "@/lib/word-count"
 import { COLLECTION_TO_SECTION, SECTIONS } from "@/consts"
-import { calculateWordCountFromHtml, readingTime } from "@/lib/site-utils"
+import { readingTime } from "@/lib/site-utils"
 import { formatCount } from "@/lib/text"
 import type { ContentCollection } from "@/types"
 
@@ -162,13 +163,13 @@ export async function getPostsByTag<C extends ContentCollection>(
 }
 
 export async function getPostStats(post: PostEntry) {
-  const wordCount = calculateWordCountFromHtml(post.body)
+  const wordCount = calculateWordCount(post.body)
   const chapters = isSubpost(post.id)
     ? []
     : await getSubpostsForParent(post.id, post.collection)
   const combinedWordCount = chapters.length
     ? chapters.reduce(
-        (total, chapter) => total + calculateWordCountFromHtml(chapter.body),
+        (total, chapter) => total + calculateWordCount(chapter.body),
         wordCount,
       )
     : null

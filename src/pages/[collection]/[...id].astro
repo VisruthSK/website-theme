@@ -33,7 +33,11 @@ import {
 } from "@/lib/data-utils"
 import { assertNoBrokenLinks } from "@/lib/links"
 import { extractCitedKeys } from "@/lib/markdown/cite"
-import { canonicalizePathSegments, plainTitle } from "@/lib/site-utils"
+import {
+  canonicalizePathSegments,
+  plainTitle,
+  siteOrigin,
+} from "@/lib/site-utils"
 import { formatTitleAsHtml } from "@/lib/text"
 import { render } from "astro:content"
 import { fonts } from "virtual:theme/assets"
@@ -79,6 +83,7 @@ const showToc =
 const parent = isSubpost(post.id)
   ? await getParentPost(post.id, collection)
   : null
+const entryUrl = new URL(Astro.url.pathname, siteOrigin(Astro))
 const seriesId = isSubpost(post.id) ? getParentId(post.id) : post.id
 const chapters = await getSubpostsForParent(seriesId, collection)
 const seriesParent = parent ?? post
@@ -135,12 +140,14 @@ const crumbs = [
     />
   )}
 
-  <article data-pagefind-body>
+  <article data-pagefind-body class="h-entry">
+    <data class="u-url" value={entryUrl.href} />
     <header>
       <h1
         id="post-title"
         data-page-title
         data-pagefind-weight="10"
+        class="p-name"
         set:html={formatTitleAsHtml(post.data.title)}
       />
       <MetaRow
@@ -177,7 +184,10 @@ const crumbs = [
       </nav>
     )}
 
-    <prose-content data-compact={stats.wordCount < 500 || undefined}>
+    <prose-content
+      class="e-content"
+      data-compact={stats.wordCount < 500 || undefined}
+    >
       <Content />
       {hasBibliography && <Bibliography citedKeys={citedKeys} />}
     </prose-content>

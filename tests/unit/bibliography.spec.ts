@@ -4,7 +4,9 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import {
   formatReference,
+  formatShortAuthors,
   readBibliography,
+  sortEntriesByAuthorYear,
 } from "../../src/lib/bibliography.ts"
 
 const directory = mkdtempSync(join(tmpdir(), "bibliography-"))
@@ -31,6 +33,38 @@ test("brace protection is removed from names and titles", () => {
     "Smith and Sons",
   ])
   expect(entry.title).toBe("The TeXbook — a Book")
+})
+
+test("short author lists for author-year citations", () => {
+  expect(formatShortAuthors(["Knuth, Donald E."])).toBe("Knuth")
+  expect(formatShortAuthors(["Knuth, Donald E.", "Plass, Michael F."])).toBe(
+    "Knuth & Plass",
+  )
+  expect(
+    formatShortAuthors([
+      "Knuth, Donald E.",
+      "Plass, Michael F.",
+      "Smith, Jane",
+    ]),
+  ).toBe("Knuth, Plass & Smith")
+  expect(
+    formatShortAuthors([
+      "Knuth, Donald E.",
+      "Plass, Michael F.",
+      "Smith, Jane",
+      "Doe, John",
+    ]),
+  ).toBe("Knuth et al.")
+})
+
+test("author-year entries sort by first author, then year, then title", () => {
+  const sorted = sortEntriesByAuthorYear([
+    { key: "b", author: ["Beta, A."], title: "Beta", year: 2001 },
+    { key: "a2", author: ["Alpha, B."], title: "Second", year: 1990 },
+    { key: "a1", author: ["Alpha, A."], title: "First", year: 2000 },
+    { key: "a1b", author: ["Alpha, A."], title: "First", year: 1990 },
+  ])
+  expect(sorted.map(({ key }) => key)).toEqual(["a1b", "a1", "a2", "b"])
 })
 
 test("page ranges use an en dash", () => {
