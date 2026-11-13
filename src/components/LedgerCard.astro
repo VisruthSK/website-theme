@@ -11,6 +11,7 @@ import { withBase } from "@/lib/base"
 import { formatLooseDate } from "@/lib/dates"
 import { dateRange, type LedgerEntry } from "@/lib/ledger"
 import { renderLedgerNote } from "@/lib/ledger-note"
+import { formatTitleAsHtml } from "@/lib/text"
 
 type Props = {
   entry: LedgerEntry
@@ -18,9 +19,17 @@ type Props = {
   dated: boolean
   linkLabel: string
   side?: "auto" | "rating" | "links" | "none"
+  linkTitle?: boolean
 }
 
-const { entry, permalink, dated, linkLabel, side = "auto" } = Astro.props
+const {
+  entry,
+  permalink,
+  dated,
+  linkLabel,
+  side = "auto",
+  linkTitle = true,
+} = Astro.props
 const { data } = entry
 const { dates, open } = dated
   ? dateRange(data.started, data.ended)
@@ -40,6 +49,11 @@ const sideMode =
 const linkHref =
   data.link &&
   `${SECTIONS[COLLECTION_TO_SECTION[data.link.collection]].href}/${data.link.id}/`
+const titleHtml = formatTitleAsHtml(data.title)
+const role = data.role?.trim()
+const descriptionHtml = data.description?.trim()
+  ? formatTitleAsHtml(data.description.trim())
+  : undefined
 ---
 
 <Card
@@ -52,14 +66,15 @@ const linkHref =
   <div class="head">
     <div>
       <h3 class="card-title p-name" id={permalink} data-prose>
-        {data.url ? (
+        {linkTitle && data.url ? (
           <Link class="u-url" href={withBase(data.url)}>
-            {data.title}
+            <Fragment set:html={titleHtml} />
           </Link>
         ) : (
-          data.title
+          <Fragment set:html={titleHtml} />
         )}
       </h3>
+      {role && <p class="ledger-role">{role}</p>}
       <MetaRow
         class="byline"
         items={[
@@ -109,18 +124,31 @@ const linkHref =
     {sideMode === "links" && (
       <div class="side side-links" data-pagefind-ignore>
         {data.url && (
-          <a href={withBase(data.url)} aria-label="Website" title="Website">
+          <a
+            data-icon-button
+            href={withBase(data.url)}
+            aria-label="Website"
+            title="Website"
+          >
             <GlobeIcon aria-hidden="true" />
           </a>
         )}
         {data.repo && (
-          <a href={data.repo} aria-label="Repository" title="Repository">
+          <a
+            data-icon-button
+            href={data.repo}
+            aria-label="Repository"
+            title="Repository"
+          >
             <GithubIcon aria-hidden="true" />
           </a>
         )}
       </div>
     )}
   </div>
+  {descriptionHtml && (
+    <p class="ledger-description card-excerpt p-note" set:html={descriptionHtml} />
+  )}
   {
     hasDetails && (
       <div class:list={["ledger-details", !data.note && "without-note"]}>
@@ -174,6 +202,31 @@ const linkHref =
     gap: 0.5rem;
     flex-shrink: 0;
     font-family: var(--font-sans);
+  }
+
+  .side-links {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .side-links a {
+    color: var(--muted-foreground);
+
+    &:is(:hover, :focus-visible) {
+      color: var(--foreground);
+    }
+  }
+
+  .ledger-role {
+    margin-block: 0;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
+
+  .ledger-description {
+    margin: var(--space-xs) 0 0;
+    color: var(--muted-foreground);
   }
 
   .score {
@@ -232,34 +285,6 @@ const linkHref =
   .link a {
     display: inline-block;
     padding-block: 0.125rem;
-  }
-
-  .side-links {
-    gap: 0.375rem;
-  }
-
-  .side-links a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.125rem;
-    height: 2.125rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    color: var(--muted-foreground);
-    transition:
-      border-color var(--duration-fast),
-      color var(--duration-fast);
-
-    &:hover {
-      border-color: color-mix(in oklab, var(--flourish) 45%, var(--border));
-      color: var(--foreground);
-    }
-  }
-
-  .side-links svg {
-    width: 1rem;
-    height: 1rem;
   }
 
   .ledger-tags {
