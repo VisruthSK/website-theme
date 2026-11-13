@@ -51,9 +51,7 @@ function parseCitationMarkers(value: string): CitationMarker[] {
 export function extractCitedKeys(body: string | undefined): string[] {
   if (!body) return []
   return [
-    ...new Set(
-      parseCitationMarkers(stripCode(body)).map(({ key }) => key),
-    ),
+    ...new Set(parseCitationMarkers(stripCode(body)).map(({ key }) => key)),
   ]
 }
 
