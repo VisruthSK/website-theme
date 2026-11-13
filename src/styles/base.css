@@ -1,5 +1,6 @@
 html {
   font-synthesis: none;
+  --min-font-size: 0.875rem;
 }
 
 body {
