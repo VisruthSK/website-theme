@@ -34,8 +34,11 @@ const posts = (collection: string) =>
   })
 
 export interface LedgerOptions {
-  /** Field names every entry must supply; missing ones are build errors. */
-  required?: readonly (keyof LedgerEntry["data"])[]
+  /**
+   * Field names every entry must supply; missing ones are build errors.
+   * `link` is excluded — it is validated as a reference when configured.
+   */
+  required?: readonly Exclude<keyof LedgerEntry["data"], "link">[]
 }
 
 export function defineLedgerSchema() {
@@ -56,18 +59,14 @@ export function defineLedgerSchema() {
   })
 }
 
-export const defineLedger = (
-  path: string,
-  link?: string,
-  options: LedgerOptions = {},
-) => {
-  const base = defineLedgerSchema()
-  const withLink = base.extend({
-    link: link ? reference(link).optional() : z.string().optional(),
-  })
-  const schema = withLink.superRefine((data, context) => {
-    for (const key of options.required ?? []) {
-      if (data[key] === undefined) {
+function withRequired(
+  schema: z.ZodTypeAny,
+  required: readonly string[],
+) {
+  return schema.superRefine((data: unknown, context) => {
+    const fields = data as Record<string, unknown>
+    for (const key of required) {
+      if (fields[key] === undefined) {
         context.addIssue({
           code: "custom",
           path: [key],
@@ -76,6 +75,18 @@ export const defineLedger = (
       }
     }
   })
+}
+
+export const defineLedger = (
+  path: string,
+  link?: string,
+  options: LedgerOptions = {},
+) => {
+  const schema = withRequired(defineLedgerSchema(), options.required ?? []).and(
+    link
+      ? z.object({ link: reference(link).optional() })
+      : z.object({}),
+  )
   return defineCollection({ loader: file(path), schema })
 }
 
