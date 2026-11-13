@@ -89,9 +89,7 @@ export function themeStylesheet(theme: Theme, file: URL, root: URL) {
   const faces = [
     ...fonts.body.faces.map((face) => fontFace(fonts.body.family, face)),
     ...fonts.heading.faces.map((face) => fontFace(fonts.heading.family, face)),
-    ...(features.dropCap && fonts.dropCap
-      ? [fontFace(fonts.dropCap.family, fonts.dropCap)]
-      : []),
+    ...(fonts.accent ? fonts.accent.faces.map((face) => fontFace(fonts.accent!.family, face)) : []),
     ...(fonts.mono?.faces.map((face) => fontFace(fonts.mono!.family, face)) ??
       []),
     ...(features.math
@@ -116,6 +114,8 @@ export function themeStylesheet(theme: Theme, file: URL, root: URL) {
     `--font-sans: ${stack(fonts.heading, [])};`,
     `--font-serif: ${stack(fonts.body, [])};`,
     `--font-mono: ${stack(fonts.mono, ["ui-monospace", "monospace"])};`,
+    `--font-accent: ${fonts.accent ? stack(fonts.accent, []) : "var(--font-serif)"};`,
+    `--drop-cap-weight: ${fonts.accent?.faces[0]?.weight ?? 900};`,
     ...(features.math ? [`--font-math: ${stackEntry(mathFamily)}, math;`] : []),
   ]
   const block = (selector: string, lines: string[]) =>
@@ -173,7 +173,7 @@ export function themeCss(theme: Theme) {
     "var(--prose-font-size)": theme.prose.fontSize,
     "var(--prose-line-height)": theme.prose.lineHeight,
     "var(--prose-indent)": theme.prose.indent,
-    "var(--drop-cap-size)": theme.fonts.dropCap?.size ?? "0rem",
+    "var(--drop-cap-size)": theme.fonts.accent?.size ?? "0rem",
   }
   const blanked = Object.entries(FEATURE_FILES)
     .filter(([feature]) => !theme.features[feature as keyof Theme["features"]])

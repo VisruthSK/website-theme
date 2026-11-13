@@ -196,6 +196,12 @@ const fonts = z.strictObject({
     smallCaps: z.boolean().default(true),
   }),
   heading: family(["ui-sans-serif", "system-ui", "sans-serif", ...EMOJI]),
+  accent: family(["ui-sans-serif", "system-ui", "sans-serif", ...EMOJI])
+    .extend({
+      size: remLength.default("5.9rem"),
+      tolerance: z.number().positive().default(0.35),
+    })
+    .optional(),
   mono: family([
     "ui-monospace",
     "SFMono-Regular",
@@ -206,13 +212,6 @@ const fonts = z.strictObject({
     "monospace",
   ]).optional(),
   math: z.strictObject({ family: nonEmpty, file: fileName }).optional(),
-  dropCap: face
-    .extend({
-      family: nonEmpty,
-      size: remLength.default("5.9rem"),
-      tolerance: z.number().positive().default(0.35),
-    })
-    .optional(),
 })
 
 const link = z.strictObject({ href: nonEmpty, label: nonEmpty })
@@ -240,6 +239,7 @@ export const themeSchema = z
       dir: z.enum(["ltr", "rtl"]).default("ltr"),
       featuredPostCount: z.int().nonnegative().default(3),
       featured: z.array(z.string()).default([]),
+      monogram: nonEmpty.optional(),
     }),
     pages: z
       .strictObject({
@@ -321,8 +321,8 @@ export const themeSchema = z
           `unknown section ${item.section}`,
         )
     })
-    if (theme.features.dropCap && !theme.fonts.dropCap)
-      issue(["fonts", "dropCap"], "required while features.dropCap is true")
+    if (theme.features.dropCap && !theme.fonts.accent)
+      issue(["fonts", "accent"], "required while features.dropCap is true")
     if (theme.features.typeset) {
       const { faces } = theme.fonts.body
       if (

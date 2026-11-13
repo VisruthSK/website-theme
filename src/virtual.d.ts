@@ -10,7 +10,7 @@ declare module "virtual:theme/assets" {
     bodyItalic?: string
     heading: string
     mono?: string
-    dropCap?: string
+    accent?: string
     math?: string
   }
   export const icons: Record<string, import("astro/types").SvgComponent>

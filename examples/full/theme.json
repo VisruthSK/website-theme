@@ -102,12 +102,16 @@
         }
       ]
     },
-    "dropCap": {
+    "accent": {
       "family": "IBM Plex Sans",
-      "file": "plex-sans-600-normal.woff2",
+      "faces": [
+        {
+          "file": "plex-sans-600-normal.woff2",
+          "weight": 600
+        }
+      ],
       "size": "6.1rem",
-      "tolerance": 1,
-      "weight": 600
+      "tolerance": 1
     }
   }
 }

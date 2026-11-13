@@ -111,9 +111,9 @@ const crumbs = [
     {usesMath && fonts.math && <FontPreload href={fonts.math} />}
     {
       remarkPluginFrontmatter.dropCap &&
-        fonts.dropCap &&
-        fonts.dropCap !== fonts.heading &&
-        fonts.dropCap !== fonts.body && <FontPreload href={fonts.dropCap} />
+        fonts.accent &&
+        fonts.accent !== fonts.heading &&
+        fonts.accent !== fonts.body && <FontPreload href={fonts.accent} />
     }
   </Fragment>
   <PagefindMeta
