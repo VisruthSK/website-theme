@@ -160,6 +160,10 @@
   }
 }
 
+.chip-static {
+  pointer-events: none;
+}
+
 .chip-draft {
   background: var(--danger);
   color: var(--danger-foreground);
