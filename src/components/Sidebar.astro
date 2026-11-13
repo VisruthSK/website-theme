@@ -138,6 +138,16 @@ const isExternal = externalTo(SITE.href)
       inline-size: 100%;
       justify-content: space-between;
       margin: auto 0 0 -0.5rem;
+
+      :global(label[data-theme-toggle]) {
+        inline-size: 2.75rem;
+        block-size: 2.75rem;
+      }
+
+      :global(label[data-theme-toggle] svg) {
+        width: 1.75rem;
+        height: 1.75rem;
+      }
     }
   }
 
