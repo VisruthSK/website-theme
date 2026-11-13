@@ -59,8 +59,8 @@ export function defineLedgerSchema() {
   })
 }
 
-function withRequired(
-  schema: z.ZodTypeAny,
+function withRequired<S extends z.ZodType>(
+  schema: S,
   required: readonly string[],
 ) {
   return schema.superRefine((data: unknown, context) => {
@@ -82,11 +82,10 @@ export const defineLedger = (
   link?: string,
   options: LedgerOptions = {},
 ) => {
-  const schema = withRequired(defineLedgerSchema(), options.required ?? []).and(
-    link
-      ? z.object({ link: reference(link).optional() })
-      : z.object({}),
-  )
+  const base = withRequired(defineLedgerSchema(), options.required ?? [])
+  const schema = link
+    ? base.extend({ link: reference(link).optional() })
+    : base
   return defineCollection({ loader: file(path), schema })
 }
 
