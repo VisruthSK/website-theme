@@ -104,6 +104,11 @@ const isExternal = externalTo(SITE.href)
     letter-spacing: 0.08em;
     line-height: 1;
     user-select: none;
+
+    @media (width >= 64rem) {
+      font-size: 2rem;
+      letter-spacing: 0.1em;
+    }
   }
 
   dev-badge {
@@ -130,6 +135,8 @@ const isExternal = externalTo(SITE.href)
 
     @media (width >= 64rem) {
       order: 3;
+      inline-size: 100%;
+      justify-content: space-between;
       margin: auto 0 0 -0.5rem;
     }
   }
