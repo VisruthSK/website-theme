@@ -94,8 +94,8 @@ test.describe("schema", () => {
   })
 
   test("a drop cap needs a face and sections must be distinct", () => {
-    const { dropCap: _, ...fonts } = example.fonts
-    expect(failure({ ...example, fonts })).toContain("fonts.dropCap")
+    const { accent: _, ...fonts } = example.fonts
+    expect(failure({ ...example, fonts })).toContain("fonts.accent")
     expect(
       failure({
         ...example,

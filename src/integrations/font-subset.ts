@@ -53,12 +53,12 @@ function textInTags(html: string, tags: string) {
 }
 
 export function fontSubset(theme: Theme, root: URL): AstroIntegration {
-  const { body, heading, mono, dropCap } = theme.fonts
+  const { body, heading, mono, accent } = theme.fonts
   const shared = new Set(
     [
       ...heading.faces,
       ...(mono?.faces ?? []),
-      ...(dropCap ? [dropCap] : []),
+      ...(accent?.faces ?? []),
     ].map(({ file }) => stem(file)),
   )
   const only = (keep: (face: (typeof body.faces)[number]) => boolean) =>
