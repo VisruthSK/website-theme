@@ -2,29 +2,58 @@
 import Card from "@/components/Card.astro"
 import Link from "@/components/Link.astro"
 import MetaRow from "@/components/MetaRow.astro"
+import TagChip from "@/components/TagChip.astro"
 import Time from "@/components/Time.astro"
 import { COLLECTION_TO_SECTION, SECTIONS } from "@/consts"
+import GlobeIcon from "@/icons/globe.svg"
+import GithubIcon from "@/icons/github.svg"
 import { withBase } from "@/lib/base"
 import { formatLooseDate } from "@/lib/dates"
 import { dateRange, type LedgerEntry } from "@/lib/ledger"
 import { renderLedgerNote } from "@/lib/ledger-note"
+import { formatTitleAsHtml } from "@/lib/text"
 
 type Props = {
   entry: LedgerEntry
   permalink: string
   dated: boolean
   linkLabel: string
+  side?: "auto" | "rating" | "links" | "none"
+  linkTitle?: boolean
 }
 
-const { entry, permalink, dated, linkLabel } = Astro.props
+const {
+  entry,
+  permalink,
+  dated,
+  linkLabel,
+  side = "auto",
+  linkTitle = true,
+} = Astro.props
 const { data } = entry
 const { dates, open } = dated
   ? dateRange(data.started, data.ended)
   : { dates: [], open: false }
 const hasDetails = Boolean(data.note || data.link)
+const hasRating = data.rating !== undefined
+const showFavouriteChip = data.favorite && !hasDetails
+const showLinks = Boolean(data.repo ?? data.url)
+const sideMode =
+  side === "auto"
+    ? hasRating || showFavouriteChip
+      ? "rating"
+      : showLinks
+        ? "links"
+        : "none"
+    : side
 const linkHref =
   data.link &&
   `${SECTIONS[COLLECTION_TO_SECTION[data.link.collection]].href}/${data.link.id}/`
+const titleHtml = formatTitleAsHtml(data.title)
+const role = data.role?.trim()
+const descriptionHtml = data.description?.trim()
+  ? formatTitleAsHtml(data.description.trim())
+  : undefined
 ---
 
 <Card
@@ -37,14 +66,15 @@ const linkHref =
   <div class="head">
     <div>
       <h3 class="card-title p-name" id={permalink} data-prose>
-        {data.url ? (
+        {linkTitle && data.url ? (
           <Link class="u-url" href={withBase(data.url)}>
-            {data.title}
+            <Fragment set:html={titleHtml} />
           </Link>
         ) : (
-          data.title
+          <Fragment set:html={titleHtml} />
         )}
       </h3>
+      {role && <p class="ledger-role">{role}</p>}
       <MetaRow
         class="byline"
         items={[
@@ -77,23 +107,48 @@ const linkHref =
         )
       }
     </div>
-    {
-      (data.rating !== undefined || (data.favorite && !hasDetails)) && (
-        <div class="side" data-pagefind-ignore>
-          {data.rating === "DNF" ? (
-            <span class="dnf p-rating">DNF</span>
-          ) : (
-            data.rating !== undefined && (
-              <span class:list={["score", "p-rating", data.favorite && "favorite"]}>
-                {data.rating}
-              </span>
-            )
-          )}
-          {data.favorite && !hasDetails && <span class="chip">Favorite</span>}
-        </div>
-      )
-    }
+    {sideMode === "rating" && (
+      <div class="side" data-pagefind-ignore>
+        {data.rating === "DNF" ? (
+          <span class="dnf p-rating">DNF</span>
+        ) : (
+          data.rating !== undefined && (
+            <span class:list={["score", "p-rating", data.favorite && "favorite"]}>
+              {data.rating}
+            </span>
+          )
+        )}
+        {data.favorite && !hasDetails && <span class="chip">Favorite</span>}
+      </div>
+    )}
+    {sideMode === "links" && (
+      <div class="side side-links" data-pagefind-ignore>
+        {data.url && (
+          <a
+            data-icon-button
+            href={withBase(data.url)}
+            aria-label="Website"
+            title="Website"
+          >
+            <GlobeIcon aria-hidden="true" />
+          </a>
+        )}
+        {data.repo && (
+          <a
+            data-icon-button
+            href={data.repo}
+            aria-label="Repository"
+            title="Repository"
+          >
+            <GithubIcon aria-hidden="true" />
+          </a>
+        )}
+      </div>
+    )}
   </div>
+  {descriptionHtml && (
+    <p class="ledger-description card-excerpt p-note" set:html={descriptionHtml} />
+  )}
   {
     hasDetails && (
       <div class:list={["ledger-details", !data.note && "without-note"]}>
@@ -113,6 +168,17 @@ const linkHref =
         </div>
         {data.favorite && <span class="chip" data-pagefind-ignore>Favorite</span>}
       </div>
+    )
+  }
+  {
+    data.tags && data.tags.length > 0 && (
+      <ul class="chip-list ledger-tags" data-pagefind-ignore>
+        {data.tags.map((tag) => (
+          <li>
+            <TagChip tag={tag} href={false} />
+          </li>
+        ))}
+      </ul>
     )
   }
 </Card>
@@ -136,6 +202,31 @@ const linkHref =
     gap: 0.5rem;
     flex-shrink: 0;
     font-family: var(--font-sans);
+  }
+
+  .side-links {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .side-links a {
+    color: var(--muted-foreground);
+
+    &:is(:hover, :focus-visible) {
+      color: var(--foreground);
+    }
+  }
+
+  .ledger-role {
+    margin-block: 0;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
+
+  .ledger-description {
+    margin: var(--space-xs) 0 0;
+    color: var(--muted-foreground);
   }
 
   .score {
@@ -194,5 +285,9 @@ const linkHref =
   .link a {
     display: inline-block;
     padding-block: 0.125rem;
+  }
+
+  .ledger-tags {
+    margin-block-start: var(--space-xs);
   }
 </style>

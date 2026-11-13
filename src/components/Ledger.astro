@@ -18,6 +18,7 @@ type Props = {
   dated?: boolean
   ratings?: boolean
   searchable?: boolean
+  linkTitle?: boolean
   feed?: { href: string; label: string }
 }
 
@@ -29,6 +30,7 @@ const {
   dated = true,
   ratings = false,
   searchable = true,
+  linkTitle,
   feed,
 } = Astro.props
 const { entries = await getLedger(collection), href = `/${collection}` } =
@@ -68,6 +70,7 @@ const permalinks = ledgerPermalinks(entries)
             permalink={permalinks.get(entry.id)!}
             dated={dated}
             linkLabel={linkLabel}
+            linkTitle={linkTitle}
           />
         ))}
       </EntryGroup>

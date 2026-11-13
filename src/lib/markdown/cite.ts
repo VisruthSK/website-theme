@@ -16,6 +16,14 @@ const CITE_ITEM_PATTERN = new RegExp(
   String.raw`^([\s\S]*?)(-?)@(${KEY})([\s\S]*)$`,
 )
 
+// Citations are a prose feature; code and HTML comments are ignored.
+function stripCode(markdown: string): string {
+  return markdown
+    .replace(/\r?\n(```|~~~)[\s\S]*?\n\1(?=\r?\n|$)/g, "\n")
+    .replace(/`[^`\n]*`/g, "")
+    .replace(/<!--[\s\S]*?-->/g, "")
+}
+
 interface CitationMarker {
   key: string
   markerStart: number
@@ -42,7 +50,9 @@ function parseCitationMarkers(value: string): CitationMarker[] {
 
 export function extractCitedKeys(body: string | undefined): string[] {
   if (!body) return []
-  return [...new Set(parseCitationMarkers(body).map(({ key }) => key))]
+  return [
+    ...new Set(parseCitationMarkers(stripCode(body)).map(({ key }) => key)),
+  ]
 }
 
 const GROUP_SEPARATOR_PATTERN = /^[\s,;]+$/
