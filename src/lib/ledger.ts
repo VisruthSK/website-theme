@@ -13,6 +13,8 @@ export interface LedgerEntry {
     added?: Date
     note?: string
     url?: string
+    repo?: string
+    tags?: string[]
     link?: { collection: string; id: string }
   }
 }
