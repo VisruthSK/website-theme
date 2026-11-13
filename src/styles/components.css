@@ -83,11 +83,10 @@
 
 .card-eyebrow {
   margin-block-end: 0.25rem;
-  font-family: var(--font-accent, var(--font-serif));
   font-size: 0.75rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--flourish);
+  color: var(--ink-subtle);
 }
 
 .card-title {
