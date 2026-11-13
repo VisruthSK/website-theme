@@ -6,6 +6,7 @@ import { ledgerPermalinks } from "@/lib/ledger"
 import { getLedger } from "@/lib/ledger-entries"
 import { renderLedgerNote } from "@/lib/ledger-note"
 import { resolveSiteUrl } from "@/lib/site-utils"
+import { escapeHtml, stripTitleMarkup } from "@/lib/text"
 
 interface LedgerSource {
   collection: string
@@ -37,8 +38,9 @@ export async function renderLedgerFeed(
         return entries.map(({ id, data }) => {
           const rating =
             data.rating === "DNF" ? "DNF" : data.rating && `${data.rating}/10`
+          const itemTitle = stripTitleMarkup(data.title)
           return {
-            title: data.title,
+            title: itemTitle,
             link: `${withBase(href)}#${permalinks.get(id)}`,
             pubDate: data.ended ?? data.added,
             categories: [noun],
@@ -55,7 +57,9 @@ export async function renderLedgerFeed(
                   ? `<p>${[data.creator, rating].filter(Boolean).join(" · ")}</p>`
                   : "",
                 data.url
-                  ? `<p><a href="${withBase(data.url)}">${data.title}</a></p>`
+                  ? `<p><a href="${escapeHtml(
+                      withBase(data.url),
+                    )}">${escapeHtml(itemTitle)}</a></p>`
                   : "",
                 data.note ? renderLedgerNote(data.note) : "",
               ].join(""),
