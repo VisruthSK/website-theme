@@ -224,10 +224,6 @@ entry-group {
     font-weight: 500;
     line-height: 2rem;
 
-    &:not([data-year]) {
-      font-family: var(--font-accent, var(--font-sans));
-    }
-
     &[data-year] {
       padding-block-end: 0.25rem;
       border-block-end: 1px solid var(--border-subtle);
