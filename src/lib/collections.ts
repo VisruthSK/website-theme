@@ -56,6 +56,8 @@ export function defineLedgerSchema() {
     url: z.union([z.url(), z.string().startsWith("/")]).optional(),
     repo: z.url().optional(),
     tags: z.array(z.string().min(1)).optional(),
+    role: z.string().optional(),
+    description: z.string().optional(),
   })
 }
 

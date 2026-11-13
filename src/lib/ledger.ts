@@ -15,6 +15,8 @@ export interface LedgerEntry {
     url?: string
     repo?: string
     tags?: string[]
+    role?: string
+    description?: string
     link?: { collection: string; id: string }
   }
 }
