@@ -99,7 +99,7 @@ function virtualModules(
   const srcDir = new URL("src/", root)
   const fontUrl = (file: string) =>
     JSON.stringify(`/${theme.fonts.directory}/${file}?url&no-inline`)
-  const { body, heading, mono, dropCap } = theme.fonts
+  const { body, heading, mono, accent, dropCap } = theme.fonts
   const face = (weight: number, style: string) =>
     body.faces.find((entry) => entry.weight === weight && entry.style === style)
   const fonts: Record<string, string | undefined> = {
@@ -107,7 +107,9 @@ function virtualModules(
     bodyItalic: face(400, "italic")?.file,
     heading: heading.faces[0].file,
     mono: mono?.faces[0].file,
-    dropCap: theme.features.dropCap ? dropCap?.file : undefined,
+    dropCap: theme.features.dropCap
+      ? (dropCap ?? accent?.faces[0])?.file
+      : undefined,
     math: theme.features.math ? theme.fonts.math?.file : undefined,
   }
   const present = Object.entries(fonts).filter(

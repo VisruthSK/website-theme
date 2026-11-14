@@ -70,7 +70,7 @@ async function fontBytes(theme: Theme, root: URL) {
 async function load(theme: Theme, root: URL) {
   const { constants, source } = typesetConstants(
     theme.prose,
-    theme.fonts.dropCap?.tolerance ?? 0.35,
+    theme.fonts.dropCap?.tolerance ?? theme.fonts.accent?.tolerance ?? 0.35,
   )
   const faces = await loadFaces(
     fileURLToPath(new URL(`${theme.fonts.directory}/`, root)),
@@ -199,7 +199,9 @@ export function typeset(theme: Theme, root: URL): AstroIntegration {
         const outputPath = fileURLToPath(dir)
         const { planFor, save } = await planner(
           await assets(),
-          parseFloat(theme.fonts.dropCap?.size ?? "0rem"),
+          parseFloat(
+            theme.fonts.dropCap?.size ?? theme.fonts.accent?.size ?? "0rem",
+          ),
           root,
         )
         const skipped = new Map<string, number>()

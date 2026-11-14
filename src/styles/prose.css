@@ -52,9 +52,9 @@ prose-content {
       block-size: 5.25rem;
       margin-inline-end: 1rem;
       color: var(--flourish);
-      font-family: var(--font-sans);
+      font-family: var(--font-drop-cap, var(--font-accent, var(--font-serif)));
       font-size: var(--drop-cap-size);
-      font-weight: 900;
+      font-weight: var(--drop-cap-weight, 900);
       line-height: 0.89;
       text-transform: uppercase;
     }
@@ -74,8 +74,11 @@ prose-content {
         initial-letter: 3 3;
         margin-inline-end: 1rem;
         color: var(--flourish);
-        font-family: var(--font-sans);
-        font-weight: 900;
+        font-family: var(
+          --font-drop-cap,
+          var(--font-accent, var(--font-serif))
+        );
+        font-weight: var(--drop-cap-weight, 900);
         text-transform: uppercase;
       }
     }

@@ -48,6 +48,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "monogram": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
@@ -1483,6 +1487,119 @@
           ],
           "additionalProperties": false
         },
+        "accent": {
+          "type": "object",
+          "properties": {
+            "family": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fallback": {
+              "default": [
+                "ui-sans-serif",
+                "system-ui",
+                "sans-serif",
+                "Apple Color Emoji",
+                "Segoe UI Emoji",
+                "Segoe UI Symbol",
+                "Noto Color Emoji"
+              ],
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "faces": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "pattern": "^[^/\\\\]+\\.(?:woff2|woff|ttf|otf)$"
+                  },
+                  "weight": {
+                    "default": 400,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  },
+                  "style": {
+                    "default": "normal",
+                    "type": "string",
+                    "enum": [
+                      "normal",
+                      "italic"
+                    ]
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "size": {
+              "default": "5.9rem",
+              "type": "string",
+              "pattern": "^\\d+(?:\\.\\d+)?rem$"
+            },
+            "tolerance": {
+              "default": 0.35,
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "family",
+            "faces"
+          ],
+          "additionalProperties": false
+        },
+        "dropCap": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "pattern": "^[^/\\\\]+\\.(?:woff2|woff|ttf|otf)$"
+            },
+            "weight": {
+              "default": 400,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "style": {
+              "default": "normal",
+              "type": "string",
+              "enum": [
+                "normal",
+                "italic"
+              ]
+            },
+            "family": {
+              "type": "string",
+              "minLength": 1
+            },
+            "size": {
+              "default": "5.9rem",
+              "type": "string",
+              "pattern": "^\\d+(?:\\.\\d+)?rem$"
+            },
+            "tolerance": {
+              "default": 0.35,
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "file",
+            "family"
+          ],
+          "additionalProperties": false
+        },
         "mono": {
           "type": "object",
           "properties": {
@@ -1559,48 +1676,6 @@
           "required": [
             "family",
             "file"
-          ],
-          "additionalProperties": false
-        },
-        "dropCap": {
-          "type": "object",
-          "properties": {
-            "file": {
-              "type": "string",
-              "pattern": "^[^/\\\\]+\\.(?:woff2|woff|ttf|otf)$"
-            },
-            "weight": {
-              "default": 400,
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 1000
-            },
-            "style": {
-              "default": "normal",
-              "type": "string",
-              "enum": [
-                "normal",
-                "italic"
-              ]
-            },
-            "family": {
-              "type": "string",
-              "minLength": 1
-            },
-            "size": {
-              "default": "5.9rem",
-              "type": "string",
-              "pattern": "^\\d+(?:\\.\\d+)?rem$"
-            },
-            "tolerance": {
-              "default": 0.35,
-              "type": "number",
-              "exclusiveMinimum": 0
-            }
-          },
-          "required": [
-            "file",
-            "family"
           ],
           "additionalProperties": false
         }
