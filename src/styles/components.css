@@ -83,7 +83,7 @@
 
 .card-eyebrow {
   margin-block-end: 0.25rem;
-  font-size: var(--min-font-size);
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--ink-subtle);
@@ -98,7 +98,7 @@
 
 .card-excerpt {
   margin-block-end: 0.5rem;
-  font-size: var(--min-font-size);
+  font-size: 0.875rem;
   line-height: 1.5rem;
   color: var(--ink-subtle);
 }
@@ -108,7 +108,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--min-font-size);
+  font-size: 0.875rem;
   color: var(--ink-muted);
 
   .card-body > & {
@@ -145,7 +145,7 @@
   border-radius: var(--radius-md);
   background: var(--surface-accent-soft);
   color: var(--ink-strong);
-  font-size: var(--min-font-size);
+  font-size: 0.75rem;
   font-weight: 500;
   text-decoration-line: none;
   pointer-events: auto;

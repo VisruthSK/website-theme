@@ -184,7 +184,7 @@ prose-content {
       top: -0.5em;
       margin-inline-end: 0.25em;
       color: var(--flourish);
-      font-size: var(--min-font-size);
+      font-size: 75%;
       line-height: 0;
       text-decoration-line: none;
     }
