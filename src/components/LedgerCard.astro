@@ -7,6 +7,7 @@ import Time from "@/components/Time.astro"
 import { COLLECTION_TO_SECTION, SECTIONS, SITE } from "@/consts"
 import GlobeIcon from "@/icons/globe.svg"
 import GithubIcon from "@/icons/github.svg"
+import { LEDGER_LINK_ICONS } from "@/lib/ledger-icons"
 import { withBase } from "@/lib/base"
 import { formatLooseDate } from "@/lib/dates"
 import { dateRange, type LedgerEntry } from "@/lib/ledger"
@@ -37,7 +38,7 @@ const { dates, open } = dated
 const hasDetails = Boolean(data.note || data.link)
 const hasRating = data.rating !== undefined
 const showFavouriteChip = data.favorite && !hasDetails
-const showLinks = Boolean(data.repo ?? data.url)
+const showLinks = Boolean(data.repo ?? data.url ?? data.links?.length)
 const sideMode =
   side === "auto"
     ? hasRating || showFavouriteChip
@@ -146,6 +147,20 @@ const descriptionHtml = data.description?.trim()
             <GithubIcon aria-hidden="true" />
           </a>
         )}
+        {data.links?.map((link) => {
+          const Icon = LEDGER_LINK_ICONS[link.icon]
+          return (
+            <a
+              data-icon-button
+              href={link.url}
+              aria-label={link.label ?? link.icon}
+              title={link.label ?? link.icon}
+              {...newTabProps(isExternal(link.url))}
+            >
+              <Icon aria-hidden="true" />
+            </a>
+          )
+        })}
       </div>
     )}
   </div>
@@ -216,7 +231,9 @@ const descriptionHtml = data.description?.trim()
   .side-links {
     flex-direction: row;
     align-items: center;
+    flex-wrap: wrap;
     gap: 0.25rem;
+    justify-content: flex-end;
   }
 
   .side-links a {

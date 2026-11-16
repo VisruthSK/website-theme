@@ -42,6 +42,8 @@ export interface LedgerOptions {
   required?: readonly Exclude<keyof LedgerEntry["data"], "link">[]
 }
 
+const LEDGER_LINK_ICON_NAMES = ["github", "globe", "cran"] as const
+
 function defineLedgerSchema() {
   return z.strictObject({
     title: z.string(),
@@ -60,6 +62,15 @@ function defineLedgerSchema() {
     role: z.string().optional(),
     description: z.string().optional(),
     order: z.number().optional(),
+    links: z
+      .array(
+        z.strictObject({
+          label: z.string().min(1).optional(),
+          url: z.url(),
+          icon: z.enum(LEDGER_LINK_ICON_NAMES).default("globe"),
+        }),
+      )
+      .optional(),
   })
 }
 

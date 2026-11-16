@@ -19,6 +19,7 @@ export interface LedgerEntry {
     description?: string
     order?: number
     feed?: string
+    links?: { label?: string; url: string; icon: "github" | "globe" | "cran" }[]
     link?: { collection: string; id: string }
   }
 }
