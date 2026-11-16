@@ -7,7 +7,7 @@ import Time from "@/components/Time.astro"
 import { COLLECTION_TO_SECTION, SECTIONS, SITE } from "@/consts"
 import GlobeIcon from "@/icons/globe.svg"
 import GithubIcon from "@/icons/github.svg"
-import { LEDGER_LINK_ICONS } from "@/lib/ledger-icons"
+import { LEDGER_LINK_ICONS, LEDGER_LINK_LABELS } from "@/lib/ledger-icons"
 import { withBase } from "@/lib/base"
 import { formatLooseDate } from "@/lib/dates"
 import { dateRange, type LedgerEntry } from "@/lib/ledger"
@@ -149,12 +149,13 @@ const descriptionHtml = data.description?.trim()
         )}
         {data.links?.map((link) => {
           const Icon = LEDGER_LINK_ICONS[link.icon]
+          const label = link.label ?? LEDGER_LINK_LABELS[link.icon]
           return (
             <a
               data-icon-button
               href={link.url}
-              aria-label={link.label ?? link.icon}
-              title={link.label ?? link.icon}
+              aria-label={label}
+              title={label}
               {...newTabProps(isExternal(link.url))}
             >
               <Icon aria-hidden="true" />

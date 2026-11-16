@@ -1,3 +1,4 @@
+import type { LedgerLinkIcon } from "./ledger-icons"
 import { groupByYear } from "./group"
 
 export interface LedgerEntry {
@@ -19,7 +20,7 @@ export interface LedgerEntry {
     description?: string
     order?: number
     feed?: string
-    links?: { label?: string; url: string; icon: "github" | "globe" | "cran" }[]
+    links?: { label?: string; url: string; icon: LedgerLinkIcon }[]
     link?: { collection: string; id: string }
   }
 }

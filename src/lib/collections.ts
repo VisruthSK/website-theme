@@ -3,6 +3,7 @@ import { defineCollection, reference, type SchemaContext } from "astro:content"
 import { z } from "astro/zod"
 import theme from "virtual:theme/config"
 import type { LedgerEntry } from "./ledger"
+import { LEDGER_LINK_ICON_NAMES } from "./ledger-icons"
 import { fileWithOrder } from "./ledger-loader"
 
 const postSchema = ({ image }: SchemaContext) =>
@@ -41,8 +42,6 @@ export interface LedgerOptions {
    */
   required?: readonly Exclude<keyof LedgerEntry["data"], "link">[]
 }
-
-const LEDGER_LINK_ICON_NAMES = ["github", "globe", "cran"] as const
 
 function defineLedgerSchema() {
   return z.strictObject({
