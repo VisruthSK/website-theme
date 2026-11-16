@@ -74,9 +74,6 @@ export const shelfEntries: Array<ShelfConfig & { shelf: Shelf }> = (
   Object.keys(shelves) as Shelf[]
 ).map((shelf) => ({ shelf, ...shelves[shelf] }))
 
-export const shelfSources = shelfEntries.map(({ shelf }) =>
-  shelfSource(shelf),
-)
+export const shelfSources = shelfEntries.map(({ shelf }) => shelfSource(shelf))
 
 export const recentlyAddedSources = [...shelfSources]
-

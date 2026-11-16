@@ -12,8 +12,16 @@ export function getStaticPaths() {
   }))
 }
 
-const { shelf, label, description, linkLabel, dated, searchable,
-  linkTitle, ratings } = Astro.props
+const {
+  shelf,
+  label,
+  description,
+  linkLabel,
+  dated,
+  searchable,
+  linkTitle,
+  ratings,
+} = Astro.props
 
 const isBlogroll = shelf === "blogroll"
 const entries = isBlogroll ? await getBlogs() : undefined
