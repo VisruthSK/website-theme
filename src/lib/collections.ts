@@ -1,8 +1,9 @@
-import { file, glob } from "astro/loaders"
+import { glob } from "astro/loaders"
 import { defineCollection, reference, type SchemaContext } from "astro:content"
 import { z } from "astro/zod"
 import theme from "virtual:theme/config"
 import type { LedgerEntry } from "./ledger"
+import { fileWithOrder } from "./ledger-loader"
 
 const postSchema = ({ image }: SchemaContext) =>
   z.object({
@@ -58,6 +59,7 @@ function defineLedgerSchema() {
     tags: z.array(z.string().min(1)).optional(),
     role: z.string().optional(),
     description: z.string().optional(),
+    order: z.number().optional(),
   })
 }
 
@@ -86,7 +88,7 @@ export const defineLedger = (
 ) => {
   const base = withRequired(defineLedgerSchema(), options.required ?? [])
   const schema = link ? base.extend({ link: reference(link).optional() }) : base
-  return defineCollection({ loader: file(path), schema })
+  return defineCollection({ loader: fileWithOrder(path), schema })
 }
 
 export function defineCollections<

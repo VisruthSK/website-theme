@@ -5,21 +5,15 @@ import { respondWithFeed } from "@/lib/feed"
 import { ledgerPermalinks } from "@/lib/ledger"
 import { getLedger } from "@/lib/ledger-entries"
 import { renderLedgerNote } from "@/lib/ledger-note"
+import { ledgerPlainText } from "@/lib/markdown/ledger-markdown"
 import { resolveSiteUrl } from "@/lib/site-utils"
-import { escapeHtml, stripTitleMarkup } from "@/lib/text"
+import { escapeHtml } from "@/lib/text"
 
 interface LedgerSource {
   collection: string
   href: string
   noun: string
 }
-
-const plainText = (markdown: string) =>
-  markdown
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/[_*]/g, "")
-    .replace(/\s+/g, " ")
-    .trim()
 
 export async function renderLedgerFeed(
   context: APIContext,
@@ -38,7 +32,7 @@ export async function renderLedgerFeed(
         return entries.map(({ id, data }) => {
           const rating =
             data.rating === "DNF" ? "DNF" : data.rating && `${data.rating}/10`
-          const itemTitle = stripTitleMarkup(data.title)
+          const itemTitle = ledgerPlainText(data.title)
           return {
             title: itemTitle,
             link: `${withBase(href)}#${permalinks.get(id)}`,
@@ -47,7 +41,7 @@ export async function renderLedgerFeed(
             author: data.creator,
             description: [
               rating && `Rating: ${rating}.`,
-              plainText(data.note ?? ""),
+              ledgerPlainText(data.note ?? ""),
             ]
               .filter(Boolean)
               .join(" "),

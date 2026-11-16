@@ -5,7 +5,12 @@ import Page from "@/components/Page.astro"
 import PageIntro from "@/components/PageIntro.astro"
 import PagefindMeta from "@/components/PagefindMeta.astro"
 import RatingSpread from "@/components/RatingSpread.astro"
-import { ledgerGroups, ledgerPermalinks, type LedgerEntry } from "@/lib/ledger"
+import {
+  ledgerGroups,
+  ledgerPermalinks,
+  sortByOrder,
+  type LedgerEntry,
+} from "@/lib/ledger"
 import { getLedger } from "@/lib/ledger-entries"
 
 type Props = {
@@ -36,7 +41,9 @@ const {
 const { entries = await getLedger(collection), href = `/${collection}` } =
   Astro.props
 
-const groups = dated ? ledgerGroups(entries) : [{ heading: "", entries }]
+const groups = dated
+  ? ledgerGroups(entries)
+  : [{ heading: "", entries: sortByOrder(entries) }]
 const permalinks = ledgerPermalinks(entries)
 ---
 

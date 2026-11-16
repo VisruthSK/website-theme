@@ -4,14 +4,14 @@ import Link from "@/components/Link.astro"
 import MetaRow from "@/components/MetaRow.astro"
 import TagChip from "@/components/TagChip.astro"
 import Time from "@/components/Time.astro"
-import { COLLECTION_TO_SECTION, SECTIONS } from "@/consts"
+import { COLLECTION_TO_SECTION, SECTIONS, SITE } from "@/consts"
 import GlobeIcon from "@/icons/globe.svg"
 import GithubIcon from "@/icons/github.svg"
 import { withBase } from "@/lib/base"
 import { formatLooseDate } from "@/lib/dates"
 import { dateRange, type LedgerEntry } from "@/lib/ledger"
-import { renderLedgerNote } from "@/lib/ledger-note"
-import { formatTitleAsHtml } from "@/lib/text"
+import { renderLedgerInline, renderLedgerNote } from "@/lib/ledger-note"
+import { externalTo, newTabProps } from "@/lib/external-link-utils"
 
 type Props = {
   entry: LedgerEntry
@@ -49,10 +49,11 @@ const sideMode =
 const linkHref =
   data.link &&
   `${SECTIONS[COLLECTION_TO_SECTION[data.link.collection]].href}/${data.link.id}/`
-const titleHtml = formatTitleAsHtml(data.title)
+const isExternal = externalTo(SITE.href)
+const titleHtml = renderLedgerInline(data.title)
 const role = data.role?.trim()
 const descriptionHtml = data.description?.trim()
-  ? formatTitleAsHtml(data.description.trim())
+  ? renderLedgerNote(data.description.trim())
   : undefined
 ---
 
@@ -129,6 +130,7 @@ const descriptionHtml = data.description?.trim()
             href={withBase(data.url)}
             aria-label="Website"
             title="Website"
+            {...newTabProps(isExternal(data.url))}
           >
             <GlobeIcon aria-hidden="true" />
           </a>
@@ -139,6 +141,7 @@ const descriptionHtml = data.description?.trim()
             href={data.repo}
             aria-label="Repository"
             title="Repository"
+            {...newTabProps(isExternal(data.repo))}
           >
             <GithubIcon aria-hidden="true" />
           </a>
@@ -146,9 +149,15 @@ const descriptionHtml = data.description?.trim()
       </div>
     )}
   </div>
-  {descriptionHtml && (
-    <p class="ledger-description card-excerpt p-note" set:html={descriptionHtml} />
-  )}
+  {
+    descriptionHtml && (
+      <prose-content
+        class="ledger-description card-excerpt p-note"
+        data-compact
+        set:html={descriptionHtml}
+      />
+    )
+  }
   {
     hasDetails && (
       <div class:list={["ledger-details", !data.note && "without-note"]}>
