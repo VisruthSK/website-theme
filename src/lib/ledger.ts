@@ -26,9 +26,7 @@ const UNDATED = Number.MAX_SAFE_INTEGER
 
 export const sortByOrder = <T extends LedgerEntry>(entries: T[]) =>
   entries.toSorted(
-    (a, b) =>
-      (a.data.order ?? Number.POSITIVE_INFINITY) -
-      (b.data.order ?? Number.POSITIVE_INFINITY),
+    (a, b) => (a.data.order ?? UNDATED) - (b.data.order ?? UNDATED),
   )
 
 const ledgerDate = ({ data }: LedgerEntry) =>

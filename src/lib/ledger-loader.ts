@@ -1,13 +1,10 @@
 import { file } from "astro/loaders"
 import type { Loader, LoaderContext } from "astro/loaders"
 
-interface ScopedEntry {
-  id: string
-  data?: Record<string, unknown>
-}
+type ScopedEntry = Parameters<LoaderContext["store"]["set"]>[0]
 
 const injectOrder = (entry: ScopedEntry, position: number): ScopedEntry =>
-  entry.data && typeof entry.data === "object" && entry.data.order === undefined
+  entry.data.order === undefined
     ? { ...entry, data: { ...entry.data, order: position } }
     : entry
 
@@ -27,21 +24,15 @@ export const fileWithOrder = (path: string): Loader => {
     name: "ledger-file-with-order",
     load: (context: LoaderContext) => {
       let position = 0
-      const originalSet = context.store.set.bind(context.store)
-      const store = new Proxy(context.store, {
-        get(target, property, receiver) {
-          if (property === "set") {
-            return (entry: ScopedEntry) =>
-              originalSet(
-                injectOrder(entry, (position += 1)) as Parameters<
-                  typeof originalSet
-                >[0],
-              )
-          }
-          return Reflect.get(target, property, receiver)
+      const { set } = context.store
+      return base.load({
+        ...context,
+        store: {
+          ...context.store,
+          // Fresh counter per load() so dev reloads restamp correctly.
+          set: (entry) => set(injectOrder(entry, ++position)),
         },
       })
-      return base.load({ ...context, store })
     },
   }
 }
