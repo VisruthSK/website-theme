@@ -18,6 +18,7 @@ export interface LedgerEntry {
     role?: string
     description?: string
     order?: number
+    feed?: string
     link?: { collection: string; id: string }
   }
 }

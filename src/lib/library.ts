@@ -70,13 +70,9 @@ export const libraryFeed = {
   label: "Library RSS feed",
 }
 
-export const shelfEntries = (Object.keys(shelves) as Shelf[]).map(
-  (shelf) =>
-    ({
-      shelf,
-      ...shelves[shelf],
-    }) as const,
-)
+export const shelfEntries: Array<ShelfConfig & { shelf: Shelf }> = (
+  Object.keys(shelves) as Shelf[]
+).map((shelf) => ({ shelf, ...shelves[shelf] }))
 
 export const shelfSources = shelfEntries.map(({ shelf }) =>
   shelfSource(shelf),
