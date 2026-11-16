@@ -1654,6 +1654,10 @@
       },
       "additionalProperties": false
     },
+    "library": {
+      "default": false,
+      "type": "boolean"
+    },
     "features": {
       "default": {
         "typeset": true,

@@ -287,6 +287,7 @@ export const themeSchema = z
           .prefault({}),
       })
       .prefault({}),
+    library: z.boolean().default(false),
     features: features.default({
       typeset: true,
       citations: true,
