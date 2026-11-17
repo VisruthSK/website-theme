@@ -4,7 +4,8 @@
     "title": "Example Site",
     "description": "Public domain stories, and an LLM written benchmark",
     "href": "https://visruthsk.github.io/website-theme/",
-    "author": "Example Author",
+    "first_name": "Example",
+    "surname": "Author",
     "featured": ["everything", "measuring-the-theme"]
   },
   "sections": [

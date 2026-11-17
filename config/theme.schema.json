@@ -19,7 +19,11 @@
           "type": "string",
           "format": "uri"
         },
-        "author": {
+        "first_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "surname": {
           "type": "string",
           "minLength": 1
         },
@@ -58,7 +62,8 @@
         "title",
         "description",
         "href",
-        "author"
+        "first_name",
+        "surname"
       ],
       "additionalProperties": false
     },

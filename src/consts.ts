@@ -3,7 +3,11 @@ import { icons } from "virtual:theme/assets"
 import { withBase } from "@/lib/base"
 import type { ContentCollection, SectionMetadata } from "@/types"
 
-export const SITE = theme.site
+export const SITE = {
+  ...theme.site,
+  /** Full display name, derived from `first_name` + `surname`. */
+  author: `${theme.site.first_name} ${theme.site.surname}`,
+}
 export const PAGES = theme.pages
 export const BROWSER_COLORS = theme.browserColors
 export const FEATURES = theme.features

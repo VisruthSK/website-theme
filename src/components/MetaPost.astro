@@ -31,8 +31,20 @@ const jsonLd = JSON.stringify({
   isAccessibleForFree: true,
   datePublished: isoDate,
   dateModified: isoDate,
-  author: { "@type": "Person", name: SITE.author, url: base.href },
-  publisher: { "@type": "Person", name: SITE.author, url: base.href },
+  author: {
+    "@type": "Person",
+    name: SITE.author,
+    givenName: SITE.first_name,
+    familyName: SITE.surname,
+    url: base.href,
+  },
+  publisher: {
+    "@type": "Person",
+    name: SITE.author,
+    givenName: SITE.first_name,
+    familyName: SITE.surname,
+    url: base.href,
+  },
   isPartOf: { "@type": "Blog", name: SITE.title, url: base.href },
   ...(tags?.length ? { keywords: tags.join(", ") } : {}),
 }).replace(/</g, "\\u003c")

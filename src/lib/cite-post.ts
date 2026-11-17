@@ -15,10 +15,7 @@ const sanitize = (value: string) =>
 const escapeField = (value: string) =>
   value.replaceAll("\\", "/").replace(/[{}]/g, "")
 
-const citePostKey = (id: string) => {
-  const surname = sanitize(SITE.author.trim().split(/\s+/).at(-1) ?? "post")
-  return `${surname}-${sanitize(id)}`
-}
+const citePostKey = (id: string) => `${sanitize(SITE.surname)}-${sanitize(id)}`
 
 export const biblatexEntry = ({
   id,
@@ -33,7 +30,7 @@ export const biblatexEntry = ({
 }) =>
   [
     `@online{${citePostKey(id)}`,
-    `  author  = {${escapeField(SITE.author)}}`,
+    `  author  = {${escapeField(`${SITE.surname}, ${SITE.first_name}`)}}`,
     `  title   = {${escapeField(title)}}`,
     `  date    = {${date.toISOString().slice(0, 10)}}`,
     `  url     = {${escapeField(url)}}`,
