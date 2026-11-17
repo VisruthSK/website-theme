@@ -5,8 +5,8 @@ import type { ContentCollection, SectionMetadata } from "@/types"
 
 export const SITE = {
   ...theme.site,
-  /** Full display name, derived from `first_name` + `surname`. */
-  author: `${theme.site.first_name} ${theme.site.surname}`,
+  /** Full display name, derived from `givenName` + `familyName`. */
+  author: `${theme.site.givenName} ${theme.site.familyName}`,
 }
 export const PAGES = theme.pages
 export const BROWSER_COLORS = theme.browserColors

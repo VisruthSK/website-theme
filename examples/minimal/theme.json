@@ -4,8 +4,8 @@
     "title": "Field Journal",
     "description": "Public domain stories in a quiet setting",
     "href": "https://journal.example.net/",
-    "first_name": "Sample",
-    "surname": "Writer",
+    "givenName": "Sample",
+    "familyName": "Writer",
     "locale": "en-GB"
   },
   "sections": [
