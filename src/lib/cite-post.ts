@@ -15,7 +15,7 @@ const sanitize = (value: string) =>
 const escapeField = (value: string) =>
   value.replaceAll("\\", "/").replace(/[{}]/g, "")
 
-export const citePostKey = (id: string) => {
+const citePostKey = (id: string) => {
   const surname = sanitize(SITE.author.trim().split(/\s+/).at(-1) ?? "post")
   return `${surname}-${sanitize(id)}`
 }
