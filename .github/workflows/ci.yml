@@ -38,12 +38,18 @@ jobs:
       - run: pnpm flatten --check
 
   playwright:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.image }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox, webkit]
+        include:
+          - browser: chromium
+            image: ubuntu-latest
+          - browser: firefox
+            image: ubuntu-latest
+          - browser: webkit
+            image: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
         with:
@@ -61,7 +67,7 @@ jobs:
       - uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-${{ steps.playwright.outputs.version }}-${{ matrix.browser }}
+          key: ${{ matrix.image }}-${{ steps.playwright.outputs.version }}-${{ matrix.browser }}
       - run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
       - run: >-
           pnpm exec playwright test
