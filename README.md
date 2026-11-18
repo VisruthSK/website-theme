@@ -2,7 +2,7 @@
 
 An Astro 7 theme for long-form writing, built on [astro-erudite](https://github.com/jktrn/astro-erudite) by enscribe. It keeps astro-erudite as a git submodule and overlays it: a file here replaces the astro-erudite file at the same path, and nothing inside astro-erudite is edited, so its new releases can be pulled in. It is not affiliated with or endorsed by the author of astro-erudite.
 
-From astro-erudite it keeps the native-CSS design system, the Sätteri Markdown processor, Expressive Code, Temml maths, series, the table of contents, heading anchors, callouts, tags, RSS and sitemaps. The theme adds:
+From astro-erudite it keeps the native-CSS design system, the Sätteri Markdown processor, Expressive Code, Temml maths, series, the table of contents, heading anchors, callouts, tags, RSS, Atom and JSON Feeds and sitemaps. The theme adds:
 
 - Line breaking at build time with [Justice](https://github.com/kitlangton/justice), applied by a small script, and optical margins ported from [Justif](https://github.com/lyallcooper/justif) and measured from the configured fonts.
 - Footnotes set as margin notes on wide screens.
@@ -134,6 +134,7 @@ Two font settings exist because browsers render some fonts differently from how 
 - `fonts.stripHinting` (default `false`) removes hinting instructions when fonts are subset. Without them, Chromium on Linux auto-hints some fonts and widens their glyphs, so keep it off unless you have checked your fonts.
 - `fonts.dropCap.size` (default `5.9rem`) is the drop cap's font size. Browsers that support `initial-letter` size the cap themselves; pick the size at which the fallback matches them, or drop-cap paragraphs fall back to native justification.
 - `fonts.dropCap.tolerance` (default `0.35`) is how far, in em, a browser's own sizing of the initial letter may differ from the plan before the paragraph keeps native justification. Browsers differ from each other and from letter to letter, so a site whose drop-cap paragraphs fall back can raise it; line verification still catches overflow.
+- `prose.citations.style` (default `"numeric"`) switches the in-text citations and the reference list to the author–year form: `(Knuth & Plass 1981)` and `Knuth & Plass (1981)` in the prose, and the reference list sorted by first author with no numbers. `"numeric"` keeps first-appearance numbering and the bracketed form.
 
 ## Lists
 
@@ -231,6 +232,13 @@ The slowest build steps (the optical-margin tables, the line-break plans and the
 
 - `site.href` in `examples/full/theme.json` is the published address, `https://visruthsk.github.io/website-theme/`; change it if the repository moves.
 - Pages cannot send response headers, so the Content Security Policy in `public/_headers` does not apply there.
+
+## Environment variables
+
+- `SITE_NOW` — an ISO date the build treats as "now", so drafts and future-dated posts are evaluated against a fixed moment rather than the day the build runs. Useful for reproducible builds.
+- `LOCAL_CSP=1` — also emit the strict `_headers` Content Security Policy on the dev and preview servers, so local pages are tested under the same policy as production.
+- `STANDARD_SITE_PUBLICATION` — the `at://` URI of the Standard.site publication; when set, the build injects the `site.standard.document` links and writes the `/site.standard.publication` verification file. See _Standard.site_ below.
+- `public/_redirects` — one redirect source per line; the link checker accepts these paths as valid targets for links pointing at them, so moved pages do not fail the build. Redirect targets are not validated or rendered.
 
 ## Developing
 

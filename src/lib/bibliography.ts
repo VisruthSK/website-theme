@@ -18,6 +18,31 @@ export interface BibliographyEntry {
 
 export type Bibliography = Record<string, BibliographyEntry>
 
+export type CitationStyle = "numeric" | "author-year"
+
+const surname = (name: string) => name.split(",")[0].trim()
+
+export function formatShortAuthors(authors: string[]): string {
+  if (authors.length === 0) return "Unknown"
+  const names = authors.map(surname)
+  if (names.length === 1) return names[0]
+  if (names.length === 2) return `${names[0]} & ${names[1]}`
+  if (names.length === 3) return `${names[0]}, ${names[1]} & ${names[2]}`
+  return `${names[0]} et al.`
+}
+
+export function sortEntriesByAuthorYear(
+  entries: BibliographyEntry[],
+): BibliographyEntry[] {
+  return [...entries].sort((a, b) => {
+    const byAuthor = (a.author[0] ?? "").localeCompare(b.author[0] ?? "")
+    if (byAuthor !== 0) return byAuthor
+    const byYear = (a.year ?? 0) - (b.year ?? 0)
+    if (byYear !== 0) return byYear
+    return a.title.localeCompare(b.title)
+  })
+}
+
 interface CslName {
   family?: string
   given?: string

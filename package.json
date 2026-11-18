@@ -8,6 +8,7 @@
     "dev": "astro dev --root examples/full",
     "build": "node scripts/build.mjs examples/full examples/minimal",
     "check": "astro check --root examples/full && astro check --root examples/minimal",
+    "typecheck": "tsc --noEmit -p tsconfig.tests.json",
     "test": "playwright test",
     "format": "prettier --check . && node tools/format-astro.mjs",
     "format:write": "prettier --write . && node tools/format-astro.mjs --write",
@@ -54,6 +55,7 @@
     "@astrojs/check": "^0.9.11",
     "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
+    "@types/node": "^26.1.2",
     "knip": "^6.42.0",
     "prettier": "^3.9.10",
     "typescript": "^6.0.3"

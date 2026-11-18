@@ -9,6 +9,12 @@ import { footnotes } from "../../src/lib/markdown/footnotes.ts"
 import { opening } from "../../src/lib/markdown/opening.ts"
 
 const citations = cite("examples/full/src/data/references.bib")
+const authorYearCitations = cite(
+  "examples/full/src/data/references.bib",
+  "author-year",
+)
+const citeAuthorYear = (source: string) =>
+  render(source, { mdastPlugins: [authorYearCitations] })
 
 const render = (
   source: string,
@@ -70,6 +76,38 @@ test.describe("citations", () => {
 
   test("cited keys are extracted in order of first use", () => {
     expect(extractCitedKeys("[@b; @a] and @b")).toEqual(["b", "a"])
+  })
+
+  test.describe("author-year style", () => {
+    test("narrative citations render authors and year", () => {
+      const html = citeAuthorYear("As @knuth1981 showed.")
+      expect(html).toContain('<a href="#ref-knuth1981"')
+      expect(html).toContain(">Knuth &amp; Plass 1981</a>")
+      expect(html).toContain('<span class="citation">(1981)</span>')
+      expect(html).not.toContain('class="citation-link">1<')
+    })
+
+    test("bracketed groups use parentheses, locators and suppressed authors", () => {
+      const html = citeAuthorYear("Both [see @three2020, p. 14; -@wilde1888].")
+      expect(html).toContain('<span class="citation">(see ')
+      expect(html).toContain(">Knuth, Plass &amp; Smith 2020</a>")
+      expect(html).toContain(", p. 14;")
+      expect(html).toContain("; ")
+      expect(html).toContain(">1888</a>")
+      expect(html).toContain(")</span>")
+    })
+
+    test("four or more authors collapse to et al.", () => {
+      expect(citeAuthorYear("As @four2021 says.")).toContain(
+        ">Knuth et al. 2021</a>",
+      )
+    })
+
+    test("undated entries cite as n.d.", () => {
+      expect(citeAuthorYear("As @undated says.")).toContain(
+        '<span class="citation">(n.d.)</span>',
+      )
+    })
   })
 })
 

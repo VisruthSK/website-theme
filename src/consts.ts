@@ -20,6 +20,7 @@ export const SECTIONS: Record<string, SectionMetadata> = Object.fromEntries(
     },
   ]),
 )
+export const PROSE = theme.prose
 
 export type SectionSlug = string
 export const SECTION_SLUGS: SectionSlug[] = theme.sections.map(

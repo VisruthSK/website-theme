@@ -2,19 +2,18 @@ import type { APIContext } from "astro"
 
 import { SITE } from "@/consts"
 
-export function calculateWordCountFromHtml(
-  html: string | null | undefined,
-): number {
-  if (!html) return 0
-  const textOnly = html.replace(/<[^>]+>/g, "")
-  return textOnly.split(/\s+/).filter(Boolean).length
-}
-
 export const siteOrigin = ({ site, url }: { site?: URL; url: URL }) =>
   site ?? new URL(url.origin)
 
-export const resolveSiteUrl = (context: APIContext) =>
-  (context.site?.toString() ?? SITE.href).replace(/\/$/, "")
+/**
+ * Absolute base URL of the site, including the base path on sub-path
+ * deployments. `context.site` loses the path, so always read it from
+ * SITE: feed readers resolving relative URLs against `https://host/`
+ * would otherwise drop the base path.
+ */
+export const siteBase = () => SITE.href.replace(/\/$/, "")
+
+export const resolveSiteUrl = (_context: APIContext) => siteBase()
 
 export function readingTime(wordCount: number): string {
   const readingTimeMinutes = Math.max(1, Math.round(wordCount / 200))
