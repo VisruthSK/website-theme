@@ -13,7 +13,7 @@ on:
         ".github/workflows/pages.yml",
       ]
   pull_request:
-    types: [opened, reopened, synchronize, labeled, closed]
+    types: [opened, reopened, synchronize, closed]
   workflow_dispatch:
 
 permissions:
@@ -29,8 +29,6 @@ jobs:
     if: >-
       (github.event_name != 'pull_request' && github.ref == 'refs/heads/main') ||
       (github.event.action != 'closed' &&
-       contains(github.event.pull_request.labels.*.name, 'build-website') &&
-       (github.event.action != 'labeled' || github.event.label.name == 'build-website') &&
        github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 20
