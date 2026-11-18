@@ -31,15 +31,28 @@ const linkHref =
   href={`#${permalink}`}
   label={`${data.title}, permalink`}
   data-favorite={data.favorite || undefined}
+  urlClass=""
+  class="h-cite"
 >
   <div class="head">
     <div>
-      <h3 class="card-title" id={permalink} data-prose>
-        {data.url ? <Link href={withBase(data.url)}>{data.title}</Link> : data.title}
+      <h3 class="card-title p-name" id={permalink} data-prose>
+        {data.url ? (
+          <Link class="u-url" href={withBase(data.url)}>
+            {data.title}
+          </Link>
+        ) : (
+          data.title
+        )}
       </h3>
       <MetaRow
         class="byline"
-        items={[data.creator, data.published ? formatLooseDate(data.published) : undefined]}
+        items={[
+          data.creator ? { text: data.creator, class: "p-author" } : undefined,
+          data.published
+            ? { text: formatLooseDate(data.published), class: "dt-published" }
+            : undefined,
+        ]}
       />
       {
         dated && dates.length === 0 && data.added && (
@@ -68,10 +81,12 @@ const linkHref =
       (data.rating !== undefined || (data.favorite && !hasDetails)) && (
         <div class="side" data-pagefind-ignore>
           {data.rating === "DNF" ? (
-            <span class="dnf">DNF</span>
+            <span class="dnf p-rating">DNF</span>
           ) : (
             data.rating !== undefined && (
-              <span class:list={["score", data.favorite && "favorite"]}>{data.rating}</span>
+              <span class:list={["score", "p-rating", data.favorite && "favorite"]}>
+                {data.rating}
+              </span>
             )
           )}
           {data.favorite && !hasDetails && <span class="chip">Favorite</span>}
@@ -84,7 +99,11 @@ const linkHref =
       <div class:list={["ledger-details", !data.note && "without-note"]}>
         <div class="details-body">
           {data.note && (
-            <prose-content class="note card-excerpt" data-compact set:html={renderLedgerNote(data.note)} />
+            <prose-content
+              class="note card-excerpt p-note"
+              data-compact
+              set:html={renderLedgerNote(data.note)}
+            />
           )}
           {linkHref && (
             <p class="link card-excerpt" data-prose data-pagefind-ignore>

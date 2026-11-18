@@ -210,6 +210,26 @@ test("posts carry citation meta tags", ({ site }) => {
   }
 })
 
+test("listing and ledger cards carry microformats2 markup", ({ site }) => {
+  const home = readFileSync(join(distOf(site), "index.html"), "utf8")
+  expect(home, "listing cards").toContain("h-entry")
+  expect(home).toContain("p-name")
+  expect(home).toContain("u-url")
+  if (site.ledger) {
+    const ledgerPath = join(
+      distOf(site),
+      site.ledger.path.replace(/^\/+/, ""),
+      "index.html",
+    )
+    const ledger = readFileSync(ledgerPath, "utf8")
+    expect(ledger, "ledger cards").toContain("h-cite")
+    expect(ledger).toContain("p-name")
+    expect(ledger).toContain("p-author")
+    expect(ledger).toContain("dt-published")
+    expect(ledger).toContain("p-rating")
+  }
+})
+
 test("the JSON feed parses and matches the RSS feed", ({ site }) => {
   const file = join(distOf(site), "feed.json")
   expect(existsSync(file), file).toBe(true)
