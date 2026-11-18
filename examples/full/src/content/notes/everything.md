@@ -3,7 +3,6 @@ title: 'Everything at Once'
 date: 2025-02-03
 description: 'Inline code, an external SVG, tables, maths, callouts, footnotes and citations in one note.'
 tags: ['code', 'features']
-bib: example
 ---
 
 THIS CONTENT IS ENTIRELY LLM WRITTEN

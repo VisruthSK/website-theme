@@ -1687,11 +1687,6 @@
       },
       "additionalProperties": false
     },
-    "bibliographies": {
-      "default": "src/data/bibliographies",
-      "type": "string",
-      "minLength": 1
-    },
     "unhinted": {
       "default": [
         "/_astro/*",

@@ -22,6 +22,7 @@ import {
   temmlMath,
 } from "../lib/markdown/astro-erudite"
 import { localHeadersPlugin } from "../lib/local-headers"
+import { citationCheck } from "./citation-check"
 import { bundleCss } from "./bundle-css"
 import { earlyHints } from "./early-hints"
 import { fontSubset } from "./font-subset"
@@ -92,7 +93,7 @@ function iconPath(name: string, srcDir: URL) {
 function virtualModules(
   theme: Theme,
   root: URL,
-  paths: { bibliographies: string; public: string },
+  paths: { bibliography: string; public: string },
 ) {
   const srcDir = new URL("src/", root)
   const fontUrl = (file: string) =>
@@ -155,7 +156,7 @@ export async function themeConfig(
 ): Promise<AstroUserConfig> {
   const theme = await loadTheme(new URL("theme.json", root))
   const paths = {
-    bibliographies: fileURLToPath(new URL(theme.bibliographies, root)),
+    bibliography: fileURLToPath(new URL("src/data/references.bib", root)),
     public: fileURLToPath(new URL("public/", root)),
   }
   const { features } = theme
@@ -187,6 +188,7 @@ export async function themeConfig(
       sitemap(),
       ...(features.search ? [pagefindSearch()] : []),
       linkCheck(paths.public, base),
+      ...(features.citations ? [citationCheck(paths.public)] : []),
       earlyHints(theme, base),
       ...(features.typeset ? [typeset(theme, root)] : []),
       fontSubset(theme, root),
@@ -226,7 +228,7 @@ export async function themeConfig(
           dashes,
           ...(features.callouts ? [calloutDirective] : []),
           inlineExpressiveCode,
-          ...(features.citations ? [cite(paths.bibliographies)] : []),
+          ...(features.citations ? [cite(paths.bibliography)] : []),
           ...(features.marginNotes ? [footnoteSentences] : []),
           ...(features.math ? [temmlMath] : []),
         ],

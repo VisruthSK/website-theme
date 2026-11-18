@@ -3,7 +3,6 @@ title: 'Measuring the theme against astro-erudite'
 date: 2026-11-02
 description: 'Fifteen pages of the same content built with astro-erudite and with this theme: an eighth of the bytes and a faster largest paint everywhere, a slower first paint on a really slow link for three pages.'
 tags: ['performance', 'accessibility', 'typography']
-bib: example
 ---
 
 THIS CONTENT IS ENTIRELY LLM WRITTEN

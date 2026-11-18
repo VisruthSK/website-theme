@@ -1,6 +1,6 @@
 declare module "virtual:theme/config" {
   const theme: import("../config/theme").Theme
-  export const paths: { bibliographies: string; public: string }
+  export const paths: { bibliography: string; public: string }
   export default theme
 }
 

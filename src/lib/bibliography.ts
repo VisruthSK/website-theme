@@ -1,7 +1,6 @@
 import { Cite } from "@citation-js/core"
 import "@citation-js/plugin-bibtex"
 import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 export interface BibliographyEntry {
   key: string
@@ -58,24 +57,20 @@ const toEntry = (item: CslItem): BibliographyEntry => ({
   url: item.URL,
 })
 
-export function readBibliography(
-  directory: string,
-  bibName: string,
-): Bibliography | null {
-  const path = join(directory, `${bibName}.bib`)
-  const cached = cache.get(path)
+export function readBibliography(file: string): Bibliography | null {
+  const cached = cache.get(file)
   if (cached) return cached
 
   try {
     const bibliography: Bibliography = {}
-    for (const item of new Cite(readFileSync(path, "utf-8"))
+    for (const item of new Cite(readFileSync(file, "utf-8"))
       .data as CslItem[]) {
       bibliography[item.id] = toEntry(item)
     }
-    cache.set(path, bibliography)
+    cache.set(file, bibliography)
     return bibliography
   } catch (error) {
-    console.warn(`Bibliography file not found: ${bibName}.bib`, error)
+    console.warn(`Bibliography file not found: ${file}`, error)
     return null
   }
 }

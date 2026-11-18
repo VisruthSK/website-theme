@@ -3,7 +3,6 @@ title: 'The Gift of the Magi'
 date: 2026-10-14
 description: 'O. Henry’s Christmas story, in the public domain.'
 tags: ['story', 'henry']
-bib: example
 ---
 
 Story text by O. Henry [@henry1906] from Project Gutenberg, in the public domain. The callout and note are LLM written.
