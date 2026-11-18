@@ -7,6 +7,8 @@ tags: ['performance', 'accessibility', 'typography']
 
 THIS CONTENT IS ENTIRELY LLM WRITTEN
 
+---
+
 This theme is built on astro-erudite and adds a build-time line breaker, margin notes and citations. To see what that costs and buys, both themes build the same fifteen pages here, and the comparison covers what a browser downloads, how soon it paints and what Lighthouse scores.[^scope]
 
 ## The same content on both
