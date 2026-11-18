@@ -28,6 +28,7 @@ import { FOOTER, SITE } from "@/consts"
     @media (width >= 40rem) {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
+      grid-template-areas: "text mono icons";
       align-items: center;
       gap: 0;
       inline-size: 100%;
@@ -36,6 +37,7 @@ import { FOOTER, SITE } from "@/consts"
 
   p {
     margin: 0;
+    grid-area: text;
     justify-self: start;
     font-size: var(--step--1);
     color: var(--muted-foreground);
@@ -44,6 +46,7 @@ import { FOOTER, SITE } from "@/consts"
   .monogram {
     display: inline-flex;
     align-items: center;
+    grid-area: mono;
     justify-self: center;
     font-family: var(--font-accent, var(--font-serif));
     font-size: var(--step--1);
@@ -54,6 +57,7 @@ import { FOOTER, SITE } from "@/consts"
   }
 
   .row :global(ul) {
+    grid-area: icons;
     justify-self: end;
   }
 </style>
