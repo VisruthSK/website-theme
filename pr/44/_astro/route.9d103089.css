@@ -1,0 +1,38 @@
+.bibliography[data-astro-cid-qh6uglb7]{margin:2rem 0}.bibliography[data-astro-cid-qh6uglb7] h2[data-astro-cid-qh6uglb7]{margin-bottom:1rem;font-size:1.5rem}.bibliography-list[data-astro-cid-qh6uglb7]{counter-reset:bibliography-counter;padding-left:0;list-style-type:none}.bibliography-entry[data-astro-cid-qh6uglb7]{counter-increment:bibliography-counter;margin-bottom:1rem;padding-left:2rem;line-height:1.6;position:relative}.bibliography-entry[data-astro-cid-qh6uglb7]:before{content:"[" counter(bibliography-counter) "]";font-weight:500;position:absolute;left:0}.bibliography-authors[data-astro-cid-qh6uglb7]{font-weight:500}.bibliography-warning[data-astro-cid-qh6uglb7]{border-left:4px solid var(--warning);border-radius:var(--radius-md);background:var(--surface-warning);margin:1rem 0;padding:1rem}.bibliography-warning[data-astro-cid-qh6uglb7] p[data-astro-cid-qh6uglb7]{color:var(--ink-strong);margin:0}
+.s5ba1a6ba{--ecMaxLine:49ch}
+
+.s17a05fd1{--0:#BF3441;--1:#F97583}
+:root .s17a05fd1{color:var(--0)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .s17a05fd1{color:var(--1)}}
+:root[data-theme=dark] .s17a05fd1{color:var(--1)}
+.s9008416b{--0:#24292E;--1:#E1E4E8}
+:root .s9008416b{color:var(--0)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .s9008416b{color:var(--1)}}
+:root[data-theme=dark] .s9008416b{color:var(--1)}
+.sd5693bf8{--0:#6F42C1;--1:#B392F0}
+:root .sd5693bf8{color:var(--0)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .sd5693bf8{color:var(--1)}}
+:root[data-theme=dark] .sd5693bf8{color:var(--1)}
+.s8ecd9b90{--0:#AE4B07;--1:#FFAB70}
+:root .s8ecd9b90{color:var(--0)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .s8ecd9b90{color:var(--1)}}
+:root[data-theme=dark] .s8ecd9b90{color:var(--1)}
+.s14ce11c2{--0:#005CC5;--1:#79B8FF}
+:root .s14ce11c2{color:var(--0)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .s14ce11c2{color:var(--1)}}
+:root[data-theme=dark] .s14ce11c2{color:var(--1)}
+.sdf6c0e6e{--ecIndent:2ch}
+
+.s9d3b88f7{--0:#032F62;--1:#9ECBFF}
+:root .s9d3b88f7{color:var(--0)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .s9d3b88f7{color:var(--1)}}
+:root[data-theme=dark] .s9d3b88f7{color:var(--1)}
+.s8b424f07{text-align: right}
+
+.s87aa9fdc{display:block math;}
+
+.sfa5ab551{--ecMaxLine:73ch}
+
+.sb78ad029{--ecIndent:4ch}
+
+.sfa1ebe9b{--ecIndent:6ch}
