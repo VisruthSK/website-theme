@@ -1,6 +1,7 @@
 ---
 import Bibliography from "@/components/Bibliography.astro"
 import FontPreload from "@/components/FontPreload.astro"
+import CitePost from "@/components/CitePost.astro"
 import MetaPost from "@/components/MetaPost.astro"
 import MetaRow from "@/components/MetaRow.astro"
 import PagefindMeta from "@/components/PagefindMeta.astro"
@@ -203,6 +204,7 @@ const crumbs = [
         </ul>
       </aside>
     )}
+    <CitePost post={post} canonical={parentHref ?? undefined} />
   </article>
 </Layout>
 

@@ -58,6 +58,10 @@ const ROUTES: [
   ["/rss.xml", "rss.xml.ts"],
   ["/index.xml", "index.xml.ts"],
   ["/feed.json", "feed.json.ts"],
+  ["/library", "library/index.astro"],
+  ["/library/[shelf]", "library/[shelf].astro"],
+  ["/library/[...shelf]/feed.xml", "library/[...shelf]/feed.xml.ts"],
+  ["/library/blogroll.opml", "library/blogroll.opml.ts"],
   ["/robots.txt", "robots.txt.ts"],
   ["/site.webmanifest", "site.webmanifest.ts"],
 ]
@@ -72,6 +76,7 @@ function routes(theme: Theme): AstroIntegration {
       "astro:config:setup": ({ config, injectRoute }) => {
         for (const [pattern, file, feature] of ROUTES) {
           if (feature && !theme.features[feature]) continue
+          if (pattern.startsWith("/library") && !theme.library) continue
           if (existsSync(new URL(`pages/${file}`, config.srcDir))) continue
           injectRoute({
             pattern,
@@ -99,7 +104,7 @@ function virtualModules(
   const srcDir = new URL("src/", root)
   const fontUrl = (file: string) =>
     JSON.stringify(`/${theme.fonts.directory}/${file}?url&no-inline`)
-  const { body, heading, mono, dropCap } = theme.fonts
+  const { body, heading, mono, accent, dropCap } = theme.fonts
   const face = (weight: number, style: string) =>
     body.faces.find((entry) => entry.weight === weight && entry.style === style)
   const fonts: Record<string, string | undefined> = {
@@ -107,7 +112,9 @@ function virtualModules(
     bodyItalic: face(400, "italic")?.file,
     heading: heading.faces[0].file,
     mono: mono?.faces[0].file,
-    dropCap: theme.features.dropCap ? dropCap?.file : undefined,
+    dropCap: theme.features.dropCap
+      ? (dropCap ?? accent?.faces[0])?.file
+      : undefined,
     math: theme.features.math ? theme.fonts.math?.file : undefined,
   }
   const present = Object.entries(fonts).filter(

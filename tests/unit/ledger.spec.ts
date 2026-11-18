@@ -5,6 +5,7 @@ import {
   ledgerGroups,
   ledgerPermalinks,
   slugify,
+  sortByOrder,
   type LedgerEntry,
 } from "../../src/lib/ledger.ts"
 
@@ -56,6 +57,32 @@ test("years run newest first, entries newest first, undated last", () => {
 test("there is no Undated group when every entry has an end date", () => {
   const groups = ledgerGroups([entry("a", "A", "2025-05-31")])
   expect(groups.map(({ heading }) => heading)).toEqual(["2025"])
+})
+
+test("sortByOrder orders ascending and keeps unordered entries stable", () => {
+  const withOrder = (id: string, order?: number) => ({
+    ...entry(id, id),
+    data: { ...entry(id, id).data, order },
+  })
+  expect(
+    sortByOrder([
+      withOrder("later", 20),
+      withOrder("plain-a"),
+      withOrder("first", 10),
+      withOrder("plain-b"),
+    ]).map(({ id }) => id),
+  ).toEqual(["first", "later", "plain-a", "plain-b"])
+})
+
+test("ledgerGroups sorts the Undated bucket by order", () => {
+  const withOrder = (id: string, order?: number) => ({
+    ...entry(id, id),
+    data: { ...entry(id, id).data, order },
+  })
+  const groups = ledgerGroups([withOrder("b", 2), withOrder("a", 1)])
+  expect(groups.map(({ entries }) => entries.map(({ id }) => id))).toEqual([
+    ["a", "b"],
+  ])
 })
 
 test("rereads count up in the order they were finished", () => {

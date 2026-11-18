@@ -2,15 +2,25 @@
 import { withBase } from "@/lib/base"
 import { canonicalizePathSegments } from "@/lib/site-utils"
 
-type Props = { tag: string; count?: number }
+type Props = { tag: string; count?: number; href?: string | false }
 
-const { tag, count } = Astro.props
-const href = canonicalizePathSegments(
-  withBase("/tags"),
-  encodeURIComponent(tag),
-)
+const { tag, count, href: hrefProp } = Astro.props
+const href =
+  hrefProp === false
+    ? null
+    : (hrefProp ??
+      canonicalizePathSegments(withBase("/tags"), encodeURIComponent(tag)))
 ---
 
-<a {href} class:list={["chip", "p-category", tag === "draft" && "chip-draft"]}>
-  #{tag}{count !== undefined && <> <span>({count})</span></>}
-</a>
+{
+  href ? (
+    <a {href} class:list={["chip", "p-category", tag === "draft" && "chip-draft"]}>
+      #{tag}{count !== undefined && <> <span>({count})</span></>}
+    </a>
+  ) : (
+    <span class="chip chip-static">
+      #{tag}{count !== undefined && <> <span>({count})</span></>}
+    </span>
+  )
+}
+

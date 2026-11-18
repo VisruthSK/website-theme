@@ -4,7 +4,8 @@
     "title": "Example Site",
     "description": "Public domain stories, and an LLM written benchmark",
     "href": "https://visruthsk.github.io/website-theme/",
-    "author": "Example Author",
+    "givenName": "Example",
+    "familyName": "Author",
     "featured": ["everything", "measuring-the-theme"]
   },
   "sections": [
@@ -101,6 +102,17 @@
           "file": "plex-mono-400-normal.woff2"
         }
       ]
+    },
+    "accent": {
+      "family": "IBM Plex Sans",
+      "faces": [
+        {
+          "file": "plex-sans-600-normal.woff2",
+          "weight": 600
+        }
+      ],
+      "size": "6.1rem",
+      "tolerance": 1
     },
     "dropCap": {
       "family": "IBM Plex Sans",

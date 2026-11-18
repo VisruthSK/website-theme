@@ -5,6 +5,10 @@ description: "Publish the master RSS feed to the AT Protocol."
 tags: ["features"]
 ---
 
+THIS CONTENT IS ENTIRELY LLM WRITTEN
+
+---
+
 The theme can publish its master RSS feed to [Standard.site](https://standard.site/), making the site's posts available on the AT Protocol. All sections share one publication. The records include each post's canonical URL, date, tags, description and rendered content, along with plain text for readers that need it.
 
 The RSS feed decides what gets published. Drafts and future posts stay out until they appear in the feed. Set `rss: false` in a post's frontmatter to leave it out of Standard.site as well as the RSS feeds; it remains on the website. Removing a post from the feed does not delete an existing record from your account.
