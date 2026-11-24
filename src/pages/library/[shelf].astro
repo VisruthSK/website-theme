@@ -1,0 +1,50 @@
+---
+import Link from "@/components/Link.astro"
+import Ledger from "@/components/Ledger.astro"
+import { withBase } from "@/lib/base"
+import { getBlogs } from "@/lib/blogroll"
+import { shelfFeed, shelfHref, shelfEntries } from "@/lib/library"
+
+export function getStaticPaths() {
+  return shelfEntries.map((props) => ({
+    params: { shelf: props.shelf },
+    props,
+  }))
+}
+
+const {
+  shelf,
+  label,
+  description,
+  linkLabel,
+  dated,
+  searchable,
+  linkTitle,
+  ratings,
+} = Astro.props
+
+const isBlogroll = shelf === "blogroll"
+const entries = isBlogroll ? await getBlogs() : undefined
+---
+
+<Ledger
+  {...(description && { description })}
+  title={label}
+  collection={shelf}
+  entries={entries}
+  href={shelfHref(shelf)}
+  linkLabel={linkLabel}
+  dated={dated ?? true}
+  searchable={searchable ?? true}
+  linkTitle={linkTitle ?? true}
+  ratings={ratings ?? false}
+  feed={shelfFeed(shelf)}
+>
+  {
+    isBlogroll && (
+      <Link slot="intro" href={withBase("/library/blogroll.opml")} download>
+        Download OPML
+      </Link>
+    )
+  }
+</Ledger>

@@ -1,11 +1,12 @@
-import { linkedPaths, normalize } from "./backlink-paths"
 import { SECTIONS, SECTION_SLUGS } from "@/consts"
+import { linkedPaths, normalize } from "./backlink-paths"
 import { renderEntryContent } from "@/lib/content-render"
 import {
   getAllPostsAndSubposts,
   getPostHref,
   type PostEntry,
 } from "@/lib/data-utils"
+import { siteBase } from "@/lib/site-utils"
 
 export async function buildBacklinks(site: string) {
   const posts = (
@@ -16,14 +17,17 @@ export async function buildBacklinks(site: string) {
     )
   ).flat()
   const origin = new URL(site).origin
+  const baseUrl = siteBase()
   const targets = new Map(
     posts.map((post) => [normalize(getPostHref(post)), post]),
   )
+  const htmls = await Promise.all(
+    posts.map((post) => renderEntryContent(post, baseUrl)),
+  )
   const backlinks = new Map<string, PostEntry[]>()
-  for (const post of posts) {
+  for (const [index, post] of posts.entries()) {
     const href = getPostHref(post)
-    const html = await renderEntryContent(post, new URL(href, origin).href)
-    for (const path of linkedPaths(html, href, origin)) {
+    for (const path of linkedPaths(htmls[index], href, origin)) {
       if (path === normalize(href) || !targets.has(path)) continue
       const incoming = backlinks.get(path) ?? []
       incoming.push(post)

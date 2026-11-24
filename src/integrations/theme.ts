@@ -22,6 +22,7 @@ import {
   temmlMath,
 } from "../lib/markdown/astro-erudite"
 import { localHeadersPlugin } from "../lib/local-headers"
+import { citationCheck } from "./citation-check"
 import { bundleCss } from "./bundle-css"
 import { earlyHints } from "./early-hints"
 import { fontSubset } from "./font-subset"
@@ -56,6 +57,11 @@ const ROUTES: [
   ["/tags/[tag]/index.xml", "tags/[tag]/index.xml.ts"],
   ["/rss.xml", "rss.xml.ts"],
   ["/index.xml", "index.xml.ts"],
+  ["/feed.json", "feed.json.ts"],
+  ["/library", "library/index.astro"],
+  ["/library/[shelf]", "library/[shelf].astro"],
+  ["/library/[...shelf]/feed.xml", "library/[...shelf]/feed.xml.ts"],
+  ["/library/blogroll.opml", "library/blogroll.opml.ts"],
   ["/robots.txt", "robots.txt.ts"],
   ["/site.webmanifest", "site.webmanifest.ts"],
 ]
@@ -70,6 +76,7 @@ function routes(theme: Theme): AstroIntegration {
       "astro:config:setup": ({ config, injectRoute }) => {
         for (const [pattern, file, feature] of ROUTES) {
           if (feature && !theme.features[feature]) continue
+          if (pattern.startsWith("/library") && !theme.library) continue
           if (existsSync(new URL(`pages/${file}`, config.srcDir))) continue
           injectRoute({
             pattern,
@@ -92,12 +99,12 @@ function iconPath(name: string, srcDir: URL) {
 function virtualModules(
   theme: Theme,
   root: URL,
-  paths: { bibliographies: string; public: string },
+  paths: { bibliography: string; public: string },
 ) {
   const srcDir = new URL("src/", root)
   const fontUrl = (file: string) =>
     JSON.stringify(`/${theme.fonts.directory}/${file}?url&no-inline`)
-  const { body, heading, mono, dropCap } = theme.fonts
+  const { body, heading, mono, accent, dropCap } = theme.fonts
   const face = (weight: number, style: string) =>
     body.faces.find((entry) => entry.weight === weight && entry.style === style)
   const fonts: Record<string, string | undefined> = {
@@ -105,7 +112,9 @@ function virtualModules(
     bodyItalic: face(400, "italic")?.file,
     heading: heading.faces[0].file,
     mono: mono?.faces[0].file,
-    dropCap: theme.features.dropCap ? dropCap?.file : undefined,
+    dropCap: theme.features.dropCap
+      ? (dropCap ?? accent?.faces[0])?.file
+      : undefined,
     math: theme.features.math ? theme.fonts.math?.file : undefined,
   }
   const present = Object.entries(fonts).filter(
@@ -155,7 +164,7 @@ export async function themeConfig(
 ): Promise<AstroUserConfig> {
   const theme = await loadTheme(new URL("theme.json", root))
   const paths = {
-    bibliographies: fileURLToPath(new URL(theme.bibliographies, root)),
+    bibliography: fileURLToPath(new URL("src/data/references.bib", root)),
     public: fileURLToPath(new URL("public/", root)),
   }
   const { features } = theme
@@ -187,6 +196,7 @@ export async function themeConfig(
       sitemap(),
       ...(features.search ? [pagefindSearch()] : []),
       linkCheck(paths.public, base),
+      ...(features.citations ? [citationCheck(paths.public)] : []),
       earlyHints(theme, base),
       ...(features.typeset ? [typeset(theme, root)] : []),
       fontSubset(theme, root),
@@ -226,7 +236,9 @@ export async function themeConfig(
           dashes,
           ...(features.callouts ? [calloutDirective] : []),
           inlineExpressiveCode,
-          ...(features.citations ? [cite(paths.bibliographies)] : []),
+          ...(features.citations
+            ? [cite(paths.bibliography, theme.prose.citations.style)]
+            : []),
           ...(features.marginNotes ? [footnoteSentences] : []),
           ...(features.math ? [temmlMath] : []),
         ],

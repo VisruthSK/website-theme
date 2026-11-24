@@ -1,0 +1,33 @@
+---
+import EntryCard from "@/components/EntryCard.astro"
+import EntryGroup from "@/components/EntryGroup.astro"
+import Page from "@/components/Page.astro"
+import PageIntro from "@/components/PageIntro.astro"
+import RecentlyAdded from "@/components/RecentlyAdded.astro"
+import {
+  LIBRARY_DESCRIPTION,
+  libraryFeed,
+  recentlyAddedSources,
+  shelfEntries,
+  shelfHref,
+} from "@/lib/library"
+
+const description = LIBRARY_DESCRIPTION
+---
+
+<Page title="Library" description={description} crumb="/library" feed={libraryFeed}>
+  <PageIntro slot="intro">{description}</PageIntro>
+  <EntryGroup>
+    {
+      shelfEntries.map((entry) => (
+        <EntryCard
+          href={shelfHref(entry.shelf)}
+          title={entry.label}
+          excerpt={entry.description}
+          heading="h2"
+        />
+      ))
+    }
+  </EntryGroup>
+  <RecentlyAdded sources={recentlyAddedSources} />
+</Page>
