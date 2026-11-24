@@ -1,7 +1,6 @@
 import { Cite } from "@citation-js/core"
 import "@citation-js/plugin-bibtex"
 import { readFileSync } from "node:fs"
-import { join } from "node:path"
 
 export interface BibliographyEntry {
   key: string
@@ -18,6 +17,31 @@ export interface BibliographyEntry {
 }
 
 export type Bibliography = Record<string, BibliographyEntry>
+
+export type CitationStyle = "numeric" | "author-year"
+
+const surname = (name: string) => name.split(",")[0].trim()
+
+export function formatShortAuthors(authors: string[]): string {
+  if (authors.length === 0) return "Unknown"
+  const names = authors.map(surname)
+  if (names.length === 1) return names[0]
+  if (names.length === 2) return `${names[0]} & ${names[1]}`
+  if (names.length === 3) return `${names[0]}, ${names[1]} & ${names[2]}`
+  return `${names[0]} et al.`
+}
+
+export function sortEntriesByAuthorYear(
+  entries: BibliographyEntry[],
+): BibliographyEntry[] {
+  return [...entries].sort((a, b) => {
+    const byAuthor = (a.author[0] ?? "").localeCompare(b.author[0] ?? "")
+    if (byAuthor !== 0) return byAuthor
+    const byYear = (a.year ?? 0) - (b.year ?? 0)
+    if (byYear !== 0) return byYear
+    return a.title.localeCompare(b.title)
+  })
+}
 
 interface CslName {
   family?: string
@@ -58,24 +82,20 @@ const toEntry = (item: CslItem): BibliographyEntry => ({
   url: item.URL,
 })
 
-export function readBibliography(
-  directory: string,
-  bibName: string,
-): Bibliography | null {
-  const path = join(directory, `${bibName}.bib`)
-  const cached = cache.get(path)
+export function readBibliography(file: string): Bibliography | null {
+  const cached = cache.get(file)
   if (cached) return cached
 
   try {
     const bibliography: Bibliography = {}
-    for (const item of new Cite(readFileSync(path, "utf-8"))
+    for (const item of new Cite(readFileSync(file, "utf-8"))
       .data as CslItem[]) {
       bibliography[item.id] = toEntry(item)
     }
-    cache.set(path, bibliography)
+    cache.set(file, bibliography)
     return bibliography
   } catch (error) {
-    console.warn(`Bibliography file not found: ${bibName}.bib`, error)
+    console.warn(`Bibliography file not found: ${file}`, error)
     return null
   }
 }

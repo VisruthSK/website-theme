@@ -30,11 +30,19 @@ async function patchPagefindRuntime(pagefindDir: string) {
     ["pagefind.js", "pagefind-worker.js"].map(async (filename) => {
       const filePath = join(pagefindDir, filename)
       const source = await readFile(filePath, "utf8")
+
+      if (source.includes(PAGEFIND_WASM_INIT_FIXED)) {
+        return
+      }
+      if (!source.includes(PAGEFIND_WASM_INIT)) {
+        throw new Error(
+          `Pagefind's runtime in ${filename} no longer matches the CSP patch in src/integrations/pagefind.ts. Update the patch (or allow the new WASM init) instead of shipping a search page that breaks under Content-Security-Policy.`,
+        )
+      }
       const patched = source.replaceAll(
         PAGEFIND_WASM_INIT,
         PAGEFIND_WASM_INIT_FIXED,
       )
-
       if (patched !== source) {
         await writeFile(filePath, patched)
       }

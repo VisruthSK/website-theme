@@ -1,3 +1,4 @@
+import type { LedgerLinkIcon } from "./ledger-icons"
 import { groupByYear } from "./group"
 
 export interface LedgerEntry {
@@ -13,11 +14,23 @@ export interface LedgerEntry {
     added?: Date
     note?: string
     url?: string
+    repo?: string
+    tags?: string[]
+    role?: string
+    description?: string
+    order?: number
+    feed?: string
+    links?: { label?: string; url: string; icon: LedgerLinkIcon }[]
     link?: { collection: string; id: string }
   }
 }
 
 const UNDATED = Number.MAX_SAFE_INTEGER
+
+export const sortByOrder = <T extends LedgerEntry>(entries: T[]) =>
+  entries.toSorted(
+    (a, b) => (a.data.order ?? UNDATED) - (b.data.order ?? UNDATED),
+  )
 
 const ledgerDate = ({ data }: LedgerEntry) =>
   data.ended ?? (data.rating === "DNF" ? data.started : undefined) ?? data.added
@@ -37,7 +50,12 @@ export const slugify = (text: string) =>
     .replace(/^-|-$/g, "")
 
 export const ledgerGroups = <T extends LedgerEntry>(entries: T[]) =>
-  groupByYear(entries, ledgerDate, (a, b) => endedTime(b) - endedTime(a))
+  groupByYear(entries, ledgerDate, (a, b) => endedTime(b) - endedTime(a)).map(
+    (group) =>
+      group.heading === "Undated"
+        ? { ...group, entries: sortByOrder(group.entries) }
+        : group,
+  )
 
 export function ledgerPermalinks(entries: LedgerEntry[]) {
   const counts = new Map<string, number>()

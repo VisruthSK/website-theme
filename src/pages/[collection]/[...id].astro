@@ -1,6 +1,7 @@
 ---
 import Bibliography from "@/components/Bibliography.astro"
 import FontPreload from "@/components/FontPreload.astro"
+import CitePost from "@/components/CitePost.astro"
 import MetaPost from "@/components/MetaPost.astro"
 import MetaRow from "@/components/MetaRow.astro"
 import PagefindMeta from "@/components/PagefindMeta.astro"
@@ -33,7 +34,11 @@ import {
 } from "@/lib/data-utils"
 import { assertNoBrokenLinks } from "@/lib/links"
 import { extractCitedKeys } from "@/lib/markdown/cite"
-import { canonicalizePathSegments, plainTitle } from "@/lib/site-utils"
+import {
+  canonicalizePathSegments,
+  plainTitle,
+  siteOrigin,
+} from "@/lib/site-utils"
 import { formatTitleAsHtml } from "@/lib/text"
 import { render } from "astro:content"
 import { fonts } from "virtual:theme/assets"
@@ -62,14 +67,13 @@ const basePath = section.href
 const { Content, headings, remarkPluginFrontmatter } = await render(post)
 assertNoBrokenLinks(post.id, remarkPluginFrontmatter)
 const body = post.body ?? ""
-const { bib } = post.data
-const hasBibliography = Boolean(bib)
 const hasCode = /^\s*(```|~~~)/m.test(body)
 const usesMono =
   hasCode || [post.data.title, body].some((text) => /`[^`\n]+`/.test(text))
 const usesMath =
   FEATURES.math && /\$\$|(?<![\\$])\$(?=\S)[^$\n]*\S\$(?!\d)/.test(body)
-const citedKeys = hasBibliography ? extractCitedKeys(body) : []
+const citedKeys = FEATURES.citations ? extractCitedKeys(body) : []
+const hasBibliography = citedKeys.length > 0
 
 const tocHeadings = withReferencesHeading(headings, hasBibliography).filter(
   ({ depth, text }) => depth >= 2 && depth <= 4 && text.trim(),
@@ -80,6 +84,7 @@ const showToc =
 const parent = isSubpost(post.id)
   ? await getParentPost(post.id, collection)
   : null
+const entryUrl = new URL(Astro.url.pathname, siteOrigin(Astro))
 const seriesId = isSubpost(post.id) ? getParentId(post.id) : post.id
 const chapters = await getSubpostsForParent(seriesId, collection)
 const seriesParent = parent ?? post
@@ -136,12 +141,14 @@ const crumbs = [
     />
   )}
 
-  <article data-pagefind-body>
+  <article data-pagefind-body class="h-entry">
+    <data class="u-url" value={entryUrl.href} />
     <header>
       <h1
         id="post-title"
         data-page-title
         data-pagefind-weight="10"
+        class="p-name"
         set:html={formatTitleAsHtml(post.data.title)}
       />
       <MetaRow
@@ -178,11 +185,12 @@ const crumbs = [
       </nav>
     )}
 
-    <prose-content data-compact={stats.wordCount < 500 || undefined}>
+    <prose-content
+      class="e-content"
+      data-compact={stats.wordCount < 500 || undefined}
+    >
       <Content />
-      {FEATURES.citations && bib && citedKeys.length > 0 && (
-        <Bibliography bib={bib} citedKeys={citedKeys} />
-      )}
+      {hasBibliography && <Bibliography citedKeys={citedKeys} />}
     </prose-content>
     {backlinks.length > 0 && (
       <aside class="backlinks" data-pagefind-ignore>
@@ -196,6 +204,7 @@ const crumbs = [
         </ul>
       </aside>
     )}
+    <CitePost post={post} canonical={parentHref ?? undefined} />
   </article>
 </Layout>
 

@@ -8,25 +8,32 @@ import { footnoteSentences } from "../../src/lib/markdown/footnote-sentences.ts"
 import { footnotes } from "../../src/lib/markdown/footnotes.ts"
 import { opening } from "../../src/lib/markdown/opening.ts"
 
-const astro = (frontmatter: Record<string, unknown> = {}) => ({
-  astro: {
-    frontmatter,
-    headings: [],
-    localImagePaths: new Set<string>(),
-    remoteImagePaths: new Set<string>(),
-  },
-})
-
-const citations = cite("examples/full/src/data/bibliographies")
+const citations = cite("examples/full/src/data/references.bib")
+const authorYearCitations = cite(
+  "examples/full/src/data/references.bib",
+  "author-year",
+)
+const citeAuthorYear = (source: string) =>
+  render(source, { mdastPlugins: [authorYearCitations] })
 
 const render = (
   source: string,
   options: Omit<Parameters<typeof markdownToHtml>[1], "data"> = {},
   frontmatter: Record<string, unknown> = {},
-) => markdownToHtml(source, { ...options, data: astro(frontmatter) }).html
+) =>
+  markdownToHtml(source, {
+    ...options,
+    data: {
+      astro: {
+        frontmatter,
+        headings: [],
+        localImagePaths: new Set<string>(),
+        remoteImagePaths: new Set<string>(),
+      },
+    },
+  }).html
 
-const cited = (source: string) =>
-  render(source, { mdastPlugins: [citations] }, { bib: "example" })
+const cited = (source: string) => render(source, { mdastPlugins: [citations] })
 
 const numbers = (html: string) =>
   [...html.matchAll(/class="citation-link"[^>]*>(\d+)</g)].map(([, n]) => n)
@@ -63,14 +70,44 @@ test.describe("citations", () => {
     expect(cited("Unknown @nokey here.")).toContain("citation-missing")
   })
 
-  test("posts without a bibliography are untouched", () => {
-    expect(
-      render("As @knuth1981 says.", { mdastPlugins: [citations] }),
-    ).not.toContain("citation")
+  test("without the cite plugin keys are left as text", () => {
+    expect(render("As @knuth1981 says.")).not.toContain("citation")
   })
 
   test("cited keys are extracted in order of first use", () => {
     expect(extractCitedKeys("[@b; @a] and @b")).toEqual(["b", "a"])
+  })
+
+  test.describe("author-year style", () => {
+    test("narrative citations render authors and year", () => {
+      const html = citeAuthorYear("As @knuth1981 showed.")
+      expect(html).toContain('<a href="#ref-knuth1981"')
+      expect(html).toContain(">Knuth &amp; Plass 1981</a>")
+      expect(html).toContain('<span class="citation">(1981)</span>')
+      expect(html).not.toContain('class="citation-link">1<')
+    })
+
+    test("bracketed groups use parentheses, locators and suppressed authors", () => {
+      const html = citeAuthorYear("Both [see @three2020, p. 14; -@wilde1888].")
+      expect(html).toContain('<span class="citation">(see ')
+      expect(html).toContain(">Knuth, Plass &amp; Smith 2020</a>")
+      expect(html).toContain(", p. 14;")
+      expect(html).toContain("; ")
+      expect(html).toContain(">1888</a>")
+      expect(html).toContain(")</span>")
+    })
+
+    test("four or more authors collapse to et al.", () => {
+      expect(citeAuthorYear("As @four2021 says.")).toContain(
+        ">Knuth et al. 2021</a>",
+      )
+    })
+
+    test("undated entries cite as n.d.", () => {
+      expect(citeAuthorYear("As @undated says.")).toContain(
+        '<span class="citation">(n.d.)</span>',
+      )
+    })
   })
 })
 

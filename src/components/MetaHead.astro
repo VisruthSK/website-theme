@@ -42,6 +42,7 @@ import { fonts } from "virtual:theme/assets"
 
   <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
   <FeedLink href="/rss.xml" title={SITE.title} />
+  <FeedLink href="/feed.json" title={SITE.title} type="application/feed+json" />
 
   <FontPreload href={fonts.heading} />
   <FontPreload href={fonts.body} />

@@ -7,6 +7,8 @@ tags: ['story', 'notes']
 
 THIS CONTENT IS ENTIRELY LLM WRITTEN
 
+---
+
 The entries on this example site are stories whose copyright has expired, taken from Project Gutenberg. They stand in for the writing a real site would hold, and they were chosen because they are short enough to read in one sitting and long enough to fill several pages of justified text. This entry is the only one written for the site, and it explains the choices.
 
 ## Why old stories

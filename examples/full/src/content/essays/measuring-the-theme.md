@@ -3,10 +3,11 @@ title: 'Measuring the theme against astro-erudite'
 date: 2026-11-02
 description: 'Fifteen pages of the same content built with astro-erudite and with this theme: an eighth of the bytes and a faster largest paint everywhere, a slower first paint on a really slow link for three pages.'
 tags: ['performance', 'accessibility', 'typography']
-bib: example
 ---
 
 THIS CONTENT IS ENTIRELY LLM WRITTEN
+
+---
 
 This theme is built on astro-erudite and adds a build-time line breaker, margin notes and citations. To see what that costs and buys, both themes build the same fifteen pages here, and the comparison covers what a browser downloads, how soon it paints and what Lighthouse scores.[^scope]
 

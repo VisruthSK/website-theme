@@ -3,10 +3,11 @@ title: 'Everything at Once'
 date: 2025-02-03
 description: 'Inline code, an external SVG, tables, maths, callouts, footnotes and citations in one note.'
 tags: ['code', 'features']
-bib: example
 ---
 
 THIS CONTENT IS ENTIRELY LLM WRITTEN
+
+---
 
 This note uses every kind of content the theme sets, so that one page can show how they sit together. It is a short working document: a few paragraphs of prose with `inline code` in the line, a command such as `pnpm exec astro build --root examples/full` that has to wrap with the text around it, and a few notes in the margin.[^inline]
 

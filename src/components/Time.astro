@@ -1,9 +1,9 @@
 ---
 import { formatDate } from "@/lib/dates"
 
-type Props = { date: Date }
+type Props = { date: Date; class?: string }
 
-const { date } = Astro.props
+const { date, class: className } = Astro.props
 ---
 
-<time datetime={date.toISOString()}>{formatDate(date)}</time>
+<time class={className} datetime={date.toISOString()}>{formatDate(date)}</time>

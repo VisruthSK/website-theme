@@ -196,6 +196,19 @@ const fonts = z.strictObject({
     smallCaps: z.boolean().default(true),
   }),
   heading: family(["ui-sans-serif", "system-ui", "sans-serif", ...EMOJI]),
+  accent: family(["ui-sans-serif", "system-ui", "sans-serif", ...EMOJI])
+    .extend({
+      size: remLength.default("5.9rem"),
+      tolerance: z.number().positive().default(0.35),
+    })
+    .optional(),
+  dropCap: face
+    .extend({
+      family: nonEmpty,
+      size: remLength.default("5.9rem"),
+      tolerance: z.number().positive().default(0.35),
+    })
+    .optional(),
   mono: family([
     "ui-monospace",
     "SFMono-Regular",
@@ -206,13 +219,6 @@ const fonts = z.strictObject({
     "monospace",
   ]).optional(),
   math: z.strictObject({ family: nonEmpty, file: fileName }).optional(),
-  dropCap: face
-    .extend({
-      family: nonEmpty,
-      size: remLength.default("5.9rem"),
-      tolerance: z.number().positive().default(0.35),
-    })
-    .optional(),
 })
 
 const link = z.strictObject({ href: nonEmpty, label: nonEmpty })
@@ -235,11 +241,13 @@ export const themeSchema = z
       title: nonEmpty,
       description: z.string(),
       href: z.url(),
-      author: nonEmpty,
+      givenName: nonEmpty,
+      familyName: nonEmpty,
       locale: nonEmpty.default("en-US"),
       dir: z.enum(["ltr", "rtl"]).default("ltr"),
       featuredPostCount: z.int().nonnegative().default(3),
       featured: z.array(z.string()).default([]),
+      monogram: nonEmpty.optional(),
     }),
     pages: z
       .strictObject({
@@ -280,8 +288,14 @@ export const themeSchema = z
         lineHeight: remLength.default("1.75rem"),
         indent: emLength.default("1.35em"),
         dropCapMinWords: z.int().nonnegative().default(500),
+        citations: z
+          .strictObject({
+            style: z.enum(["numeric", "author-year"]).default("numeric"),
+          })
+          .prefault({}),
       })
       .prefault({}),
+    library: z.boolean().default(false),
     features: features.default({
       typeset: true,
       citations: true,
@@ -292,7 +306,6 @@ export const themeSchema = z
       search: true,
       externalLinkIcons: true,
     }),
-    bibliographies: nonEmpty.default("src/data/bibliographies"),
     unhinted: z
       .array(z.string().startsWith("/"))
       .default(["/_astro/*", "/pagefind/*"]),
@@ -317,8 +330,11 @@ export const themeSchema = z
           `unknown section ${item.section}`,
         )
     })
-    if (theme.features.dropCap && !theme.fonts.dropCap)
-      issue(["fonts", "dropCap"], "required while features.dropCap is true")
+    if (theme.features.dropCap && !theme.fonts.accent && !theme.fonts.dropCap)
+      issue(
+        ["fonts", "accent"],
+        "required while features.dropCap is true (or set fonts.dropCap)",
+      )
     if (theme.features.typeset) {
       const { faces } = theme.fonts.body
       if (

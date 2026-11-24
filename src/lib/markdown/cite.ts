@@ -1,12 +1,10 @@
-import {
-  defineMdastPlugin,
-  type MdastPluginDefinition,
-  type PluginFactoryContext,
-} from "satteri"
+import { defineMdastPlugin, type MdastPluginDefinition } from "satteri"
 import {
   formatReference,
+  formatShortAuthors,
   readBibliography,
   type Bibliography,
+  type CitationStyle,
 } from "../bibliography"
 import { escapeHtml } from "../text"
 
@@ -17,6 +15,14 @@ const CITE_GROUP_PATTERN = /\[([^[\]]*@[^[\]]*)\]/g
 const CITE_ITEM_PATTERN = new RegExp(
   String.raw`^([\s\S]*?)(-?)@(${KEY})([\s\S]*)$`,
 )
+
+// Citations are a prose feature; code and HTML comments are ignored.
+function stripCode(markdown: string): string {
+  return markdown
+    .replace(/\r?\n(```|~~~)[\s\S]*?\n\1(?=\r?\n|$)/g, "\n")
+    .replace(/`[^`\n]*`/g, "")
+    .replace(/<!--[\s\S]*?-->/g, "")
+}
 
 interface CitationMarker {
   key: string
@@ -44,7 +50,9 @@ function parseCitationMarkers(value: string): CitationMarker[] {
 
 export function extractCitedKeys(body: string | undefined): string[] {
   if (!body) return []
-  return [...new Set(parseCitationMarkers(body).map(({ key }) => key))]
+  return [
+    ...new Set(parseCitationMarkers(stripCode(body)).map(({ key }) => key)),
+  ]
 }
 
 const GROUP_SEPARATOR_PATTERN = /^[\s,;]+$/
@@ -87,26 +95,34 @@ function renderLink(
   key: string,
   number: number,
   bibliography: Bibliography | null,
+  style: CitationStyle,
+  suppressed = false,
 ): string {
   const safeKey = escapeHtml(key)
   const entry = bibliography?.[key]
   if (!entry) {
-    return `<span class="citation-missing" title="Citation key not found: ${safeKey}">${safeKey}?</span>`
+    return `<span class="citation-missing" data-citation-missing="${safeKey}" title="Citation key not found: ${safeKey}">${safeKey}?</span>`
   }
   const label = escapeHtml(
     `${number}. ${entry.author.join(", ")}, ${entry.year ?? "n.d."}. ${entry.title}`,
   )
   const preview = escapeHtml(formatReference(entry))
+  if (style === "author-year") {
+    const year = `${entry.year ?? "n.d."}`
+    const text = suppressed
+      ? year
+      : `${formatShortAuthors(entry.author)} ${year}`
+    return `<a href="#ref-${safeKey}" class="citation-link" aria-label="${label}" data-citation-preview="${preview}">${escapeHtml(text)}</a>`
+  }
   return `<a href="#ref-${safeKey}" class="citation-link" aria-label="${label}" data-citation-preview="${preview}">${number}</a>`
 }
 
 export const cite =
-  (directory: string) =>
-  ({ data }: PluginFactoryContext) => {
-    const bibName = data.astro?.frontmatter.bib
-    if (typeof bibName !== "string" || !bibName) return null
-
-    const bibliography = readBibliography(directory, bibName)
+  (file: string, style: CitationStyle = "numeric") =>
+  () => {
+    const bibliography = readBibliography(file)
+    const authorYear = style === "author-year"
+    const [open, close] = authorYear ? ["(", ")"] : ["[", "]"]
     const citationNumbers = new Map<string, number>()
 
     const numberFor = (key: string): number => {
@@ -122,16 +138,17 @@ export const cite =
       for (const item of inner.split(";")) {
         const match = CITE_ITEM_PATTERN.exec(item)
         if (!match) return [{ type: "text", value: `[${inner}]` }]
-        const [, prefix, , key, suffix] = match
+        const [, prefix, dash, key, suffix] = match
         const lead = prefix.trim()
+        const suppressed = dash === "-"
         rendered.push(
-          `${lead ? `${escapeHtml(lead)} ` : ""}${renderLink(key, numberFor(key), bibliography)}${escapeHtml(suffix.trimEnd())}`,
+          `${lead ? `${escapeHtml(lead)} ` : ""}${renderLink(key, numberFor(key), bibliography, style, suppressed)}${escapeHtml(suffix.trimEnd())}`,
         )
       }
       return [
         {
           type: "html",
-          value: `<span class="citation">[${rendered.join("; ")}]</span>`,
+          value: `<span class="citation">${open}${rendered.join("; ")}${close}</span>`,
         },
       ]
     }
@@ -148,13 +165,22 @@ export const cite =
           parts.push({ type: "text", value: value.slice(cursor, group.start) })
         }
 
-        const links = group.keys.map((key) =>
-          renderLink(key, numberFor(key), bibliography),
-        )
-        parts.push({
-          type: "html",
-          value: `<span class="citation">[${links.join(", ")}]</span>`,
-        })
+        if (authorYear) {
+          const rendered = group.keys.map((key) => {
+            const entry = bibliography?.[key]
+            const year = `${entry?.year ?? "n.d."}`
+            return `${renderLink(key, numberFor(key), bibliography, style)} <span class="citation">(${escapeHtml(year)})</span>`
+          })
+          parts.push({ type: "html", value: rendered.join(", ") })
+        } else {
+          const links = group.keys.map((key) =>
+            renderLink(key, numberFor(key), bibliography, style),
+          )
+          parts.push({
+            type: "html",
+            value: `<span class="citation">${open}${links.join(", ")}${close}</span>`,
+          })
+        }
 
         cursor = group.end
         const gap = SPACE_BEFORE_PUNCTUATION_PATTERN.exec(value.slice(cursor))
